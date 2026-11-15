@@ -437,7 +437,7 @@ function buildUi() {
   });
 
   updateSummary();
-  mountApp("directory");
+  mountApp("aduc");
 }
 
 function setStatus(checkId, status, detail) {

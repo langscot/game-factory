@@ -315,7 +315,7 @@ export default {
         <button type="button" class="ev-trow group" role="treeitem" aria-expanded="${treeOpen.apps}" data-tree="apps">
           <span class="tw">${treeOpen.apps ? "▾" : "▸"}</span>${FOLDER_ICON}<span class="ev-tlabel">Applications and Services Logs</span>
         </button>
-        ${treeOpen.apps ? '<div class="ev-tnone">No published logs in this mock console.</div>' : ""}`;
+        ${treeOpen.apps ? '<div class="ev-tnone">No published logs.</div>' : ""}`;
 
       for (const node of treeHost.querySelectorAll("[data-tree]")) {
         node.addEventListener("click", () => {
@@ -387,8 +387,7 @@ export default {
         <button type="button" data-act="refresh">Refresh</button>
         <div class="ev-actgroup">Event</div>
         <button type="button" data-act="props"${selected ? "" : " disabled"}>Event Properties...</button>
-        <button type="button" data-act="copy"${selected ? "" : " disabled"}>Copy Details</button>
-        <div class="ev-actnote">Mock console. Nothing here read the real machine.</div>`;
+        <button type="button" data-act="copy"${selected ? "" : " disabled"}>Copy Details</button>`;
 
       actionsHost.querySelector('[data-act="filter"]').addEventListener("click", openFilter);
       actionsHost.querySelector('[data-act="clear"]').addEventListener("click", clearLog);
@@ -441,7 +440,7 @@ export default {
       const log = logById(currentLogId());
       const yes = await ctx.ui.confirm(
         "Clear Log",
-        `Clear the ${log.name} log?\n\nThe seeded and recorded events in this mock console will go. Events raised after this point will still arrive.`,
+        `Clear the ${log.name} log?\n\nAll events in this log will be permanently lost. Events raised after this point will still be recorded.`,
         { ok: "Clear", cancel: "Cancel" },
       );
       if (!yes) return;
@@ -511,7 +510,7 @@ export default {
           onClick: () =>
             ctx.ui.alert(
               "Event Viewer",
-              "Microsoft Management Console — eventvwr.msc\n\nA mock Event Viewer shell for the Halcyon helpdesk desktop. The events are seeded content and the live world audit trail; no local logs are read.",
+              "Microsoft Management Console — eventvwr.msc\n\nEvent Viewer shows the event logs for this computer. Use it to review system, application and security events.\n\nVersion 10.0 (Build 22621)",
             ),
         },
       ]);
@@ -689,7 +688,7 @@ export default {
                       .join("")}
                   </div>
                   <div class="ev-desc">${ctx.ui.esc(record.general)}</div>`
-                : `<div class="ev-detbar"><span>View: XML View</span><span class="muted">Read-only mock XML</span></div>
+                : `<div class="ev-detbar"><span>View: XML View</span><span class="muted">Read-only XML</span></div>
                    <pre class="ev-xml">${ctx.ui.esc(eventXml(record))}</pre>`
             }
           </div>

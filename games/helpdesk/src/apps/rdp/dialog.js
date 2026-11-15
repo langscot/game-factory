@@ -263,7 +263,7 @@ export function createConnectionDialog(root, ctx, app) {
     open: {
       heading: "Open a connection file",
       message:
-        "This build does not read .rdp files. Type the computer name on the General tab instead — recent computers are one click away.",
+        "Remote Desktop Connection cannot open saved .rdp files on this PC. Type the computer name on the General tab instead.",
     },
     audio: {
       heading: "Remote audio",

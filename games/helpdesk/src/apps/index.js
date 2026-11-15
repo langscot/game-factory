@@ -13,11 +13,11 @@ import { registerApps } from "./registry.js";
 
 
 
+
 import browser from "./browser/index.js";
 import ticketdesk from "./ticketdesk/index.js";
 import mail from "./mail/index.js";
 import handbook from "./handbook/index.js";
-import directory from "./directory/index.js";
 import aduc from "./aduc/index.js";
 import explorer from "./explorer/index.js";
 import notepad from "./notepad/index.js";

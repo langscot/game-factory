@@ -42,7 +42,7 @@ const seedDraft = () => ({
 const EMPTY =
   '<div class="rp-empty">' +
   glyph("newMail") +
-  "<div><b>Select an item to read</b><br>Pick a message in the list to open it here.</div></div>";
+  "<div><b>Select an item to read</b></div></div>";
 
 export default {
   id: "mail",
@@ -271,7 +271,7 @@ export default {
         ? list.map((message) => rowHtml(message, preview)).join("")
         : `<div class="lp-empty">${
             ui.search
-              ? `No items match <b>${ctx.ui.esc(ui.search)}</b>.<br>Try a sender name or part of the subject.`
+              ? `No items match <b>${ctx.ui.esc(ui.search)}</b>.`
               : "There are no items to show in this view."
           }</div>`;
     }
@@ -343,11 +343,6 @@ export default {
               ? `<div class="rp-ticket"><button class="btn" data-act="ticket">Open ticket #${message.ticketId} in Ticket Desk</button></div>`
               : ""
           }
-          ${
-            message.ticketId
-              ? ""
-              : `<p class="rp-hint">Inspect the transport headers with File &gt; Properties before acting on anything that asks for a password, a token or money.</p>`
-          }
         </div>
       </div>`;
     }
@@ -359,7 +354,7 @@ export default {
           activeFolder() === "drafts"
             ? '<div class="rp-empty">' +
               glyph("draft") +
-              "<div><b>Drafts open in the composer</b><br>Click a draft in the list to keep writing it.</div></div>"
+              "<div><b>Select an item to read</b></div></div>"
             : EMPTY;
         return;
       }
@@ -367,7 +362,7 @@ export default {
         refs.read.innerHTML =
           '<div class="rp-empty">' +
           glyph("draft") +
-          "<div><b>A draft is not a sent message</b><br>Click it in the list to open the composer.</div></div>";
+          "<div><b>Draft</b><br>Not sent.</div></div>";
         return;
       }
       refs.read.innerHTML = readingHtml(message);
@@ -518,8 +513,8 @@ export default {
                    <button class="btn primary" data-props>Properties</button>
                    <span class="tiny muted">Internet headers</span>
                  </div>
-                 <p style="margin-top:10px">Open Properties to read the transport headers — From, Reply-To, Return-Path and Received — before you trust the display name.</p>`
-              : `<p>No message is selected. Pick one in the message list, then come back to File &gt; Properties to inspect its Internet headers.</p>`
+                 <p style="margin-top:10px">From, Reply-To, Return-Path and Received are the headers this mailbox recorded for the message.</p>`
+              : `<p>No message is selected.</p>`
           }
         </div>
         <div class="bs-card">
@@ -533,10 +528,10 @@ export default {
     }
 
     const PAGES = {
-      open: ["Open & Export", "Import and export are disabled by mailbox policy. Nothing leaves this machine."],
-      save: ["Save As", "This mock mailbox does not write .eml or .msg files to disk. Send the message or save a draft instead."],
+      open: ["Open & Export", "Import and export are disabled by mailbox policy."],
+      save: ["Save As", "Saving messages to disk is disabled by mailbox policy. Send the message or save a draft instead."],
       print: ["Print", "No printer is attached to this mailbox. The floor printer only knows how to jam."],
-      options: ["Options", "Account, layout and offline settings live in Settings. Outlook keeps only the view state for this app."],
+      options: ["Options", "Account and offline settings are managed by Halcyon Dynamics IT."],
     };
 
     function simplePage(page) {
@@ -630,16 +625,16 @@ export default {
         case "offline":
           toast(
             ctx.world.mail.canSendFrom(ctx.world.session.current().technicianId)
-              ? "Outlook is online. Disconnect the adapter in Settings to work offline."
-              : "This machine is offline. Reconnect the adapter in Settings before sending.",
+              ? "Connected to HALCYON Exchange."
+              : "Working offline. Changes will sync when you reconnect.",
           );
           break;
         case "newFolder":
         case "newSearch":
-          toast("Custom folders are not part of this shell yet.");
+          toast("Creating folders is disabled by mailbox policy.");
           break;
         case "emptyFolder":
-          toast("Permanent deletion is not enabled in this mock mailbox. Delete moves items to Deleted Items.");
+          toast("Permanent deletion is disabled by mailbox policy. Delete moves items to Deleted Items.");
           break;
         case "cleanUp":
           toast("Nothing to clean up in this folder.");

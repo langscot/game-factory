@@ -589,7 +589,7 @@ export default {
           { ok: "End process" },
         );
         if (confirmed) {
-          await ctx.ui.alert("Task Manager", "Access is denied.\n\nThis is a critical system process and cannot be ended.");
+          await ctx.ui.alert("Task Manager", "The operation could not be completed.\n\nAccess is denied.");
         }
         return;
       }
@@ -883,7 +883,7 @@ export default {
       if (!services.length) table.append(ctx.ui.el(`<div class="tm-empty">No services found.</div>`));
 
       scroll.append(table);
-      page.append(scroll, ctx.ui.el(`<p class="tm-note">Services are read-only. Windows handles the starting and stopping.</p>`));
+      page.append(scroll);
       view.replaceChildren(page);
       viewRefs = { kind: "services" };
     }

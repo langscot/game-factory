@@ -690,7 +690,7 @@ export default {
                     })
                     .join("")}</tbody>
                 </table></div>`
-              : `<div class="sc-empty">Install or remove an application and it will appear here.</div>`
+              : `<div class="sc-empty">No recent activity.</div>`
           }
 
           <div class="sc-section-title">Requests</div>

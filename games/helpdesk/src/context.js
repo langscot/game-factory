@@ -1,6 +1,8 @@
 // The app context. Both the desktop shell and the dev harness build it, so an
 // app cannot tell whether it is running on the desktop or in the harness.
 
+import { bindDialogOwner } from "./ui/dialog.js";
+
 export function createAppContext({ platform, ui, app, handle, options = {}, open }) {
   const disposers = [];
 
@@ -16,6 +18,9 @@ export function createAppContext({ platform, ui, app, handle, options = {}, open
       log: () => platform.world.audit.all(),
     },
     clock: platform.clock,
+    // The OS audio service. Undefined in harnesses that do not build a shell;
+    // apps should feature-detect before asking for a cue.
+    audio: platform.audio,
     session: {
       day: () => platform.world.session.day(),
       trust: () => platform.world.session.trust(),
@@ -24,7 +29,7 @@ export function createAppContext({ platform, ui, app, handle, options = {}, open
       hardwareTier: () => platform.world.session.hardwareTier(),
       seed: () => platform.world.session.seed(),
     },
-    ui,
+    ui: bindDialogOwner(ui, handle),
     options,
     open: (appId, opts) => open(appId, opts),
     window: {

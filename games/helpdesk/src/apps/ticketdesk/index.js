@@ -2,9 +2,9 @@
 //
 // The request comes from mail, the person and machine come from the world, and
 // the checklist is driven by the platform's ticket watcher. There is no
-// Approve/Deny: to close a case you perform the real work (in the Directory or
-// Settings stopgap today, in ADUC / Services / Software Center later) and the
-// watcher records evidence. Wrong actions are recorded and the case stays open.
+// Approve/Deny: to close a case you perform the real work in the tool that owns
+// it (ADUC, Services, Software Center) and the watcher records evidence. Wrong
+// actions are recorded and the case stays open.
 
 const instances = new WeakMap();
 
@@ -118,7 +118,8 @@ export default {
           <div>
             <div style="width:46px;height:46px;margin:0 auto 10px">${api.ui.icon("ticket")}</div>
             <h3>Day ${day} — ${count} open ticket${count === 1 ? "" : "s"}</h3>
-            <p>Read the briefing in Mail, keep the Policy Handbook open, and check the Staff Directory before you act. Cases close when the work is done, not when you click a verdict.</p>
+            <p>Read the briefing in Mail, keep the Policy Handbook open, and check ADUC before you act. Cases close when the work is done, not when you click a verdict.</p>
+            <p>The queue for today's shift is waiting.</p>
             <button class="btn primary" data-act="start">Start shift</button>
           </div>
         </div>`);
@@ -221,7 +222,7 @@ export default {
           )}${person?.remote ? " · remote" : ""}</span>
           <span><i>Machine</i>${api.ui.esc(machine?.hostname || "—")}${machine ? ` · tier ${machine.hardwareTier}` : ""}</span>
           <span><i>Policy</i>${api.ui.esc(rule?.title || `Policy ${ticket.ruleId}`)}</span>
-          <button class="link" data-open-directory>Open Directory</button>
+          <button class="link" data-open-aduc>Open ADUC</button>
         </div>`);
 
       if (wrong.length) {
@@ -291,12 +292,12 @@ export default {
                     </li>`,
                   )
                   .join("")}</ol>`
-              : `<p class="muted tiny">No evidence yet. Perform the work in the tool that owns it; the watcher records what changed.</p>`
+              : `<p class="muted tiny">No evidence yet.</p>`
           }
         </div>`),
       );
 
-      view.querySelector("[data-open-directory]").addEventListener("click", () => api.open("directory"));
+      view.querySelector("[data-open-aduc]").addEventListener("click", () => api.open("aduc"));
 
       const send = view.querySelector("[data-send-reply]");
       if (send) {

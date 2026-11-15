@@ -325,7 +325,7 @@ export function mountConsole(container, ctx) {
             </div>`;
           })
           .join("")
-      : `<div class="gpmc-empty">This GPO is not linked to any containers yet.</div>`;
+      : `<div class="gpmc-empty">This GPO is not linked to any containers.</div>`;
 
     return `<div class="gpmc-tabbar"><b>Links</b><button type="button" class="gpmc-btn" data-act="link">Link an Existing GPO...</button></div>
       <div class="gpmc-linkhead"><span>Location</span><span>Order</span><span>Enforced</span><span></span></div>
@@ -334,12 +334,12 @@ export function mountConsole(container, ctx) {
       <div class="gpmc-filterrow">${ctx.ui.icon("people")}<span>${esc(
         gpo.security,
       )}</span></div>
-      <p class="gpmc-note">Only this group reads and applies the policy. The mock does not change Windows security.</p>`;
+      <p class="gpmc-note">Only this group reads and applies the policy.</p>`;
   }
 
   function detailsHtml(state, gpo) {
     const modified = state.lastEdited[gpo.id]
-      ? `Today at ${state.lastEdited[gpo.id]} (this session)`
+      ? `Today at ${state.lastEdited[gpo.id]}`
       : gpo.modified;
     const field = (label, value, wide = false) =>
       `<div class="gpmc-field${wide ? " is-wide" : ""}"><span>${label}</span><div>${value}</div></div>`;
@@ -354,8 +354,7 @@ export function mountConsole(container, ctx) {
       ${field("Computer version", `(AD) ${gpo.revision}.0`)}
       ${field("Security filtering", esc(gpo.security))}
       ${field("Description", esc(gpo.description), true)}
-    </div>
-    <p class="gpmc-note">The report is generated from mock state. No directory was queried.</p>`;
+    </div>`;
   }
 
   function settingsTabHtml(state, gpo) {
@@ -388,8 +387,7 @@ export function mountConsole(container, ctx) {
         <button type="button" class="gpmc-btn" data-act="edit">Edit...</button>
       </div>
       <div class="gpmc-settinghead"><span>Scope</span><span>Setting</span><span>State</span></div>
-      <div class="gpmc-settinglist">${body}</div>
-      <p class="gpmc-note">The editor writes back here. Changes in this session only; nothing touches the registry.</p>`;
+      <div class="gpmc-settinglist">${body}</div>`;
   }
 
   function delegationHtml() {
@@ -400,8 +398,7 @@ export function mountConsole(container, ctx) {
           <span>${esc(entry.allowed)}</span>
           <span>${esc(entry.inherited)}</span>
         </div>`,
-      ).join("")}</div>
-      <p class="gpmc-note">Delegation is display-only in this console.</p>`;
+      ).join("")}</div>`;
   }
 
   function targetViewHtml(state, targetId) {
@@ -443,8 +440,7 @@ export function mountConsole(container, ctx) {
 
     return `<div class="gpmc-tabbar"><b>Links</b><button type="button" class="gpmc-btn" data-act="link">Link an Existing GPO...</button></div>
       <div class="gpmc-ou-head"><span>Order</span><span>Group Policy Object</span><span>Enforced</span><span>Status</span><span></span></div>
-      <div class="gpmc-ou-list">${body}</div>
-      <p class="gpmc-note">Policies inherited from parent containers are listed on the Group Policy Inheritance tab.</p>`;
+      <div class="gpmc-ou-list">${body}</div>`;
   }
 
   function inheritanceHtml(state, target) {
@@ -527,7 +523,6 @@ export function mountConsole(container, ctx) {
             <span>${esc(starter.comment)}</span><span>${esc(starter.version)}</span>
           </div>`,
         ).join("")}</div>
-        <p class="gpmc-note">Starter GPOs are templates. This mock lists them but does not copy one.</p>
       </div>
     </div>`;
   }
@@ -558,13 +553,13 @@ export function mountConsole(container, ctx) {
            <button type="button" class="gpmc-ou-card" data-node="domain">${ICO.domain}<span><b>${esc(
              DOMAIN.name,
            )}</b><small>1 domain · ${GPOS.length} GPOs</small></span><span class="gpmc-pill">${LINK_TARGETS.length} containers</span></button>`
-        : `<p>Select a domain to manage its Group Policy objects.</p>
+        : `<p>Domains in this forest.</p>
            <button type="button" class="gpmc-ou-card" data-node="domain">${ICO.domain}<span><b>${esc(
              DOMAIN.name,
            )}</b><small>${esc(DOMAIN.company)}</small></span></button>`;
     return `<div class="gpmc-main is-single">
       <div class="gpmc-panehead"><div><b>${title}</b><small>Group Policy Management</small></div></div>
-      <div class="gpmc-tabbody">${body}<p class="gpmc-note">This is a mock console. Nothing here reads or writes a real directory.</p></div>
+      <div class="gpmc-tabbody">${body}</div>
     </div>`;
   }
 
@@ -586,8 +581,7 @@ export function mountConsole(container, ctx) {
         <button type="button" data-act="refresh" data-fk="act:refresh">Refresh</button>
         <div class="gpmc-actgroup">Group Policy Objects</div>
         <button type="button" data-act="new" disabled>New</button>
-        <button type="button" data-act="report" disabled>Save Report...</button>
-        <div class="gpmc-actnote">Mock console. Links and settings live in this shift only.</div>`;
+        <button type="button" data-act="report" disabled>Save Report...</button>`;
     }
     if (isOuNode(state.node)) {
       const target = targetById(targetIdForNode(state.node));
@@ -597,15 +591,13 @@ export function mountConsole(container, ctx) {
         <button type="button" data-act="inheritance" data-fk="act:inheritance">Group Policy Inheritance</button>
         <button type="button" data-act="refresh" data-fk="act:refresh">Refresh</button>
         <div class="gpmc-actgroup">Container</div>
-        <button type="button" data-act="goto-gpos" data-fk="act:goto-gpos">Group Policy Objects</button>
-        <div class="gpmc-actnote">Precedence is calculated from the mock links in this console.</div>`;
+        <button type="button" data-act="goto-gpos" data-fk="act:goto-gpos">Group Policy Objects</button>`;
     }
     return `<div class="gpmc-acthead">Actions</div>
       <div class="gpmc-actgroup">Group Policy Management</div>
       <button type="button" data-act="goto-gpos" data-fk="act:goto-gpos">Group Policy Objects</button>
       <button type="button" data-act="precedence" data-fk="act:precedence">Group Policy Inheritance</button>
-      <button type="button" data-act="refresh" data-fk="act:refresh">Refresh</button>
-      <div class="gpmc-actnote">This console is a simulation.</div>`;
+      <button type="button" data-act="refresh" data-fk="act:refresh">Refresh</button>`;
   }
 
   // -------------------------------------------------------------------------
@@ -773,7 +765,7 @@ export function mountConsole(container, ctx) {
       ctx.ui.alert(
         "Link an Existing GPO",
         byTarget
-          ? "This GPO is already linked to every container in the mock domain."
+          ? "This GPO is already linked to every container in the domain."
           : "Every Group Policy object is already linked to this container.",
       );
       return;
@@ -798,7 +790,6 @@ export function mountConsole(container, ctx) {
             : `Choose a Group Policy object to link to <b>${esc(target.name)}</b>.`
         }</p>
         ${select}
-        <p class="gpmc-dialog-note">Links are stored in this shift only. No directory is contacted.</p>
         <div class="row"><button type="button" class="btn" data-link-cancel>Cancel</button>
         <button type="button" class="btn primary" data-link-ok>Link</button></div>
       </div>`,
@@ -917,7 +908,7 @@ export function mountConsole(container, ctx) {
           onClick: () =>
             ctx.ui.alert(
               "Group Policy Management",
-              "Group Policy Management (gpmc.msc) is a mock MMC console.\n\nLinks, precedence and settings are held in this browser tab. Nothing here touches the real directory, the registry or a filesystem.",
+              "Group Policy Management (gpmc.msc)\n\nGroup Policy Management lets you manage the Group Policy objects and links for the HALCYON domain.\n\nVersion 10.0 (Build 22621)",
             ),
         },
       ]);
