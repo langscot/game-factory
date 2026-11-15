@@ -42,7 +42,7 @@ let registered = false;
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([browser, ticketdesk, mail, handbook, directory, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
+  registerApps([browser, ticketdesk, mail, handbook, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";
