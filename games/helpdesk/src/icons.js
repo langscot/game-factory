@@ -54,6 +54,18 @@ export const ICONS = {
     <circle cx="16.6" cy="10.2" r="2.5" fill="#6fb2ff"/>
     <path d="M13 19.2c0-2.6 1.9-4.2 4.3-4.2 2.2 0 4 1.2 4.2 4.2z" fill="#6fb2ff"/>`),
 
+  aduc: svg(`
+    <rect x="2" y="3" width="20" height="18" rx="2.4" fill="#1b4f72"/>
+    <path d="M2 5.4A2.4 2.4 0 0 1 4.4 3h15.2A2.4 2.4 0 0 1 22 5.4V7H2z" fill="#2f7ad6"/>
+    <rect x="4.4" y="9" width="5.2" height="9.4" rx="1" fill="#d5e8ff"/>
+    <g fill="#2f7ad6">
+      <rect x="5.6" y="10.6" width="2.8" height="1" rx=".5"/>
+      <rect x="5.6" y="12.6" width="2.8" height="1" rx=".5"/>
+      <rect x="5.6" y="14.6" width="2.8" height="1" rx=".5"/>
+    </g>
+    <circle cx="15.4" cy="11.4" r="1.9" fill="#ffd166"/>
+    <path d="M12.2 17.6c0-1.9 1.4-3.1 3.2-3.1s3.2 1.2 3.2 3.1z" fill="#ffd166"/>`),
+
   taskmgr: svg(`
     <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#23272f"/>
     <g fill="#4cc2ff">

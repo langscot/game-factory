@@ -6,6 +6,7 @@ import ticketdesk from "./ticketdesk/index.js";
 import mail from "./mail/index.js";
 import handbook from "./handbook/index.js";
 import directory from "./directory/index.js";
+import aduc from "./aduc/index.js";
 import explorer from "./explorer/index.js";
 import notepad from "./notepad/index.js";
 import calculator from "./calculator/index.js";
@@ -18,7 +19,7 @@ let registered = false;
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin]);
+  registerApps([ticketdesk, mail, handbook, directory, aduc, explorer, notepad, calculator, settings, taskmanager, recyclebin]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";
