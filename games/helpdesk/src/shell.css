@@ -472,6 +472,14 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(43, 43, 43, 0.97); border: 1px solid var(--stroke-2); border-radius: 8px;
   box-shadow: 0 40px 90px -30px #000;
 }
+/* App-owned dialogs mount inside their .win, so only the owner dims. Keeping
+   the surface on the window (not .win-body) means scrolling and resizing the
+   app cannot slide the scrim away from it. */
+.modal-window {
+  z-index: 1200; padding: 14px; border-radius: inherit;
+  background: rgba(0, 0, 0, 0.45);
+}
+.modal-window .modal-card { max-height: 100%; }
 .modal-card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 600; }
 .modal-card .sub { color: var(--text-3); font-size: 12px; margin-bottom: 14px; }
 .modal-card p { font-size: 13px; line-height: 1.6; color: var(--text-2); margin: 0 0 10px; }
