@@ -57,8 +57,11 @@ tickets[]   id, day, personId, machineId, mailId, ruleId, why,
             objectives[] { id, kind, target ids, maxRole, status,
                            baseline, evidenceId },
             evidence[] { action, actorId, role, at, before, after },
-            wrongActions[], replies[], escalations[],
-            status, outcome, resolvedDay, resolvedAt, trustDelta
+            wrongActions[], wrongClosures[],
+            replies[], escalations[],
+            readyToClose,
+            status, outcome, resolvedDay, resolvedAt, trustDelta,
+            closure { category, note, byId, at, day, evidenceSnapshot[] }
             guards { shareIds[], softwareIds[] }   over-permission tripwires
 files       drives[], shares[] { path, acl[] { groupId|personId, access } },
             items[] { id, path, name, kind, contents, version, ownerId },
@@ -135,13 +138,17 @@ markMailRead(mailId)
 
 replyToTicket(ticketId, { template, text })   // template: deny | approve | info
 escalateTicket(ticketId, teamId, note)
+closeTicket(ticketId, { category, note })     // resolved | returned | escalated | duplicate | unable
 ```
 
-Scoring is platform-owned. A ticket is never closed by a button: the watcher
-(see below) resolves it when every objective is met, then `session.recordResolved()`
-applies the trust hit exactly once. Actions accept an optional `{ role }`
-(`self-service`, `helpdesk`, `domain-admin`) which is written into the evidence
-and used to flag broader-role access. Apps must never write `session.trust`.
+Scoring is platform-owned and happens **only at closure**. The watcher marks a
+ticket `readyToClose` when every objective is met; it never closes anything. The
+player then picks a category, writes a required closing note (10+ characters)
+and calls `closeTicket`, which stores category/note/actor/timestamp plus an
+evidence snapshot and then applies the trust hit once. Actions accept an
+optional `{ role }` (`self-service`, `helpdesk`, `domain-admin`) which is written
+into the evidence and used to flag broader-role access. Apps must never write
+`session.trust`.
 
 ## Ticket watchers and evidence
 
@@ -155,7 +162,9 @@ today or earlier it:
 3. records an evidence row on the pending → met transition: action, actor, role,
    timestamp and before/after values;
 4. detects wrong actions and records them without closing the ticket;
-5. resolves the ticket, through the platform, when every objective is met.
+5. sets `readyToClose` when every objective is met and emits `ticket:ready`.
+
+It never closes the ticket and never touches trust. Closure is deliberate:
 
 Objective kinds: `password.reset`, `account.unlock`, `account.disable`,
 `group.add`, `group.remove`, `share.grant`, `service.restart`,
@@ -173,8 +182,19 @@ Wrong actions are evidence too:
 | `broader-role` | using `domain-admin` where `helpdesk` was enough |
 
 A wrong action leaves the ticket open. Once the right work is done the ticket
-resolves, but with `outcome: "incorrect"` and the one-off trust hit. That is the
-whole scoring loop; there is no approve/deny verdict anywhere in the game.
+becomes `readyToClose` and the player closes it from the case file:
+
+| category | when it closes | score |
+| --- | --- | --- |
+| `resolved` | only when every objective is met | correct (or incorrect if wrong actions exist) |
+| `escalated` | always, but requires an escalation action | correct with complete evidence |
+| `returned` / `duplicate` / `unable` | always | `deferred` without evidence; a wrong closure with complete evidence |
+
+A closing note of at least 10 characters is required. `closeTicket` writes the
+category, note, actor, timestamp and an evidence snapshot to the ticket; only
+then does trust move. Claiming `resolved` without evidence is rejected, and a
+fully-evidenced case closed as anything other than `resolved`/`escalated` is
+recorded as `wrong-closure` and scored as incorrect.
 
 ## Events — `ctx.events`
 
@@ -194,8 +214,8 @@ Every action emits: `account:created`, `account:password-reset` (Security 4724),
 (4670), `service:restarted` (7036), `software:installed` (11707),
 `network:disconnected`, `file:saved`, `registry:imported` (4657), `mail:sent`,
 `ticket:replied`, `ticket:escalated`, `ticket:objective-met`,
-`ticket:wrong-action`, `ticket:resolved`, `session:shift-started` / `-ended` /
-`day-started`.
+`ticket:wrong-action`, `ticket:ready`, `ticket:resolved`,
+`session:shift-started` / `-ended` / `day-started`.
 
 ## The clock — `ctx.clock`
 
@@ -317,8 +337,9 @@ No other file changes. That is the whole contract.
   ticket answers now live in the seeded world; handbook text and software
   catalogue live in `src/content/` and are copied into the store on seed.
 - The Ticket Desk is a case file: request, person/machine, live objective
-  checklist, evidence trail, reply box and escalation path. It has no
-  Approve/Deny actions; resolution comes from the watcher.
+  checklist, evidence trail, reply box, escalation path and a manual close panel
+  (category, required note). It has no Approve/Deny actions; the watcher only
+  decides readiness, and the player closes the case.
 - The Staff Directory is the reference tool app. It reads the same people table
   as the GAL and ticket desk, and shows the share access derived from groups.
 - **Stopgap:** the Directory also carries a deliberately minimal account console
