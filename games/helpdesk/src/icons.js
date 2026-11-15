@@ -67,6 +67,13 @@ export const ICONS = {
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
     <circle cx="12" cy="12" r="3.1" fill="#23272f"/>`),
 
+  softwarecenter: svg(`
+    <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#0b5cab"/>
+    <rect x="4.6" y="5.6" width="14.8" height="10" rx="1.2" fill="#dcecff"/>
+    <path d="M12 7.4v5.4M9.4 10.4 12 13l2.6-2.6" stroke="#0b5cab" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="17.8" cy="18" r="3" fill="#107c10"/>
+    <path d="M16.5 18l1 1 1.8-1.9" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+
   bin: svg(`
     <path d="M5.5 6.5h13l-1 12.2a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8z" fill="#7b8794"/>
     <path d="M4.2 5.2h15.6l-.7 2.2H4.9z" fill="#a7b2bf"/>
