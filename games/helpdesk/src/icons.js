@@ -18,6 +18,16 @@ export const ICONS = {
       <path d="M7.2 10.4h9.6M7.2 13.4h9.6M7.2 16.4h6.4"/>
     </g>`),
 
+  printer: svg(`
+    <path d="M7 8V3.6h10V8" fill="#dbe6f3" stroke="#8ba0b6" stroke-width="1.1"/>
+    <rect x="2.6" y="7.4" width="18.8" height="9.6" rx="2.2" fill="#3f8ae0"/>
+    <rect x="5.2" y="9.6" width="13.6" height="2.1" rx="1" fill="#bfe0ff" opacity=".9"/>
+    <circle cx="18.1" cy="12.5" r=".9" fill="#7ee787"/>
+    <path d="M6.4 14.2h11.2v6.2H6.4z" fill="#f7f9fc"/>
+    <g stroke="#9fb2c6" stroke-width="1.1" stroke-linecap="round">
+      <path d="M9 16.6h6M9 18.6h4"/>
+    </g>`),
+
   calculator: svg(`
     <rect x="3" y="2.5" width="18" height="19" rx="3" fill="#1b5fa8"/>
     <rect x="5.4" y="5" width="13.2" height="4" rx="1.2" fill="#d5e8ff"/>
@@ -67,6 +77,33 @@ export const ICONS = {
     <circle cx="16.6" cy="10.2" r="2.5" fill="#6fb2ff"/>
     <path d="M13 19.2c0-2.6 1.9-4.2 4.3-4.2 2.2 0 4 1.2 4.2 4.2z" fill="#6fb2ff"/>`),
 
+  aduc: svg(`
+    <rect x="2" y="3" width="20" height="18" rx="2.4" fill="#1b4f72"/>
+    <path d="M2 5.4A2.4 2.4 0 0 1 4.4 3h15.2A2.4 2.4 0 0 1 22 5.4V7H2z" fill="#2f7ad6"/>
+    <rect x="4.4" y="9" width="5.2" height="9.4" rx="1" fill="#d5e8ff"/>
+    <g fill="#2f7ad6">
+      <rect x="5.6" y="10.6" width="2.8" height="1" rx=".5"/>
+      <rect x="5.6" y="12.6" width="2.8" height="1" rx=".5"/>
+      <rect x="5.6" y="14.6" width="2.8" height="1" rx=".5"/>
+    </g>
+    <circle cx="15.4" cy="11.4" r="1.9" fill="#ffd166"/>
+    <path d="M12.2 17.6c0-1.9 1.4-3.1 3.2-3.1s3.2 1.2 3.2 3.1z" fill="#ffd166"/>`),
+  services: svg(`
+    <g fill="#f2b544">
+      <circle cx="9" cy="9" r="4.4"/>
+      <g stroke="#f2b544" stroke-width="2.1" stroke-linecap="round">
+        <path d="M9 2.8v2M9 13.2v2M2.8 9h2M13.2 9h2M4.6 4.6l1.4 1.4M12 12l1.4 1.4M13.4 4.6L12 6M6 12l-1.4 1.4"/>
+      </g>
+    </g>
+    <circle cx="9" cy="9" r="1.8" fill="#23272f"/>
+    <g fill="#9fb0c0">
+      <circle cx="16.6" cy="16.6" r="3.3"/>
+      <g stroke="#9fb0c0" stroke-width="1.7" stroke-linecap="round">
+        <path d="M16.6 12.2v1.4M16.6 19.6v1.4M12.2 16.6h1.4M19.6 16.6h1.4M13.5 13.5l1 1M18.7 18.7l1 1M19.7 13.5l-1 1M14.5 18.7l-1 1"/>
+      </g>
+    </g>
+    <circle cx="16.6" cy="16.6" r="1.3" fill="#23272f"/>`),
+
   taskmgr: svg(`
     <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#23272f"/>
     <g fill="#4cc2ff">
@@ -76,9 +113,43 @@ export const ICONS = {
     </g>
     <path d="M5.6 7.2h12.8" stroke="#59606b" stroke-width="1.3" stroke-linecap="round"/>`),
 
+  devmgmt: svg(`
+    <rect x="2.5" y="3.5" width="19" height="13.5" rx="2.2" fill="#2b6cb0"/>
+    <rect x="4.4" y="5.4" width="15.2" height="9.6" rx="1" fill="#bfe0ff"/>
+    <g fill="#3b7dc4">
+      <rect x="6.2" y="7.2" width="4.2" height="2" rx=".7"/>
+      <rect x="11.4" y="7.2" width="3.2" height="2" rx=".7"/>
+      <rect x="6.2" y="10.4" width="2.6" height="2" rx=".7"/>
+    </g>
+    <path d="M8.6 20.4h6.8l-.8-2.2H9.4z" fill="#7ba7d6"/>
+    <path d="M16.4 11.8 19.2 16.6h-5.6z" fill="#f2c94c" stroke="#8a6500" stroke-width=".6"/>
+    <path d="M16.4 13.2v1.8" stroke="#3a2a00" stroke-width=".9" stroke-linecap="round"/>
+    <circle cx="16.4" cy="15.8" r=".4" fill="#3a2a00"/>`),
+  eventviewer: svg(`
+    <rect x="3" y="2.6" width="18" height="18.8" rx="2.4" fill="#f6f9ff"/>
+    <rect x="3" y="2.6" width="18" height="4.2" rx="2.4" fill="#2f6fd0"/>
+    <rect x="3" y="5" width="18" height="1.8" fill="#2f6fd0"/>
+    <g stroke="#8b9bb1" stroke-width="1.2" stroke-linecap="round">
+      <path d="M6.2 10.4h5.6M6.2 13.2h9.6M6.2 16h7.6"/>
+    </g>
+    <circle cx="16.6" cy="15.4" r="3.1" fill="#e5484d"/>
+    <path d="M16.6 13.7v2.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="16.6" cy="17.6" r=".85" fill="#fff"/>`),
+
   settings: svg(`
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
     <circle cx="12" cy="12" r="3.1" fill="#23272f"/>`),
+
+  softwarecenter: svg(`
+    <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#0b5cab"/>
+    <rect x="4.6" y="5.6" width="14.8" height="10" rx="1.2" fill="#dcecff"/>
+    <path d="M12 7.4v5.4M9.4 10.4 12 13l2.6-2.6" stroke="#0b5cab" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="17.8" cy="18" r="3" fill="#107c10"/>
+    <path d="M16.5 18l1 1 1.8-1.9" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+  wupdate: svg(`
+    <circle cx="12" cy="12" r="9" fill="#1b5fa8"/>
+    <path d="M18.2 12a6.2 6.2 0 1 1-2-4.6M18.2 4.4v4.7h-4.7" stroke="#d5e8ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.4 11.9l2.2 2.2 4.1-4.1" stroke="#7ee787" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
 
   bin: svg(`
     <path d="M5.5 6.5h13l-1 12.2a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8z" fill="#7b8794"/>
@@ -86,10 +157,19 @@ export const ICONS = {
     <path d="M9.6 4.2h4.8l.6 1h-6z" fill="#5f6b77"/>
     <g stroke="#cfd8e3" stroke-width="1.2" stroke-linecap="round"><path d="M9.6 10.4v6M12 10.4v6M14.4 10.4v6"/></g>`),
 
+  gpmc: svg(`<rect x="2.5" y="3" width="19" height="18" rx="2.6" fill="#e9eef5"/><rect x="2.5" y="3" width="19" height="4.2" rx="2.6" fill="#2f7ad6"/><rect x="2.5" y="5.4" width="19" height="1.8" fill="#2f7ad6"/><rect x="4.6" y="9.2" width="5.2" height="9.3" rx="1.1" fill="#c9d7e8"/><path d="M6.4 11.4h9M6.4 13.7h9M6.4 16h6" stroke="#5b708c" stroke-width="1.2" stroke-linecap="round"/><circle cx="16.7" cy="16.5" r="2.3" fill="#4cc2ff"/>`),
+
   image: svg(`
     <rect x="2.5" y="4.5" width="19" height="15" rx="2.4" fill="#2f7ad6"/>
     <circle cx="8.4" cy="9.6" r="1.6" fill="#d5e8ff"/>
     <path d="M4 17.2l4.6-4.3 3.4 3 3-2.6 5 4.2z" fill="#9cc8f7"/>`),
+
+  rdp: svg(`
+    <rect x="1.6" y="4" width="13.4" height="9.6" rx="1.6" fill="#2f7ad6"/>
+    <rect x="3.1" y="5.5" width="10.4" height="6.6" rx=".7" fill="#cfe6ff"/>
+    <rect x="9" y="9.4" width="13.4" height="9.6" rx="1.6" fill="#1e4f8f"/>
+    <rect x="10.5" y="10.9" width="10.4" height="6.6" rx=".7" fill="#8fc7ff"/>
+    <path d="M4.2 21.6h6.2M17 21.6h4.2" stroke="#7ba7d6" stroke-width="1.4" stroke-linecap="round"/>`),
 
   monitor: svg(`
     <rect x="2" y="3.6" width="20" height="13.6" rx="2.2" fill="#2b6cb0"/>
@@ -100,6 +180,11 @@ export const ICONS = {
     <path d="M5 3h9.2L19 7.8V21H5z" fill="#e8eef7"/>
     <path d="M14.2 3L19 7.8h-4.8z" fill="#b9cbe2"/>
     <g stroke="#8fa6c4" stroke-width="1.2" stroke-linecap="round"><path d="M7.6 11h8.4M7.6 14h8.4M7.6 17h5.6"/></g>`),
+
+  defender: svg(`
+    <path d="M12 1.8l8.3 3v6.5c0 5.3-3.4 9.2-8.3 12-4.9-2.8-8.3-6.7-8.3-12V4.8z" fill="#1b6ec2"/>
+    <path d="M12 4.2l6.1 2.2v4.8c0 4-2.5 7.1-6.1 9.4-3.6-2.3-6.1-5.4-6.1-9.4V6.4z" fill="#2f8fe0"/>
+    <path d="M8.1 11.8l2.7 2.7 5.1-5.4" stroke="#8be28b" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
 
   $chevron: svg(`<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`),
   $check: svg(`<path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`),
