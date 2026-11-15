@@ -306,6 +306,34 @@ export function createActions({ store, selectors, events, clock, session }) {
     return ok({ cleared, delay: clock.delayFor("restartService"), service: selectors.machines.service(machineId, serviceKey) });
   }
 
+  // Start, stop and pause from the Services console. `restartService` owns the
+  // restart path because it also clears stuck print jobs; this action covers
+  // the other transitions and writes the status back to the machine row.
+  function setServiceStatus(machineId, serviceKey, status, { ticketId = null, role = "helpdesk" } = {}) {
+    const target = machine(machineId);
+    if (!target) return fail("unknown-machine");
+    if (!["running", "stopped", "paused"].includes(status)) return fail("unknown-service-status");
+    const serviceRecord = target.services.find(
+      (s) => s.id === serviceKey || s.name === serviceKey || s.id === `svc_${serviceKey}`,
+    );
+    if (!serviceRecord) return fail("unknown-service");
+    if (serviceRecord.status === status) return fail("already-in-state", { status });
+
+    store.commit((draft) => {
+      draft.machines.find((m) => m.id === machineId).services.find((s) => s.id === serviceRecord.id).status = status;
+    });
+
+    events.emit("service:status-changed", {
+      category: "System",
+      code: 7036,
+      message: `${serviceRecord.displayName} on ${target.hostname} entered the ${status} state.`,
+      subjectId: target.ownerId,
+      ticketId,
+      data: { machineId, service: serviceRecord.name, status, role },
+    });
+    return ok({ service: selectors.machines.service(machineId, serviceKey) });
+  }
+
   function installSoftware(machineId, softwareId, { ticketId = null, role = "helpdesk" } = {}) {
     const target = machine(machineId);
     const software = state().directoryServices.softwareCatalogue.find((s) => s.id === softwareId);
@@ -719,6 +747,7 @@ export function createActions({ store, selectors, events, clock, session }) {
     setShareAccess,
     // machines
     restartService,
+    setServiceStatus,
     installSoftware,
     removeSoftware,
     setNetworkState,

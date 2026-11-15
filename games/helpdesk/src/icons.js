@@ -54,6 +54,22 @@ export const ICONS = {
     <circle cx="16.6" cy="10.2" r="2.5" fill="#6fb2ff"/>
     <path d="M13 19.2c0-2.6 1.9-4.2 4.3-4.2 2.2 0 4 1.2 4.2 4.2z" fill="#6fb2ff"/>`),
 
+  services: svg(`
+    <g fill="#f2b544">
+      <circle cx="9" cy="9" r="4.4"/>
+      <g stroke="#f2b544" stroke-width="2.1" stroke-linecap="round">
+        <path d="M9 2.8v2M9 13.2v2M2.8 9h2M13.2 9h2M4.6 4.6l1.4 1.4M12 12l1.4 1.4M13.4 4.6L12 6M6 12l-1.4 1.4"/>
+      </g>
+    </g>
+    <circle cx="9" cy="9" r="1.8" fill="#23272f"/>
+    <g fill="#9fb0c0">
+      <circle cx="16.6" cy="16.6" r="3.3"/>
+      <g stroke="#9fb0c0" stroke-width="1.7" stroke-linecap="round">
+        <path d="M16.6 12.2v1.4M16.6 19.6v1.4M12.2 16.6h1.4M19.6 16.6h1.4M13.5 13.5l1 1M18.7 18.7l1 1M19.7 13.5l-1 1M14.5 18.7l-1 1"/>
+      </g>
+    </g>
+    <circle cx="16.6" cy="16.6" r="1.3" fill="#23272f"/>`),
+
   taskmgr: svg(`
     <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#23272f"/>
     <g fill="#4cc2ff">
