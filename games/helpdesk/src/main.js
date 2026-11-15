@@ -6,7 +6,12 @@ import { registerBuiltinApps } from "./apps/index.js";
 import { initShell, openApp, closeAllApps, toast } from "./shell.js";
 import { showDialog, hideDialog } from "./ui/dialog.js";
 import { COMPANY } from "./content/company.js";
-import { getPrefs, savePrefs } from "./prefs.js";
+import { freshStart, getPrefs, savePrefs } from "./prefs.js";
+
+// `?fresh` throws the profile away before anything reads it. The shell shows
+// the out-of-box experience when there is no account, so this is the whole
+// first-run test switch.
+freshStart();
 
 const world = createWorld();
 // Tier, bonus and purchases live in prefs so a reload keeps the machine you

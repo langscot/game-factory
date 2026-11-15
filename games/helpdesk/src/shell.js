@@ -15,15 +15,22 @@ import {
   getWindow,
   relayout,
 } from "./wm.js";
-import { applyPrefs } from "./prefs.js";
+import { applyPrefs, getAccount, setAccountPassword, verifyPassword, verifyRecovery, MIN_PASSWORD_LENGTH } from "./prefs.js";
 import { createUi } from "./ui/index.js";
 import { createAppContext } from "./context.js";
 import { initAudio } from "./audio/index.js";
 import { toast as showToast } from "./ui/toast.js";
-import { alertDialog } from "./ui/dialog.js";
+import { alertDialog, showDialog, hideDialog } from "./ui/dialog.js";
+import { startOobe } from "./ui/oobe.js";
+import { requestAdminPassword } from "./ui/uac.js";
 import { tierSpec } from "./world/session.js";
 
 const TASKBAR_PINNED = ["explorer", "calculator"];
+
+// Apps that ask for the administrator password before they will open. These
+// are the machine's own consoles; nothing inside them changes, the gate is the
+// joke and the point.
+const ADMIN_APPS = new Set(["aduc", "terminal", "regedit", "gpmc", "services"]);
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -34,6 +41,8 @@ let selectedIcon = null;
 let altTab = null;
 let windowSounds = new Map();
 let launching = 0;
+const adminPrompts = new Set();
+let resetStage = "verify";
 
 // ---------------------------------------------------------------------------
 
@@ -63,6 +72,7 @@ export function initShell(platform) {
   els.toasts = $("#toasts");
   els.taskview = $("#taskview");
   els.lock = $("#lock");
+  els.oobe = $("#oobe");
 
   applyPrefs();
   initMenus(els.ctxLayer);
@@ -92,6 +102,7 @@ export function initShell(platform) {
   $("#userAvatar").innerHTML = icon("$user");
   $("#signinAvatar").innerHTML = icon("$user");
   $("#lockAvatar").innerHTML = icon("$user");
+  $("#resetIcon").innerHTML = icon("$lock");
   $("#showDesktopBtn").title = "Show desktop";
 
   renderDesktopIcons();
@@ -110,6 +121,7 @@ export function initShell(platform) {
   wireTaskView();
   wireLock();
   wireResize();
+  bootProfile();
 
   // The platform clock is the only tick in the game; this throttles it to a
   // once-a-second repaint of the tray clock.
@@ -137,9 +149,20 @@ export function initShell(platform) {
 export function openApp(appId, options) {
   const app = getApp(appId);
   if (!app) return null;
+
+  // Administrative consoles ask for the account password every time. The
+  // recursion carries `elevated` so a successful prompt does not ask again.
+  if (ADMIN_APPS.has(appId) && !options?.elevated) {
+    return promptForAdmin(app, options);
+  }
+
   closeStart();
   closeFlyouts();
   closeMenu();
+
+  if (options?.elevated) {
+    toast(app.title, "Running with administrative rights. Try to deserve it.", "$shield");
+  }
 
   const [width, height] = app.size;
   const windowId = app.multi
@@ -243,6 +266,26 @@ export function closeAllApps() {
   for (const win of windowList()) win.handle.close();
 }
 
+/**
+ * The UAC gate. Returns a promise only for administrative apps, because the
+ * caller has to wait for the password; ordinary launches stay synchronous.
+ */
+function promptForAdmin(app, options) {
+  if (adminPrompts.has(app.id)) return null;
+  adminPrompts.add(app.id);
+  return requestAdminPassword(app)
+    .then((allowed) => {
+      adminPrompts.delete(app.id);
+      if (!allowed) return null;
+      return openApp(app.id, { ...options, elevated: true });
+    })
+    .catch((error) => {
+      adminPrompts.delete(app.id);
+      console.error(error);
+      return null;
+    });
+}
+
 // ---------------------------------------------------------------------------
 // desktop icons
 // ---------------------------------------------------------------------------
@@ -277,8 +320,11 @@ function selectIcon(node) {
 }
 
 function iconMenu(app, x, y) {
-  openMenu(x, y, [
-    { label: "Open", onClick: () => openApp(app.id) },
+  const items = [{ label: "Open", onClick: () => openApp(app.id) }];
+  if (ADMIN_APPS.has(app.id)) {
+    items.push({ label: "Run as administrator", icon: "$shield", shortcut: "Admin", onClick: () => openApp(app.id) });
+  }
+  items.push(
     { separator: true },
     { label: "Cut", icon: "cut", disabled: true },
     { label: "Copy", icon: "copy", disabled: true },
@@ -293,7 +339,8 @@ function iconMenu(app, x, y) {
           `Type: Application\nTarget: "C:\\Program Files\\Halcyon\\Workstation\\Apps\\${app.id}.exe"\nStart in: C:\\Program Files\\Halcyon\\Workstation\\Apps\nSize: ${app.size[0]} × ${app.size[1]}`,
         ),
     },
-  ]);
+  );
+  openMenu(x, y, items);
 }
 
 function wireDesktop() {
@@ -620,12 +667,33 @@ function wireStart() {
     els.startSearch.focus();
     toast("Start", "These are all the apps this machine has. It is a work laptop.", "folder");
   });
-  $("#userBtn").addEventListener("click", () =>
-    alertDialog(
-      "m.hayes",
-      "IT Service Desk · Terminal 04\nHalcyon Dynamics\n\nAccount type: Standard user\nDomain: HALCYON",
-    ),
-  );
+  $("#userBtn").addEventListener("click", () => {
+    const account = getAccount();
+    if (!account) return;
+    const changed = account.passwordChangedAt
+      ? new Date(account.passwordChangedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+      : "the day you set it up";
+    showDialog({
+      html: `
+        <h2>${escapeHtml(account.displayName)}</h2>
+        <div class="sub">${escapeHtml(account.username)}@HALCYON · Administrator</div>
+        <p>This account can run anything as administrator, including the things you were told not to run.</p>
+        <p class="muted tiny">Password last changed: ${escapeHtml(changed)}<br>
+        Recovery question: ${escapeHtml(account.recovery?.question || "not set")}</p>
+        <div class="row">
+          <button class="btn" data-account-close>Close</button>
+          <button class="btn primary" data-account-reset>Reset password</button>
+        </div>`,
+      wire: (card) => {
+        card.querySelector("[data-account-close]").addEventListener("click", () => hideDialog());
+        card.querySelector("[data-account-reset]").addEventListener("click", () => {
+          hideDialog();
+          lockScreen();
+          showReset();
+        });
+      },
+    });
+  });
   $("#powerBtn").addEventListener("click", (event) => {
     event.stopPropagation();
     const rect = event.currentTarget.getBoundingClientRect();
@@ -849,18 +917,197 @@ function commitAltTab() {
 }
 
 // ---------------------------------------------------------------------------
-// lock screen
+// first run, lock screen and sign-in
 // ---------------------------------------------------------------------------
 
-function wireLock() {
-  $("#lockUser").addEventListener("click", () => {
-    $("#lockBottom").hidden = true;
-    $("#lockSignin").hidden = false;
-    $("#lockGo").focus();
+function bootProfile() {
+  const account = getAccount();
+  paintAccount(account);
+  if (!account) {
+    beginOobe();
+    return;
+  }
+  els.lock.hidden = false;
+  showLockBottom();
+  applyPrefs();
+}
+
+function beginOobe() {
+  els.lock.hidden = true;
+  els.oobe.hidden = false;
+  els.oobe.classList.remove("gone");
+  startOobe(els.oobe, {
+    onComplete: (account) => {
+      paintAccount(account);
+      els.oobe.classList.add("gone");
+      setTimeout(() => {
+        els.oobe.hidden = true;
+        els.oobe.classList.remove("gone");
+      }, 280);
+      enterDesktop();
+    },
   });
-  $("#lockGo").addEventListener("click", signIn);
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !els.lock.hidden) signIn();
+}
+
+function paintAccount(account = getAccount()) {
+  const name = account?.displayName || "Morgan Hayes";
+  const logon = account?.username || "m.hayes";
+  $("#lockName").textContent = name;
+  $("#lockLogon").textContent = `HALCYON\\${logon}`;
+  $("#signinName").textContent = name;
+  $("#signinLogon").textContent = `HALCYON\\${logon}`;
+  $("#userName").textContent = logon;
+  $("#lockUser").title = `${name} (${logon})`;
+  $("#resetQuestion").textContent = account?.recovery?.question || "No recovery question is set on this account.";
+}
+
+function showLockBottom() {
+  $("#lockBottom").hidden = false;
+  $("#lockSignin").hidden = true;
+  $("#lockReset").hidden = true;
+  $("#lockError").textContent = "";
+  $("#resetError").textContent = "";
+  $("#lockPassword").value = "";
+  $("#lockUser").focus({ preventScroll: true });
+}
+
+function showSignin({ focus = true } = {}) {
+  const account = getAccount();
+  if (!account) {
+    beginOobe();
+    return;
+  }
+  paintAccount(account);
+  $("#lockBottom").hidden = true;
+  $("#lockSignin").hidden = false;
+  $("#lockReset").hidden = true;
+  $("#lockError").textContent = "";
+  $("#lockPassword").value = "";
+  if (focus) $("#lockPassword").focus();
+}
+
+function showReset() {
+  const account = getAccount();
+  if (!account) return;
+  resetStage = "verify";
+  paintResetStage();
+  $("#lockBottom").hidden = true;
+  $("#lockSignin").hidden = true;
+  $("#lockReset").hidden = false;
+  $("#resetError").textContent = "";
+  $("#resetAnswer").value = "";
+  $("#resetNew").value = "";
+  $("#resetConfirm").value = "";
+  $("#resetAnswer").focus();
+}
+
+function paintResetStage() {
+  for (const node of $("#resetForm").querySelectorAll("[data-reset-step]")) {
+    node.hidden = node.dataset.resetStep !== resetStage;
+  }
+  $("#resetIcon").innerHTML = icon(resetStage === "done" ? "$check" : "$lock");
+  $("#resetIntro").hidden = resetStage === "done";
+  $("#resetCancel").hidden = resetStage === "done";
+  $("#resetGo").textContent = resetStage === "verify" ? "Verify" : resetStage === "new" ? "Change password" : "Back to sign in";
+}
+
+function submitReset(event) {
+  event.preventDefault();
+  const account = getAccount();
+  if (!account) return;
+  const error = $("#resetError");
+  error.textContent = "";
+
+  if (resetStage === "verify") {
+    const answer = $("#resetAnswer").value;
+    if (!answer.trim()) {
+      error.textContent = "Enter the answer you gave during setup.";
+      $("#resetAnswer").focus();
+      return;
+    }
+    if (!verifyRecovery(answer, account)) {
+      error.textContent = "That is not the answer on file. The question was chosen during setup.";
+      $("#resetAnswer").select();
+      return;
+    }
+    resetStage = "new";
+    paintResetStage();
+    $("#resetNew").focus();
+    return;
+  }
+
+  if (resetStage === "new") {
+    const password = $("#resetNew").value;
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      error.textContent = `The password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+      $("#resetNew").focus();
+      return;
+    }
+    if (password !== $("#resetConfirm").value) {
+      error.textContent = "The passwords do not match. Try again, slower.";
+      $("#resetConfirm").focus();
+      return;
+    }
+    setAccountPassword(password);
+    $("#lockPassword").value = "";
+    resetStage = "done";
+    paintResetStage();
+    $("#resetGo").focus();
+    return;
+  }
+
+  showSignin();
+}
+
+function attemptSignIn() {
+  const account = getAccount();
+  if (!account) {
+    beginOobe();
+    return;
+  }
+  const input = $("#lockPassword");
+  const error = $("#lockError");
+  if (!input.value) {
+    error.textContent = "Enter your password.";
+    input.focus();
+    return;
+  }
+  if (!verifyPassword(input.value, account)) {
+    error.textContent = "The password is incorrect. Try again.";
+    input.value = "";
+    input.focus();
+    return;
+  }
+  error.textContent = "";
+  input.value = "";
+  enterDesktop();
+}
+
+function wireLock() {
+  $("#lockUser").addEventListener("click", () => showSignin());
+  $("#lockForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    attemptSignIn();
+  });
+  $("#forgotBtn").addEventListener("click", showReset);
+  $("#lockBack").addEventListener("click", showLockBottom);
+  $("#lockPassword").addEventListener("input", () => ($("#lockError").textContent = ""));
+  $("#resetForm").addEventListener("submit", submitReset);
+  $("#resetCancel").addEventListener("click", () => showSignin());
+  $("#resetAnswer").addEventListener("input", () => ($("#resetError").textContent = ""));
+  $("#resetNew").addEventListener("input", () => ($("#resetError").textContent = ""));
+  $("#resetConfirm").addEventListener("input", () => ($("#resetError").textContent = ""));
+
+  // Escape backs out of the sign-in and reset panels, never off the lock.
+  els.lock.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (!$("#lockReset").hidden) {
+      event.preventDefault();
+      showSignin();
+    } else if (!$("#lockSignin").hidden) {
+      event.preventDefault();
+      showLockBottom();
+    }
   });
 }
 
@@ -868,23 +1115,40 @@ export function lockScreen() {
   closeStart();
   closeFlyouts();
   closeMenu();
+  const account = getAccount();
+  if (!account) {
+    beginOobe();
+    return;
+  }
   api?.audio?.play("lock");
   api?.audio?.stopAmbience();
+  paintAccount(account);
   els.lock.hidden = false;
   els.lock.classList.remove("gone");
-  $("#lockBottom").hidden = false;
-  $("#lockSignin").hidden = true;
+  showLockBottom();
   applyPrefs();
+  renderClock();
 }
 
-export function signIn() {
+function enterDesktop() {
   if (els.lock.classList.contains("gone")) return;
+  closeStart();
+  closeFlyouts();
+  closeMenu();
   els.lock.classList.add("gone");
-  setTimeout(() => (els.lock.hidden = true), 320);
+  setTimeout(() => {
+    els.lock.hidden = true;
+    els.lock.classList.remove("gone");
+  }, 320);
   api?.audio?.unlock();
   api?.audio?.play("boot");
   api?.onSignIn?.();
   api?.audio?.startAmbience("office");
+}
+
+/** Kept as the shell's sign-in verb; the password is checked in attemptSignIn. */
+export function signIn() {
+  attemptSignIn();
 }
 
 // ---------------------------------------------------------------------------

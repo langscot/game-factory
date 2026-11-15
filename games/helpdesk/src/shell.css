@@ -586,3 +586,179 @@ input[type="range"]::-webkit-slider-thumb {
 .app-empty { display: grid; place-items: center; height: 100%; text-align: center; padding: 24px; }
 .app-empty h3 { margin: 8px 0; font-size: 16px; font-weight: 600; }
 .app-empty p { margin: 0 0 14px; color: var(--text-3); max-width: 36ch; font-size: 12.5px; line-height: 1.5; }
+
+/* ---------- shared accessibility bits ---------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- lock screen: sign-in and password reset ---------- */
+.lock-logon { font-size: 11.5px; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.62); }
+.lock-status { margin-top: 18px; font-size: 11.5px; color: rgba(255, 255, 255, 0.55); letter-spacing: 0.04em; }
+.lock-signin .lock-name { margin: 10px 0 2px; }
+.lock-signin .lock-logon { margin-bottom: 16px; }
+.lock-form { display: grid; gap: 8px; width: min(320px, 82vw); margin: 0; }
+.lock-form label { font-size: 11.5px; color: rgba(255, 255, 255, 0.72); }
+.lock-form input {
+  width: 100%; height: 36px; padding: 0 10px; border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.45); background: rgba(255, 255, 255, 0.94); color: #1b1b1b;
+}
+.lock-form input::placeholder { color: #6b7280; }
+.lock-form input:focus { outline: 2px solid #fff; outline-offset: 2px; }
+.lock-form .lock-btn { width: 100%; min-width: 0; }
+.lock-error { min-height: 16px; margin: 0; font-size: 12px; color: #ffb4b4; text-align: center; }
+.lock-links { display: flex; gap: 18px; margin-top: 10px; }
+.lock-link { font-size: 12px; color: rgba(255, 255, 255, 0.78); text-decoration: underline; }
+.lock-link:hover { color: #fff; }
+.lock-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 2px; }
+.lock-reset {
+  position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 8px;
+  padding: 28px; overflow: auto;
+  background: rgba(10, 14, 25, 0.5);
+  -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+}
+.lock-reset-icon svg { width: 40px; height: 40px; }
+.lock-reset h2 { margin: 0; font-size: 27px; font-weight: 300; }
+.lock-reset-copy { max-width: 44ch; margin: 0 0 10px; text-align: center; font-size: 12.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.78); }
+.lock-reset-form { width: min(360px, 86vw); }
+.lock-reset-form > div { display: grid; gap: 6px; }
+.reset-question { font-size: 12.5px; line-height: 1.5; color: #e7eefb; padding: 8px 10px; border-left: 2px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.06); }
+.lock-reset-done { margin: 4px 0; font-size: 13px; line-height: 1.6; color: #c9f7d8; text-align: center; }
+.lock-reset .lock-links { margin-top: 2px; }
+
+/* ---------- first-run setup (OOBE) ---------- */
+.oobe {
+  position: absolute; inset: 0; z-index: 1600; display: grid; place-items: center;
+  padding: 24px; overflow: auto;
+  background:
+    radial-gradient(58% 56% at 16% 10%, rgba(78, 126, 255, 0.52), transparent 64%),
+    radial-gradient(52% 52% at 84% 22%, rgba(164, 82, 255, 0.34), transparent 64%),
+    radial-gradient(72% 68% at 62% 104%, rgba(0, 154, 224, 0.4), transparent 66%),
+    linear-gradient(158deg, #0b1626 0%, #050a13 58%, #02040a 100%);
+}
+.oobe::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 3px 3px; opacity: 0.5;
+}
+.oobe-card {
+  position: relative; width: min(590px, 100%); max-height: calc(100vh - 48px); overflow: auto;
+  background: #f6f8fb; color: #1c2430; border-radius: 10px;
+  box-shadow: 0 50px 110px -30px #000, 0 0 0 1px rgba(255, 255, 255, 0.12);
+  user-select: text;
+}
+.oobe-card.done { animation: oobe-done 0.22s ease; }
+.oobe.gone { animation: lock-out 0.28s ease forwards; }
+@keyframes oobe-done { from { transform: scale(1); } to { transform: scale(1.004); } }
+.oobe-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 18px 26px 0;
+}
+.oobe-brand { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.oobe-mark { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 15px; height: 15px; }
+.oobe-mark i { background: #0067c0; border-radius: 1px; }
+.oobe-mark i:nth-child(2) { background: #2f9bff; }
+.oobe-mark i:nth-child(3) { background: #55b8ff; }
+.oobe-mark i:nth-child(4) { background: #8fd4ff; }
+.oobe-count { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #6c7a8c; }
+.oobe-body { padding: 12px 30px 4px; min-height: 294px; }
+.oobe-step h1 { margin: 8px 0 6px; font-size: 26px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; outline: none; }
+.oobe-sub { margin: 0 0 18px; font-size: 12.5px; line-height: 1.55; color: #5c6b7e; max-width: 52ch; }
+.oobe-field { margin-bottom: 12px; }
+.oobe-field label { display: block; margin-bottom: 4px; font-size: 12px; font-weight: 600; color: #33445c; }
+.oobe-field input, .oobe-field select {
+  width: 100%; height: 38px; padding: 0 10px; border: 1px solid #c4cedb; border-radius: 4px;
+  background: #fff; color: #1b1b1b; font-size: 13px;
+}
+.oobe-field input:focus, .oobe-field select:focus { outline: 2px solid #0067c0; outline-offset: 1px; }
+.oobe-field input[aria-invalid="true"] { border-color: #b42318; box-shadow: 0 0 0 1px rgba(180, 35, 24, 0.3); }
+.oobe-field small { display: block; margin-top: 4px; font-size: 11px; line-height: 1.45; color: #748295; }
+.oobe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.oobe-choices { display: grid; gap: 8px; }
+.oobe-choice {
+  display: flex; gap: 10px; align-items: flex-start; padding: 11px 13px;
+  border: 1px solid #cad4e0; border-radius: 6px; background: #fff; cursor: pointer;
+}
+.oobe-choice:hover { border-color: #93a5ba; }
+.oobe-choice input { margin: 3px 0 0; accent-color: #0067c0; }
+.oobe-choice span { display: grid; gap: 3px; }
+.oobe-choice b { font-size: 13px; font-weight: 600; }
+.oobe-choice small { color: #6a788a; font-size: 11.5px; line-height: 1.45; }
+.oobe-choice:has(input:checked) { border-color: #0067c0; background: #f0f7ff; box-shadow: inset 0 0 0 1px rgba(0, 103, 192, 0.35); }
+.oobe-choice:has(input:focus-visible) { outline: 2px solid #0067c0; outline-offset: 2px; }
+.oobe-toggles { border-top: 1px solid #dde4ed; }
+.oobe-toggle {
+  display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; cursor: pointer;
+  border-bottom: 1px solid #dde4ed;
+}
+.oobe-toggle input {
+  appearance: none; flex: none; width: 38px; height: 21px; margin: 2px 0 0; border-radius: 11px;
+  background: #bcc7d4; position: relative; cursor: pointer; transition: background 0.14s ease;
+}
+.oobe-toggle input::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px;
+  border-radius: 50%; background: #fff; transition: left 0.14s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.oobe-toggle input:checked { background: #0067c0; }
+.oobe-toggle input:checked::after { left: 20px; }
+.oobe-toggle input:focus-visible { outline: 2px solid #0067c0; outline-offset: 2px; }
+.oobe-toggle span { display: grid; gap: 2px; }
+.oobe-toggle b { font-size: 12.5px; font-weight: 600; }
+.oobe-toggle small { color: #6a788a; font-size: 11.5px; line-height: 1.45; }
+.oobe-note { margin: 12px 0 0; font-size: 11px; line-height: 1.5; color: #748295; }
+.oobe-error { min-height: 17px; margin: 6px 0 0; font-size: 12px; line-height: 1.45; color: #a61b1b; text-align: left; }
+.oobe-foot {
+  display: flex; justify-content: flex-end; gap: 10px; padding: 15px 30px 4px;
+  border-top: 1px solid #dde4ed; margin-top: 14px;
+}
+.oobe-back, .oobe-next {
+  min-width: 102px; height: 34px; padding: 0 16px; border-radius: 4px; font-size: 13px; font-weight: 600;
+}
+.oobe-back { border: 1px solid #c4cedb; color: #33445c; background: #fff; }
+.oobe-back:hover { background: #eef2f7; }
+.oobe-back:disabled { opacity: 0.45; cursor: default; }
+.oobe-next { background: #0067c0; color: #fff; }
+.oobe-next:hover { background: #005ba8; }
+.oobe-back:focus-visible, .oobe-next:focus-visible { outline: 2px solid #0067c0; outline-offset: 2px; }
+.oobe-legal { margin: 0; padding: 8px 30px 18px; font-size: 10.5px; line-height: 1.5; color: #7b8797; }
+.oobe-finish { padding-top: 22px; }
+.oobe-progress { height: 4px; margin: 26px 0 14px; background: #d9e1eb; border-radius: 2px; overflow: hidden; }
+.oobe-progress i { display: block; width: 0; height: 100%; background: #0067c0; transition: width 0.38s ease; }
+.oobe-status { min-height: 20px; margin: 0; font-size: 12.5px; color: #41536a; }
+.oobe-finish .oobe-note { margin-top: 30px; }
+@media (max-width: 560px) {
+  .oobe { padding: 12px; }
+  .oobe-card { max-height: calc(100vh - 24px); }
+  .oobe-grid { grid-template-columns: 1fr; }
+  .oobe-body { padding: 8px 20px 4px; min-height: 0; }
+  .oobe-head, .oobe-foot { padding-left: 20px; padding-right: 20px; }
+  .oobe-legal { padding-left: 20px; padding-right: 20px; }
+  .oobe-step h1 { font-size: 23px; }
+  .lock-reset h2 { font-size: 23px; }
+}
+
+/* ---------- User Account Control ---------- */
+.uac-band {
+  display: flex; align-items: center; gap: 8px; margin: -22px -22px 16px; padding: 10px 18px;
+  background: #0b5cab; color: #fff; font-size: 12.5px; font-weight: 600; letter-spacing: 0.01em;
+}
+.uac-shield svg { width: 18px; height: 18px; }
+.uac-body h2 { font-size: 18px; line-height: 1.35; }
+.uac-app {
+  display: flex; gap: 11px; align-items: center; margin: 12px 0;
+  padding: 10px 12px; border: 1px solid var(--stroke); border-radius: 6px; background: rgba(255, 255, 255, 0.05);
+}
+.uac-app-icon svg { width: 34px; height: 34px; }
+.uac-app b { display: block; font-size: 13px; font-weight: 600; }
+.uac-app small { display: block; color: var(--text-3); font-size: 11px; line-height: 1.5; }
+.uac-form label { display: block; margin: 10px 0 6px; font-size: 12px; color: var(--text-2); }
+.uac-form label small { display: block; margin-top: 2px; font-size: 11px; color: var(--text-3); }
+.uac-form input {
+  width: 100%; height: 34px; padding: 0 10px; border-radius: 4px;
+  border: 1px solid var(--stroke-2); background: rgba(0, 0, 0, 0.32); color: #fff;
+}
+.uac-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.uac-error { min-height: 17px; margin: 6px 0 0; font-size: 12px; line-height: 1.45; color: #ffb4b4; }
+.uac-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
