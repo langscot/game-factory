@@ -40,6 +40,19 @@ export const ICONS = {
     </g>
     <rect x="15.2" y="15.1" width="3.4" height="3.1" rx="1" fill="#ffb64d"/>`),
 
+  regedit: svg(`
+    <rect x="2.4" y="3.4" width="19.2" height="17.2" rx="2.2" fill="#2f7ad6"/>
+    <rect x="3.9" y="4.9" width="16.2" height="14.2" rx="1.3" fill="#eef5ff"/>
+    <rect x="3.9" y="4.9" width="16.2" height="2.6" rx="1.3" fill="#d7e9ff"/>
+    <rect x="5.2" y="9" width="5.4" height="8.6" rx="0.8" fill="#cfe2f8"/>
+    <g fill="#7c93ad">
+      <rect x="12" y="9.2" width="6.6" height="1.2" rx=".6"/>
+      <rect x="12" y="12" width="6.6" height="1.2" rx=".6"/>
+      <rect x="12" y="14.8" width="4.4" height="1.2" rx=".6"/>
+    </g>
+    <circle cx="8" cy="11.5" r="1.5" fill="#7a5a0d"/>
+    <path d="M8 13v3.2M8 15.4h1.6" stroke="#7a5a0d" stroke-width="1.1" stroke-linecap="round"/>`),
+
   terminal: svg(`
     <rect x="2.5" y="4" width="19" height="16" rx="2.5" fill="#20242b"/>
     <path d="M6 9.5l3 2.5-3 2.5" stroke="#7ee787" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
