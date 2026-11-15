@@ -191,7 +191,8 @@ export function startOobe(container, { onComplete } = {}) {
     step = next;
     steps.forEach((node) => (node.hidden = Number(node.dataset.step) !== step));
     count.textContent = step >= 4 ? "Finalising" : `Step ${step + 1} of ${STEP_COUNT}`;
-    backButton.hidden = step >= 3;
+    backButton.hidden = step >= 4;
+    backButton.disabled = step === 0;
     nextButton.hidden = step >= 4;
     foot.hidden = step >= 4;
     legal.hidden = step >= 4;
