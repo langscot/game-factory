@@ -14,6 +14,24 @@ const TEMPLATES = [
   ["info", "Need more information"],
 ];
 
+const CLOSE_CATEGORIES = [
+  ["resolved", "Resolved"],
+  ["returned", "Returned to user"],
+  ["escalated", "Escalated"],
+  ["duplicate", "Duplicate"],
+  ["unable", "Unable to fix"],
+];
+
+const categoryLabel = (category) => CLOSE_CATEGORIES.find(([value]) => value === category)?.[1] || category;
+
+const CLOSE_ERRORS = {
+  "note-too-short": "Write at least 10 characters in the closing note.",
+  "objectives-incomplete": "Resolved is only available once every objective is met.",
+  "escalation-required": "Escalate the case before closing it as Escalated.",
+  "already-closed": "This case is already closed.",
+  "unknown-category": "Pick a closing category.",
+};
+
 const STATUS_ICON = { pending: "○", met: "✓", wrong: "!" };
 const STATUS_LABEL = { pending: "pending", met: "met", wrong: "wrong action" };
 
@@ -141,12 +159,24 @@ export default {
       for (const ticket of api.world.tickets.forDay(day)) {
         const view = api.world.tickets.view(ticket.id);
         const resolvedHere = ticket.status === "resolved" && ticket.resolvedDay === day;
-        const marker = resolvedHere ? (ticket.outcome === "correct" ? "✓" : "✗") : ticket.wrongActions.length ? "!" : "•";
+        const marker = resolvedHere
+          ? ticket.outcome === "correct"
+            ? "✓"
+            : ticket.outcome === "deferred"
+              ? "–"
+              : "✗"
+          : ticket.readyToClose
+            ? "→"
+            : ticket.wrongActions.length
+              ? "!"
+              : "•";
         const cls = resolvedHere
           ? ticket.outcome === "correct"
             ? "ok"
-            : "bad"
-          : ticket.wrongActions.length
+            : ticket.outcome === "deferred"
+              ? ""
+              : "bad"
+          : ticket.readyToClose || ticket.wrongActions.length
             ? "warn"
             : "";
         const button = api.ui.el(`<button class="qitem${selected === ticket.id ? " sel" : ""}" data-ticket="${ticket.id}">
@@ -210,6 +240,15 @@ export default {
         );
       }
 
+      if (ticket.readyToClose && ticket.status !== "resolved") {
+        view.append(
+          api.ui.el(`<div class="ready-banner">
+            <b>Ready to close</b>
+            <span>Every objective is met. Read the evidence, pick a category and write the closing note — the case stays open until you do.</span>
+          </div>`),
+        );
+      }
+
       view.append(
         api.ui.el(`<div class="objectives">
           <div class="obj-head"><b>Objectives</b><span class="muted tiny">${met} of ${ticket.objectives.length} met</span></div>
@@ -226,18 +265,11 @@ export default {
       );
 
       if (ticket.status === "resolved") {
-        view.append(
-          api.ui.el(`<div class="resolved ${ticket.outcome === "correct" ? "good" : "bad"}">
-            <b>${ticket.outcome === "correct" ? "Resolved from evidence" : "Resolved, but scored wrong"}</b>
-            <p>${api.ui.esc(ticket.why)}</p>
-            <span class="muted tiny">Policy ${ticket.ruleId} — ${api.ui.esc(rule?.title || "")} · ${
-              ticket.outcome === "correct" ? "trust unchanged" : `trust ${ticket.trustDelta}`
-            } · closed ${api.ui.esc(ticket.resolvedAt || "")}</span>
-          </div>`),
-        );
+        view.append(closedSummary(api, ticket, rule));
       } else {
         view.append(replyBox(api, ticket));
         view.append(escalationBox(api, ticket));
+        view.append(closeBox(api, ticket));
       }
 
       view.append(
@@ -293,7 +325,76 @@ export default {
         });
       }
 
+      const closeButton = view.querySelector("[data-close-ticket]");
+      if (closeButton) {
+        closeButton.addEventListener("click", () => {
+          const category = view.querySelector("[data-close-category]").value;
+          const note = view.querySelector("[data-close-note]").value;
+          const result = api.actions.closeTicket(ticket.id, { category, note });
+          if (!result.ok) {
+            const slot = view.querySelector("[data-close-error]");
+            if (slot) slot.textContent = CLOSE_ERRORS[result.reason] || `Cannot close: ${result.reason}.`;
+            api.ui.toast("Ticket Desk", CLOSE_ERRORS[result.reason] || `Cannot close: ${result.reason}.`, "ticket");
+            return;
+          }
+          api.ui.toast("Ticket Desk", `Ticket #${ticket.id} closed as ${categoryLabel(category)}.`, "ticket");
+        });
+      }
+
       return view;
+    }
+
+    function closedSummary(api, ticket, rule) {
+      const closure = ticket.closure;
+      const tone = ticket.outcome === "correct" ? "good" : ticket.outcome === "deferred" ? "neutral" : "bad";
+      const title =
+        ticket.outcome === "correct"
+          ? `Closed — ${categoryLabel(closure?.category)}`
+          : ticket.outcome === "deferred"
+            ? `Closed — ${categoryLabel(closure?.category)} (no score)`
+            : `Closed as ${categoryLabel(closure?.category)} — scored wrong`;
+      const note = closure?.note || "No closing note recorded.";
+      const trust = ticket.trustDelta === 0 ? "trust unchanged" : `trust ${ticket.trustDelta}`;
+      return api.ui.el(`<div class="resolved ${tone}">
+        <b>${title}</b>
+        <p>${api.ui.esc(note)}</p>
+        <span class="muted tiny">${api.ui.esc(actorName(api, closure?.byId))} · ${api.ui.esc(closure?.at || ticket.resolvedAt || "")} · Policy ${
+          ticket.ruleId
+        } — ${api.ui.esc(rule?.title || "")} · ${trust}</span>
+        ${ticket.outcome === "correct" ? "" : `<p class="muted tiny">${api.ui.esc(ticket.why)}</p>`}
+        ${
+          ticket.wrongClosures?.length
+            ? `<div class="wrong-closure">${ticket.wrongClosures
+                .map((entry) => `<div><span class="badge">${api.ui.esc(entry.reason)}</span>${api.ui.esc(entry.detail)}</div>`)
+                .join("")}</div>`
+            : ""
+        }
+      </div>`);
+    }
+
+    function closeBox(api, ticket) {
+      const preferred = ticket.readyToClose ? "resolved" : "returned";
+      return api.ui.el(`<div class="close">
+        <div class="reply-head"><b>Close case</b><span class="muted tiny">${
+          ticket.readyToClose ? "evidence complete — resolved available" : "evidence incomplete — resolved locked"
+        }</span></div>
+        <div class="close-row">
+          <select data-close-category aria-label="Closing category">
+            ${CLOSE_CATEGORIES.map(
+              ([value, label]) =>
+                `<option value="${value}"${value === preferred ? " selected" : ""}${
+                  value === "resolved" && !ticket.readyToClose ? " disabled" : ""
+                }>${label}</option>`,
+            ).join("")}
+          </select>
+          <span class="muted tiny">Closing note is required (10 characters minimum).</span>
+        </div>
+        <textarea data-close-note rows="2" placeholder="What did you do, and why is this case closed?"></textarea>
+        <div class="close-foot">
+          <span class="close-error" data-close-error role="status"></span>
+          <button class="btn primary" data-close-ticket>Close ticket</button>
+        </div>
+      </div>`);
     }
 
     function replyBox(api, ticket) {
@@ -427,8 +528,34 @@ const css = `
 .app-ticketdesk .resolved { margin-top: 14px; padding: 11px 12px; border-radius: 4px; font-size: 12.5px; line-height: 1.55; }
 .app-ticketdesk .resolved.good { background: rgba(74, 222, 128, 0.09); border: 1px solid rgba(74, 222, 128, 0.34); }
 .app-ticketdesk .resolved.bad { background: rgba(248, 113, 113, 0.09); border: 1px solid rgba(248, 113, 113, 0.34); }
+.app-ticketdesk .resolved.neutral { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--stroke-2); }
 .app-ticketdesk .resolved > b { display: block; margin-bottom: 3px; }
 .app-ticketdesk .resolved p { margin: 0 0 6px; }
+.app-ticketdesk .ready-banner {
+  margin-top: 12px; padding: 10px 12px; border-radius: 4px; font-size: 12px; line-height: 1.5;
+  background: rgba(74, 222, 128, 0.07); border: 1px solid rgba(74, 222, 128, 0.34);
+}
+.app-ticketdesk .ready-banner b { display: block; color: #b9f6c9; margin-bottom: 2px; }
+.app-ticketdesk .wrong-closure { margin-top: 7px; font-size: 11.5px; }
+.app-ticketdesk .wrong-closure .badge {
+  display: inline-block; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em;
+  border: 1px solid rgba(248, 113, 113, 0.5); border-radius: 8px; padding: 0 5px; margin-right: 6px;
+}
+.app-ticketdesk .reply, .app-ticketdesk .escalate, .app-ticketdesk .close { margin-top: 14px; border-top: 1px solid var(--stroke); padding-top: 12px; }
+.app-ticketdesk .close-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+.app-ticketdesk .close select {
+  background: rgba(0, 0, 0, 0.22); border: 1px solid var(--stroke-2); border-radius: 4px;
+  padding: 5px 8px; font-size: 12px; color: var(--text); outline: 0;
+}
+.app-ticketdesk .close select:focus { border-color: var(--accent); }
+.app-ticketdesk .close textarea {
+  width: 100%; resize: vertical; min-height: 46px; background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--stroke-2); border-radius: 4px; padding: 7px 9px; font-size: 12.5px;
+  color: var(--text); outline: 0;
+}
+.app-ticketdesk .close textarea:focus { border-color: var(--accent); }
+.app-ticketdesk .close-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+.app-ticketdesk .close-error { color: #ff9a9a; font-size: 11.5px; }
 .app-ticketdesk .reply, .app-ticketdesk .escalate { margin-top: 14px; border-top: 1px solid var(--stroke); padding-top: 12px; }
 .app-ticketdesk .reply-row { display: flex; gap: 6px; margin-bottom: 6px; }
 .app-ticketdesk .reply select, .app-ticketdesk .escalate input {
