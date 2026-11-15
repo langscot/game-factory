@@ -63,6 +63,19 @@ export const ICONS = {
     </g>
     <path d="M5.6 7.2h12.8" stroke="#59606b" stroke-width="1.3" stroke-linecap="round"/>`),
 
+  devmgmt: svg(`
+    <rect x="2.5" y="3.5" width="19" height="13.5" rx="2.2" fill="#2b6cb0"/>
+    <rect x="4.4" y="5.4" width="15.2" height="9.6" rx="1" fill="#bfe0ff"/>
+    <g fill="#3b7dc4">
+      <rect x="6.2" y="7.2" width="4.2" height="2" rx=".7"/>
+      <rect x="11.4" y="7.2" width="3.2" height="2" rx=".7"/>
+      <rect x="6.2" y="10.4" width="2.6" height="2" rx=".7"/>
+    </g>
+    <path d="M8.6 20.4h6.8l-.8-2.2H9.4z" fill="#7ba7d6"/>
+    <path d="M16.4 11.8 19.2 16.6h-5.6z" fill="#f2c94c" stroke="#8a6500" stroke-width=".6"/>
+    <path d="M16.4 13.2v1.8" stroke="#3a2a00" stroke-width=".9" stroke-linecap="round"/>
+    <circle cx="16.4" cy="15.8" r=".4" fill="#3a2a00"/>`),
+
   settings: svg(`
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
     <circle cx="12" cy="12" r="3.1" fill="#23272f"/>`),
