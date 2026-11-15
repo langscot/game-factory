@@ -35,13 +35,13 @@ world.clock.onTick((dt) => {
 function startDay(day) {
   closeAllApps();
   openApp("mail");
-  openApp("ticketdesk");
+  openApp("browser", { url: "http://servicedesk.halcyon.co/" });
   const overview = world.world.session.overview();
   const briefing = world.world.mail.inbox(day).find((message) => message.briefing);
   toast(
-    "Ticket Desk",
+    "Service Desk",
     `Day ${day}: ${overview.total} tickets waiting, 1 new message from ${briefing?.from || "Marge Delacroix"}.`,
-    "ticket",
+    "browser",
   );
 }
 

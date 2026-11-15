@@ -15,7 +15,6 @@ import { registerApps } from "./registry.js";
 
 
 import browser from "./browser/index.js";
-import ticketdesk from "./ticketdesk/index.js";
 import mail from "./mail/index.js";
 import handbook from "./handbook/index.js";
 import aduc from "./aduc/index.js";
@@ -42,7 +41,7 @@ let registered = false;
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([browser, ticketdesk, mail, handbook, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
+  registerApps([browser, mail, handbook, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";

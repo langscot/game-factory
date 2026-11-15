@@ -159,7 +159,31 @@ function readState(ctx) {
   }
   if (Number.isInteger(saved.nextId)) nextId = Math.max(nextId, saved.nextId);
 
+  // A launcher can send the browser straight to a page. Day start passes a URL
+  // on the app options; an app that is already running (Mail's issue links)
+  // leaves a launchUrl in the browser's UI state and fires ui:changed instead.
+  // Only intranet sites are accepted; anything else leaves the restored tab alone.
+  const launch =
+    typeof ctx.options?.url === "string" && ctx.options.url.trim()
+      ? ctx.options.url
+      : saved.launchUrl;
+  applyLaunch(tabs, active, launch);
+
   return { tabs, active, bookmarks, nextId };
+}
+
+/** Point the active tab at a launch request, if it resolves to an intranet site. */
+function applyLaunch(tabs, active, value) {
+  const raw = typeof value === "string" ? value.trim() : "";
+  if (!raw) return false;
+  const target = addressFor(raw);
+  if (pageFor(target).kind !== "site") return false;
+  const tab = tabs.find((entry) => entry.id === active) || tabs[0];
+  tab.url = target;
+  tab.title = titleFor(target);
+  tab.history = [target];
+  tab.index = 0;
+  return true;
 }
 
 export default {
@@ -238,6 +262,9 @@ export default {
         active,
         bookmarks: [...bookmarks],
         nextId,
+        // Consumed requests are cleared on the next save, whether the browser
+        // was opened by the request or was already running.
+        launchUrl: null,
       };
     }
 
@@ -562,14 +589,35 @@ export default {
       }
     });
 
+    // A launch request can arrive while the window is already open. The
+    // request lives in the browser's UI state so it survives a closed window,
+    // and this listener consumes it when Mail (or anything else) sets it.
+    // It is registered after the first paint so the site's own setUi during
+    // mount cannot re-consume the request that opened the window.
+    paint();
+
+    const offLaunch = ctx.events.on("ui:changed", () => {
+      if (!alive) return;
+      const request = ctx.world.session.ui(APP_ID).launchUrl;
+      if (typeof request !== "string" || !request.trim()) return;
+      const target = addressFor(request);
+      if (pageFor(target).kind !== "site") {
+        ctx.actions.setUi(APP_ID, { launchUrl: null });
+        return;
+      }
+      // Clear first: navigating renders the site, and its mount writes UI
+      // state of its own.
+      ctx.actions.setUi(APP_ID, { launchUrl: null });
+      navigate(target);
+    });
+
     instances.set(container, {
       stop: () => {
         alive = false;
+        offLaunch?.();
         unmountSite();
       },
     });
-
-    paint();
   },
 
   unmount(container) {

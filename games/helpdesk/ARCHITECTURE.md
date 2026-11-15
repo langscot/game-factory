@@ -13,7 +13,8 @@ games/helpdesk/
     shell.js              desktop chrome: icons, taskbar, Start, lock screen
     wm.js                 window manager (unchanged)
     context.js            createAppContext() — ctx for shell and harness
-    content/              authored content: company, handbook, software list
+    content/              authored content: company, handbook, software list,
+                          and the intranet sites under sites/
     world/
       index.js            createWorld() — store + selectors + actions + events + clock
       seed.js             the seeded world
@@ -28,8 +29,7 @@ games/helpdesk/
     apps/
       registry.js         app contract + registry
       index.js            the only file that imports app modules
-      ticketdesk/         migrated reference app
-      directory/          migrated tool app (shared people table)
+      browser/            tabs, address bar and the intranet site lookup
       calculator/         proof app, built on the contract
       mail/ handbook/ explorer/ notepad/ settings/ taskmanager/ recyclebin/
 ```
@@ -336,16 +336,12 @@ No other file changes. That is the whole contract.
 - `src/data.js` and `src/apps.js` are gone. People, mail, tickets, files and
   ticket answers now live in the seeded world; handbook text and software
   catalogue live in `src/content/` and are copied into the store on seed.
-- The Ticket Desk is a case file: request, person/machine, live objective
-  checklist, evidence trail, reply box, escalation path and a manual close panel
+- The Service Desk is an intranet site (`content/sites/servicedesk.js`) opened in
+  the Browser. It is the case file: request, person/machine, live objective
+  checklist, evidence trail, replies, escalation path and a manual close panel
   (category, required note). It has no Approve/Deny actions; the watcher only
-  decides readiness, and the player closes the case.
-- The Staff Directory is the reference tool app. It reads the same people table
-  as the GAL and ticket desk, and shows the share access derived from groups.
-- **Stopgap:** the Directory also carries a deliberately minimal account console
-  (reset password, unlock, disable, add to group) so account and group tickets
-  can actually be completed before ADUC (#13) lands. ADUC replaces that block;
-  it is not meant to grow.
+  decides readiness, and the player closes the case. The native Ticket Desk app
+  is gone; day start opens the Browser on the queue.
 - **Stopgap:** Settings > System lists approved software with Install buttons so
   software tickets are playable before Software Center (#25). It is not a full
   Software Center.

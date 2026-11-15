@@ -62,6 +62,20 @@ export default {
     const uiState = () => ctx.world.session.ui("mail");
     const setUi = (patch) => ctx.actions.setUi("mail", patch);
 
+    // The ticket system is an intranet site now. Mail hands the Browser a URL
+    // through its launch slot; the Browser consumes it whether it is already
+    // open or opening for the first time.
+    const SERVICE_DESK_HOST = "servicedesk.halcyon.co";
+    function openServiceDesk(ticketId = null) {
+      const url =
+        ticketId === null
+          ? `http://${SERVICE_DESK_HOST}/`
+          : `http://${SERVICE_DESK_HOST}/browse/SD-${ticketId}`;
+      ctx.actions.setUi("ticketdesk", { selectedId: ticketId });
+      ctx.actions.setUi("browser", { launchUrl: url });
+      ctx.open("browser");
+    }
+
     let drafts = [seedDraft()];
     let currentList = [];
     let painting = false;
@@ -225,7 +239,7 @@ export default {
         <div class="fp-section">Today's desk</div>
         <button class="folder-item" data-open-desk>
           <span class="ico">${GLYPH.support}</span>
-          <span class="fi-name">Open Ticket Desk</span>
+          <span class="fi-name">Open Service Desk</span>
         </button>`;
     }
 
@@ -340,7 +354,7 @@ export default {
           ${attachmentChips(message)}
           ${
             message.ticketId
-              ? `<div class="rp-ticket"><button class="btn" data-act="ticket">Open ticket #${message.ticketId} in Ticket Desk</button></div>`
+              ? `<div class="rp-ticket"><button class="btn" data-act="ticket">Open issue SD-${message.ticketId} in the Service Desk</button></div>`
               : ""
           }
         </div>
@@ -693,8 +707,7 @@ export default {
         return;
       }
       if (event.target.closest("[data-open-desk]")) {
-        ctx.actions.setUi("ticketdesk", { selectedId: null });
-        ctx.open("ticketdesk");
+        openServiceDesk();
       }
     });
 
@@ -730,8 +743,7 @@ export default {
       } else if (action === "ticket") {
         const message = selectedMessage();
         if (!message?.ticketId) return;
-        ctx.actions.setUi("ticketdesk", { selectedId: message.ticketId });
-        ctx.open("ticketdesk");
+        openServiceDesk(message.ticketId);
       }
     });
 
