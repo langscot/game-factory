@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IT Helpdesk</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563c9'/%3E%3Ctext x='16' y='23' font-size='18' font-family='sans-serif' text-anchor='middle' fill='%23fff'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./src/shell.css">
+</head>
+<body>
+  <div class="screen" id="screen">
+    <div class="desktop" id="desktop">
+      <div class="wallpaper" id="wallpaper"></div>
+      <div class="icons" id="icons"></div>
+      <div class="windows" id="windows"></div>
+      <div class="marquee" id="marquee" hidden></div>
+      <div class="watermark">Activate Windows<br><small>Go to Settings to activate Windows.</small></div>
+    </div>
+
+    <div class="taskview" id="taskview" hidden>
+      <div class="taskview-head">Task view</div>
+      <div class="taskview-grid" id="taskviewGrid"></div>
+      <div class="taskview-new">
+        <button class="tv-add" id="taskviewDesktop">+ New desktop</button>
+      </div>
+    </div>
+
+    <div class="taskbar" id="taskbar">
+      <div class="tb-group">
+        <button class="tb-btn" id="startBtn" title="Start" aria-label="Start"></button>
+        <button class="tb-btn" id="searchBtn" title="Search" aria-label="Search"></button>
+        <button class="tb-btn" id="taskviewBtn" title="Task view" aria-label="Task view"></button>
+      </div>
+      <div class="tb-apps" id="tbApps"></div>
+      <div class="tb-tray">
+        <button class="tray-btn trust" id="trustBtn" title="IT performance">
+          <span class="tray-ico" id="trustIcon"></span><span id="trustValue">100</span>
+        </button>
+        <button class="tray-btn" id="quickBtn" title="Quick settings">
+          <span class="tray-ico" id="wifiIcon"></span>
+          <span class="tray-ico" id="volIcon"></span>
+          <span class="tray-ico" id="batIcon"></span>
+        </button>
+        <button class="tray-clock" id="clockBtn" title="Date and time">
+          <span id="clockTime">09:00</span><span id="clockDate">15/11/2026</span>
+        </button>
+        <button class="tray-showdesktop" id="showDesktopBtn" title="Show desktop" aria-label="Show desktop"></button>
+      </div>
+    </div>
+
+    <section class="start" id="start" hidden>
+      <div class="start-search">
+        <span class="start-search-ico" id="startSearchIcon"></span>
+        <input id="startSearch" placeholder="Search for apps, settings and documents" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="start-grid" id="startGrid"></div>
+      <div class="start-recent-head"><span>Recommended</span><button class="link-btn" id="allAppsBtn">All apps <span></span></button></div>
+      <div class="start-recent" id="startRecent"></div>
+      <div class="start-foot">
+        <button class="start-user" id="userBtn"><span class="avatar" id="userAvatar"></span><span>m.hayes</span></button>
+        <button class="start-power" id="powerBtn" title="Power"></button>
+      </div>
+    </section>
+
+    <section class="flyout quick" id="quick" hidden>
+      <div class="quick-grid">
+        <button class="qs-tile on" data-toggle="wifi"><span class="qs-ico" id="qsWifi"></span><b>Wi-Fi</b><small>Halcyon-Corp</small></button>
+        <button class="qs-tile on" data-toggle="bt"><span class="qs-ico">ᛒ</span><b>Bluetooth</b><small>On</small></button>
+        <button class="qs-tile" data-toggle="air"><span class="qs-ico">✈</span><b>Airplane mode</b><small>Off</small></button>
+        <button class="qs-tile" data-toggle="night"><span class="qs-ico">☾</span><b>Night light</b><small>Off</small></button>
+      </div>
+      <div class="qs-slider">
+        <span class="qs-ico" id="qsVol"></span>
+        <input type="range" min="0" max="100" value="62" id="volumeRange" aria-label="Volume">
+      </div>
+      <div class="qs-slider">
+        <span class="qs-ico">☀</span>
+        <input type="range" min="20" max="100" value="80" id="brightRange" aria-label="Brightness">
+      </div>
+      <div class="qs-foot">
+        <span class="muted tiny">Battery 84% · 4h 12m left</span>
+        <button class="qs-gear" id="quickSettingsBtn" title="All settings"></button>
+      </div>
+    </section>
+
+    <section class="flyout calendar" id="calendar" hidden></section>
+
+    <section class="flyout trustpanel" id="trustPanel" hidden>
+      <h4>IT performance</h4>
+      <div class="trust-big"><b id="trustBig">100</b><span>trust</span></div>
+      <div class="trust-rows" id="trustRows"></div>
+    </section>
+
+    <div class="ctx-layer" id="ctxLayer" hidden></div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <div class="alttab" id="altTab" hidden><div class="alttab-row" id="altTabRow"></div></div>
+
+    <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+
+    <div class="lock" id="lock">
+      <div class="lock-wall" id="lockWall"></div>
+      <div class="lock-top">
+        <div class="lock-time" id="lockTime">09:00</div>
+        <div class="lock-date" id="lockDate">Sunday, 15 November</div>
+      </div>
+      <div class="lock-bottom" id="lockBottom">
+        <button class="lock-user" id="lockUser">
+          <span class="avatar big" id="lockAvatar"></span>
+          <span class="lock-name">m.hayes</span>
+          <span class="lock-hint">Click to sign in</span>
+        </button>
+      </div>
+      <div class="lock-signin" id="lockSignin" hidden>
+        <span class="avatar big" id="signinAvatar"></span>
+        <div class="lock-name">m.hayes</div>
+        <button class="lock-btn" id="lockGo">Sign in</button>
+        <small>No password. It's been a long week.</small>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
