@@ -1,0 +1,70 @@
+// The approved software catalogue. Installing one of these is a world action,
+// so Start, Task Manager and file associations all read the same list.
+
+export const SOFTWARE = [
+  {
+    id: "sw_office",
+    name: "Microsoft Office",
+    approved: true,
+    version: "2409",
+    process: "WINWORD.EXE",
+    associations: [".docx", ".xlsx", ".pptx"],
+    sizeMb: 3200,
+  },
+  {
+    id: "sw_slack",
+    name: "Slack",
+    approved: true,
+    version: "4.41",
+    process: "slack.exe",
+    associations: [],
+    sizeMb: 420,
+  },
+  {
+    id: "sw_chrome",
+    name: "Google Chrome",
+    approved: true,
+    version: "131.0",
+    process: "chrome.exe",
+    associations: [".html", ".htm"],
+    sizeMb: 310,
+  },
+  {
+    id: "sw_vscode",
+    name: "Visual Studio Code",
+    approved: true,
+    version: "1.95",
+    process: "Code.exe",
+    associations: [".js", ".ts", ".json"],
+    sizeMb: 380,
+  },
+  {
+    id: "sw_notepadpp",
+    name: "Notepad++",
+    approved: true,
+    version: "8.7",
+    process: "notepad++.exe",
+    associations: [".txt", ".log"],
+    sizeMb: 12,
+  },
+  {
+    id: "sw_7zip",
+    name: "7-Zip",
+    approved: true,
+    version: "24.09",
+    process: "7zFM.exe",
+    associations: [".zip", ".7z"],
+    sizeMb: 8,
+  },
+  {
+    id: "sw_teamviewer",
+    name: "TeamViewer",
+    approved: false,
+    version: "15.61",
+    process: "TeamViewer.exe",
+    associations: [".tv"],
+    sizeMb: 96,
+  },
+];
+
+export const softwareById = (id) => SOFTWARE.find((s) => s.id === id);

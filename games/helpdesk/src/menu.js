@@ -25,6 +25,17 @@ export function menuOpen() {
   return stack.length > 0;
 }
 
+/** The shell owns a menu layer; the dev harness does not, so make one. */
+function ensureLayer() {
+  if (layer) return layer;
+  layer = document.createElement("div");
+  layer.className = "ctx-layer";
+  layer.id = "ctxLayer";
+  document.body.append(layer);
+  initMenus(layer);
+  return layer;
+}
+
 /**
  * @param {number} x
  * @param {number} y
@@ -32,8 +43,8 @@ export function menuOpen() {
  */
 export function openMenu(x, y, items) {
   closeMenu();
-  if (!layer) return;
-  layer.hidden = false;
+  const host = ensureLayer();
+  host.hidden = false;
   addPanel(items, x, y, 0);
 }
 
