@@ -67,6 +67,11 @@ export const ICONS = {
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
     <circle cx="12" cy="12" r="3.1" fill="#23272f"/>`),
 
+  wupdate: svg(`
+    <circle cx="12" cy="12" r="9" fill="#1b5fa8"/>
+    <path d="M18.2 12a6.2 6.2 0 1 1-2-4.6M18.2 4.4v4.7h-4.7" stroke="#d5e8ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.4 11.9l2.2 2.2 4.1-4.1" stroke="#7ee787" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+
   bin: svg(`
     <path d="M5.5 6.5h13l-1 12.2a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8z" fill="#7b8794"/>
     <path d="M4.2 5.2h15.6l-.7 2.2H4.9z" fill="#a7b2bf"/>
