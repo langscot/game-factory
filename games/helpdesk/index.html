@@ -57,7 +57,7 @@
       <div class="start-recent-head"><span>Recommended</span><button class="link-btn" id="allAppsBtn">All apps <span></span></button></div>
       <div class="start-recent" id="startRecent"></div>
       <div class="start-foot">
-        <button class="start-user" id="userBtn"><span class="avatar" id="userAvatar"></span><span>m.hayes</span></button>
+        <button class="start-user" id="userBtn"><span class="avatar" id="userAvatar"></span><span id="userName">m.hayes</span></button>
         <button class="start-power" id="powerBtn" title="Power"></button>
       </div>
     </section>
@@ -99,7 +99,7 @@
 
     <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
 
-    <div class="lock" id="lock">
+    <div class="lock" id="lock" hidden>
       <div class="lock-wall" id="lockWall"></div>
       <div class="lock-top">
         <div class="lock-time" id="lockTime">09:00</div>
@@ -108,17 +108,57 @@
       <div class="lock-bottom" id="lockBottom">
         <button class="lock-user" id="lockUser">
           <span class="avatar big" id="lockAvatar"></span>
-          <span class="lock-name">m.hayes</span>
+          <span class="lock-name" id="lockName">Morgan Hayes</span>
+          <span class="lock-logon" id="lockLogon">HALCYON\m.hayes</span>
           <span class="lock-hint">Click to sign in</span>
         </button>
+        <div class="lock-status">Signed out</div>
       </div>
       <div class="lock-signin" id="lockSignin" hidden>
         <span class="avatar big" id="signinAvatar"></span>
-        <div class="lock-name">m.hayes</div>
-        <button class="lock-btn" id="lockGo">Sign in</button>
+        <div class="lock-name" id="signinName">Morgan Hayes</div>
+        <div class="lock-logon" id="signinLogon">HALCYON\m.hayes</div>
+        <form class="lock-form" id="lockForm" novalidate>
+          <label class="visually-hidden" for="lockPassword">Password</label>
+          <input id="lockPassword" type="password" autocomplete="current-password" placeholder="Password" spellcheck="false">
+          <p class="lock-error" id="lockError" role="alert"></p>
+          <button class="lock-btn" id="lockGo" type="submit">Sign in</button>
+        </form>
+        <div class="lock-links">
+          <button class="lock-link" id="forgotBtn" type="button">I forgot my password</button>
+          <button class="lock-link" id="lockBack" type="button">Back</button>
+        </div>
         <small>HALCYON</small>
       </div>
+      <div class="lock-reset" id="lockReset" hidden>
+        <span class="lock-reset-icon" id="resetIcon"></span>
+        <h2>Reset your password</h2>
+        <p class="lock-reset-copy" id="resetIntro">Answer the recovery question, then choose something you will forget by Thursday.</p>
+        <form class="lock-form lock-reset-form" id="resetForm" novalidate>
+          <div data-reset-step="verify">
+            <div class="reset-question" id="resetQuestion">Recovery question</div>
+            <label class="visually-hidden" for="resetAnswer">Recovery answer</label>
+            <input id="resetAnswer" autocomplete="off" placeholder="Answer" spellcheck="false">
+          </div>
+          <div data-reset-step="new" hidden>
+            <label for="resetNew">New password</label>
+            <input id="resetNew" type="password" autocomplete="new-password" placeholder="New password">
+            <label for="resetConfirm">Confirm new password</label>
+            <input id="resetConfirm" type="password" autocomplete="new-password" placeholder="Confirm new password">
+          </div>
+          <div data-reset-step="done" hidden>
+            <p class="lock-reset-done" id="resetDone">Password changed. Use your new password to sign in.</p>
+          </div>
+          <p class="lock-error" id="resetError" role="alert"></p>
+          <button class="lock-btn" id="resetGo" type="submit">Verify</button>
+        </form>
+        <div class="lock-links">
+          <button class="lock-link" id="resetCancel" type="button">Cancel</button>
+        </div>
+      </div>
     </div>
+
+    <div class="oobe" id="oobe" hidden></div>
   </div>
 
   <script type="module" src="./src/main.js"></script>
