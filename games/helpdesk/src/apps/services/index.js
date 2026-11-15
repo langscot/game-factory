@@ -153,7 +153,7 @@ export default {
             onClick: () =>
               ctx.ui.alert(
                 "Services",
-                "Services (services.msc) lists the background services on this computer.\n\nThis console is a simulation. Nothing here touches a real service, the registry or the filesystem.",
+                "Services (services.msc) lists the background services on this computer.\n\nVersion 10.0 (Build 22621)",
               ),
           },
         ]);
@@ -286,7 +286,7 @@ export default {
       return `
         <div class="app-services svc-props" data-svc-props>
           <h2>${ctx.ui.esc(service.displayName)} Properties (Local Computer)</h2>
-          <div class="svc-sub">Review the service details. This console is read-only.</div>
+          <div class="svc-sub">Review the service details. Changes need an administrator.</div>
           <div class="svc-tabs" role="tablist">
             <button class="svc-tab${tab === "general" ? " sel" : ""}" data-props-tab="general" role="tab" aria-selected="${
               tab === "general"

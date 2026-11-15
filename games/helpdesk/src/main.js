@@ -80,7 +80,7 @@ function showDaySummary(summary) {
         <div class="stat"><b>${summary.missed}</b><span>left open</span></div>
       </div>
       <div class="quote">${quotes[summary.day] || "“See you tomorrow.”"}</div>
-      <p class="muted tiny">Day ${nextDay} adds a new memo and more tickets. Anything left open rolls over.</p>
+      <p class="muted tiny">Anything left open rolls over to tomorrow.</p>
       <div class="row"><button class="btn primary" id="modal-next">Start day ${nextDay}</button></div>`,
     wire: (card) =>
       card.querySelector("#modal-next").addEventListener("click", () => {
@@ -136,8 +136,8 @@ function showFinal(summary) {
         <div class="stat"><b>${trust}</b><span>trust</span></div>
       </div>
       <div class="quote">${quote}</div>
-      <p class="muted tiny">Thanks for playing. The wiki password is the same as last quarter's.</p>
-      <div class="row"><button class="btn primary" id="modal-restart">Play again</button></div>`,
+      <p class="muted tiny">Another week survived. The wiki password is the same as last quarter's.</p>
+      <div class="row"><button class="btn primary" id="modal-restart">Start over</button></div>`,
     wire: (card) =>
       card.querySelector("#modal-restart").addEventListener("click", () => {
         hideAnd();
