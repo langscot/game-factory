@@ -58,6 +58,12 @@ export const ICONS = {
     <path d="M6 9.5l3 2.5-3 2.5" stroke="#7ee787" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M11.5 15h6" stroke="#7ee787" stroke-width="1.6" stroke-linecap="round"/>`),
 
+  browser: svg(`
+    <circle cx="12" cy="12" r="9.4" fill="#2f7ad6"/>
+    <ellipse cx="12" cy="12" rx="4.2" ry="9.4" fill="none" stroke="#cfe6ff" stroke-width="1.2"/>
+    <path d="M2.8 12h18.4M4.4 7.2h15.2M4.4 16.8h15.2" stroke="#cfe6ff" stroke-width="1.2"/>
+    <path d="M5.8 5.4a10 10 0 0 1 4.4-2.1" stroke="#8fc7ff" stroke-width="1.4" fill="none" stroke-linecap="round"/>`),
+
   mail: svg(`
     <rect x="2" y="4.8" width="20" height="14.4" rx="2.4" fill="#2f7ad6"/>
     <path d="M2.6 6.6 12 13l9.4-6.4" stroke="#dcebff" stroke-width="1.5" fill="none" stroke-linejoin="round"/>`),
