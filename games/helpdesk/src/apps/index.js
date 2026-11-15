@@ -10,6 +10,7 @@ import { registerApps } from "./registry.js";
 
 
 
+
 import ticketdesk from "./ticketdesk/index.js";
 import mail from "./mail/index.js";
 import handbook from "./handbook/index.js";
@@ -22,6 +23,7 @@ import settings from "./settings/index.js";
 import taskmanager from "./taskmanager/index.js";
 import services from "./services/index.js";
 import recyclebin from "./recyclebin/index.js";
+import terminal from "./terminal/index.js";
 import rdp from "./rdp/index.js";
 import wupdate from "./wupdate/index.js";
 import devmgmt from "./devmgmt/index.js";
@@ -35,7 +37,7 @@ let registered = false;
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
+  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";
