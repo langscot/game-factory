@@ -305,7 +305,7 @@ export default {
             )
             .join("")}
         </div>
-        <div class="def-note">Windows Security is managed by Halcyon Dynamics. Settings that change here only affect this simulated device.</div>`;
+        <div class="def-note">Windows Security is managed by Halcyon Dynamics.</div>`;
     }
 
     function currentThreats(st) {
@@ -522,8 +522,8 @@ export default {
           <div class="def-card-head"><h2>Firewall &amp; network protection settings</h2></div>
           <p class="def-copy">Control which apps can communicate through the firewall and fine-tune the rules.</p>
           <div class="def-actions">
-            ${infoButton("Allow an app through firewall", "Allowed apps", "Allowed apps are managed by your organisation.\n\nIn this mock console the list is read-only.")}
-            ${infoButton("Advanced settings", "Advanced firewall settings", "Advanced settings are managed by your organisation.\n\nThe full Windows Defender Firewall console is not part of this app.")}
+            ${infoButton("Allow an app through firewall", "Allowed apps", "Allowed apps are managed by your organisation.")}
+            ${infoButton("Advanced settings", "Advanced firewall settings", "Advanced settings are managed by your organisation.")}
           </div>
         </section>`;
     }
@@ -578,7 +578,7 @@ export default {
           <p class="def-copy">Core isolation protects the most important parts of Windows from malicious code.</p>
           ${setting("Memory integrity", "Prevents malicious code from interfering with high-security processes.", toggle("device", "memoryIntegrity", st.device.memoryIntegrity, "Memory integrity"))}
           <div class="def-actions">
-            ${infoButton("Core isolation details", "Core isolation", "Memory integrity uses hardware virtualisation to isolate important Windows processes.\n\nChanging this setting requires a restart in the real app.")}
+            ${infoButton("Core isolation details", "Core isolation", "Memory integrity uses hardware virtualisation to isolate important Windows processes.\n\nChanging this setting requires a restart.")}
           </div>
         </section>
         <section class="def-card">
@@ -778,12 +778,12 @@ export default {
         if (button.dataset.railInfo === "settings") {
           ctx.ui.alert(
             "Settings",
-            "Windows Security settings are managed by your organisation.\n\nThis is a mock console: nothing here changes the real device.",
+            "Windows Security settings are managed by your organisation.",
           );
         } else {
           ctx.ui.alert(
             "Help",
-            "Windows Security protects this device from viruses, malware and other threats.\n\nUse the pages on the left to check protection status.",
+            "Windows Security protects this device from viruses, malware and other threats.",
           );
         }
       });

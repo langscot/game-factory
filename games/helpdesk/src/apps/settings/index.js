@@ -83,7 +83,7 @@ export default {
             }
           </div>
           <div class="set-card">
-            <h4>Install approved software <span class="stopgap-note">stopgap — Software Center (#25) replaces this</span></h4>
+            <h4>Install approved software</h4>
             ${
               available.length
                 ? available
@@ -144,10 +144,10 @@ export default {
             <div class="set-row">Machine name <b>${ctx.ui.esc(machine?.hostname || "DESKTOP")}</b></div>
             <div class="set-row">Assigned to <b>${ctx.ui.esc(session.technician?.logonName || "m.hayes")} (IT)</b></div>
             <div class="set-row">Shift <b>Day ${session.day} of ${session.maxDay}</b></div>
-            <div class="set-row">World seed <b>${session.seed}</b></div>
+            <div class="set-row">Support ID <b>HD-${session.seed}</b></div>
             <div class="set-row">Support queue <b>tickets.halcyon.co</b></div>
           </div>
-          <p class="muted tiny">This PC is managed by Halcyon Dynamics IT. Changing anything in here is a ticket in itself.</p>`;
+          <p class="muted tiny">This PC is managed by Halcyon Dynamics IT.</p>`;
       }
     }
 

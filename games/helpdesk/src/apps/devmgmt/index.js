@@ -344,7 +344,7 @@ export default {
           onClick: () =>
             ctx.ui.alert(
               "Device Manager Help",
-              "Select a class in the tree to list its devices.\n\nDouble-click a device, or right-click it, for Properties and driver actions.\n\nScan for hardware changes reinstalls any device that was uninstalled.",
+              "Device Manager displays the hardware installed on this computer and lets you update, disable or uninstall a device and its driver.",
             ),
         },
         {
@@ -352,7 +352,7 @@ export default {
           onClick: () =>
             ctx.ui.alert(
               "About Device Manager",
-              "Device Manager\nVersion 10.0.22621.1\n\nA mock MMC snap-in for Halcyon Dynamics IT. No hardware was harmed.",
+              "Device Manager\nVersion 10.0.22621.1\n\n© Halcyon Dynamics IT.",
             ),
         },
       ];

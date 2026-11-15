@@ -382,7 +382,7 @@ export default {
             onClick: () =>
               ctx.ui.alert(
                 "Active Directory Users and Computers",
-                "dsa.msc · Halcyon Dynamics\n\nA console for managing users, groups and organizational units in the HALCYON domain.\n\nThis is a simulated console. Nothing here touches a real directory.",
+                "dsa.msc · Halcyon Dynamics\n\nA console for managing users, groups and organizational units in the HALCYON domain.\n\nVersion 10.0 (Build 22621)",
               ),
           },
         ];
@@ -643,8 +643,7 @@ export default {
                   </label>`,
                 )
                 .join("")}
-            </div>
-            <p class="note">OU placement is local to this console for now. Moving a user updates this tree immediately; the shared people table keeps the same identity, groups and tickets.</p>`;
+            </div>`;
         },
       });
     }
@@ -856,8 +855,7 @@ export default {
             <label>Profile path:</label><input readonly value="\\\\HALCYON\\Profiles\\${ctx.ui.esc(person.logonName)}">
             <label>Logon script:</label><input readonly value="">
             <label>Home folder:</label><input readonly value="Connect to H: as \\\\HALCYON\\Home\\${ctx.ui.esc(person.logonName)}">
-          </div>
-          <p class="note">Profile and home-folder settings are managed by policy and are read-only in this console.</p>`;
+          </div>`;
       }
       if (tab === "Telephones") {
         return `
@@ -893,8 +891,7 @@ export default {
           <label>Office:</label><input readonly value="Halcyon HQ · Floor 3">
           <label>Telephone number:</label><input readonly value="${ctx.ui.esc(person.phone)}">
           <label>E-mail:</label><input readonly value="${ctx.ui.esc(person.email)}">
-        </div>
-        <p class="note">Directory attributes are read-only here. Use Account or Member Of to change the things this console is allowed to change.</p>`;
+        </div>`;
     }
 
     function accountTab(person) {
@@ -936,8 +933,7 @@ export default {
           <div class="status-line"><span>Password</span><b>${passwordStatus}</b></div>
           <div class="status-line"><span>Last logon</span><b>${ctx.ui.esc(person.account.lastLogon || "Never")}</b></div>
           <div class="status-line"><span>Logon name</span><b>HALCYON\\${ctx.ui.esc(person.logonName)}</b></div>
-        </fieldset>
-        <p class="note">This console never shows or stores the actual password. A reset only marks the account as “must change at next logon”.</p>`;
+        </fieldset>`;
     }
 
     function wireAccount(body, person) {
@@ -965,7 +961,7 @@ export default {
           </div>
         </div>
         <div class="status-line"><span>Primary group</span><b>Domain Users</b></div>
-        <p class="note">Group changes update the shared directory immediately and are recorded in the audit log. Domain Users is the primary group and cannot be removed.</p>`;
+        <p class="note">Domain Users is the primary group and cannot be removed.</p>`;
     }
 
     function wireMemberOf(body, person) {

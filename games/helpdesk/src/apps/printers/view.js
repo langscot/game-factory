@@ -120,7 +120,7 @@ export function renderApp(container, ctx) {
             ${state.devices.map((item) => deviceMarkup(ctx, state, item)).join("")}
           </div>
         </section>
-        <p class="cp-note">Printers and devices are managed by Halcyon Dynamics IT. Right-click a printer for more options.</p>
+        <p class="cp-note">Printers and devices are managed by Halcyon Dynamics IT.</p>
       </div>
 
       <div class="cp-statusbar">
@@ -325,7 +325,7 @@ function queueMarkup(ctx, state, printer, spooler) {
 function wireQueue(container, ctx, printer) {
   container.querySelector("[data-qclose]")?.addEventListener("click", () => closeQueue(ctx));
   container.querySelectorAll("[data-qmenu-about]").forEach((button) =>
-    button.addEventListener("click", () => ctx.ui.alert("Print queue", "This menu is not needed to work a job. Use the toolbar, or the Printer menu.")),
+    button.addEventListener("click", () => ctx.ui.alert("Print queue", "Documents are printed in the order they were submitted.")),
   );
   container.querySelector("[data-qmenu]")?.addEventListener("click", (event) => {
     const rect = event.currentTarget.getBoundingClientRect();

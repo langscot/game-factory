@@ -171,7 +171,7 @@ export default {
           onClick: () =>
             ctx.ui.alert(
               "Calculator",
-              "Standard mode. It adds, subtracts and remembers one number.\n\nType while the window is focused, or click the keys. Escape clears.",
+              "Version 11.2210.0.0\n\n© Microsoft Corporation. All rights reserved.",
             ),
         },
         { separator: true },

@@ -118,7 +118,7 @@ export default {
           <div>
             <div style="width:46px;height:46px;margin:0 auto 10px">${api.ui.icon("ticket")}</div>
             <h3>Day ${day} — ${count} open ticket${count === 1 ? "" : "s"}</h3>
-            <p>Read the briefing in Mail, keep the Policy Handbook open, and check the Staff Directory before you act. Cases close when the work is done, not when you click a verdict.</p>
+            <p>The queue for today's shift is waiting.</p>
             <button class="btn primary" data-act="start">Start shift</button>
           </div>
         </div>`);
@@ -291,7 +291,7 @@ export default {
                     </li>`,
                   )
                   .join("")}</ol>`
-              : `<p class="muted tiny">No evidence yet. Perform the work in the tool that owns it; the watcher records what changed.</p>`
+              : `<p class="muted tiny">No evidence yet.</p>`
           }
         </div>`),
       );
