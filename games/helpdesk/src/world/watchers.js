@@ -8,7 +8,6 @@
 //   * when every objective is met the ticket resolves from evidence — there is
 //     no "approve" button anywhere in the game.
 
-import { TRUST_HIT } from "./session.js";
 import { objectiveLabel } from "./objective-label.js";
 
 const ACTION_TYPES = new Set([
@@ -468,51 +467,22 @@ export function createTicketWatcher({ store, events, session, clock }) {
         }
 
         const allMet = ticket.objectives.every((objective) => objective.status === "met");
-        if (allMet && running && ticket.status === "open") finalize(ticket);
+        if (allMet && running && ticket.status === "open" && !ticket.readyToClose) {
+          ticket.readyToClose = true;
+          store.notify();
+          events.emit("ticket:ready", {
+            category: "Application",
+            code: 2006,
+            message: `Ticket #${ticket.id} is ready to close: every objective is met. Waiting for the technician's closing note.`,
+            subjectId: ticket.personId,
+            ticketId: ticket.id,
+            data: { evidence: ticket.evidence.length, wrongActions: ticket.wrongActions.length },
+          });
+        }
       }
     } finally {
       evaluating = false;
     }
-  }
-
-  function finalize(ticket) {
-    const current = state();
-    const correct = ticket.wrongActions.length === 0;
-    const trustDelta = correct ? 0 : -TRUST_HIT;
-    const day = current.session.day;
-
-    store.commit((draft) => {
-      const record = draft.tickets.find((item) => item.id === ticket.id);
-      record.status = "resolved";
-      record.outcome = correct ? "correct" : "incorrect";
-      record.resolvedDay = day;
-      record.resolvedAt = clock.stamp();
-      record.trustDelta = trustDelta;
-    });
-
-    const scored = session.recordResolved({ correct, trustDelta });
-    const rule = current.handbook.policies.find((policy) => policy.id === ticket.ruleId);
-
-    events.emit("ticket:resolved", {
-      category: "Application",
-      code: 2000,
-      level: correct ? "info" : "warning",
-      message: `Ticket #${ticket.id} resolved from evidence${correct ? "" : " with wrong actions"}. Policy ${ticket.ruleId}${
-        rule ? ` — ${rule.title}` : ""
-      }.`,
-      subjectId: ticket.personId,
-      ticketId: ticket.id,
-      data: {
-        correct,
-        ruleId: ticket.ruleId,
-        trustDelta,
-        trust: scored.trust,
-        wrongActions: ticket.wrongActions.length,
-        evidence: ticket.evidence.length,
-        personId: ticket.personId,
-        machineId: ticket.machineId,
-      },
-    });
   }
 
   events.on("*", (event) => {
