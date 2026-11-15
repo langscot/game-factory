@@ -11,6 +11,7 @@ import notepad from "./notepad/index.js";
 import calculator from "./calculator/index.js";
 import settings from "./settings/index.js";
 import taskmanager from "./taskmanager/index.js";
+import services from "./services/index.js";
 import recyclebin from "./recyclebin/index.js";
 
 let registered = false;
@@ -18,7 +19,7 @@ let registered = false;
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin]);
+  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, services, recyclebin]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";
