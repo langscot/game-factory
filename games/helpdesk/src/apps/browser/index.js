@@ -159,6 +159,21 @@ function readState(ctx) {
   }
   if (Number.isInteger(saved.nextId)) nextId = Math.max(nextId, saved.nextId);
 
+  // A launcher can send the browser straight to a page (the day-start loop
+  // uses this so the shift lands on the Service Desk queue). Only intranet
+  // sites are accepted; anything else leaves the restored tab alone.
+  const launch = typeof ctx.options?.url === "string" ? ctx.options.url.trim() : "";
+  if (launch) {
+    const target = addressFor(launch);
+    if (pageFor(target).kind === "site") {
+      const tab = tabs.find((entry) => entry.id === active) || tabs[0];
+      tab.url = target;
+      tab.title = titleFor(target);
+      tab.history = [target];
+      tab.index = 0;
+    }
+  }
+
   return { tabs, active, bookmarks, nextId };
 }
 
