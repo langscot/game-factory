@@ -154,7 +154,7 @@ export default {
         button.addEventListener("click", () => switchTab(button.dataset.shell));
       }
       const noMore = () => {
-        ctx.ui.toast("Terminal", "This machine has Command Prompt and Windows PowerShell. That is the whole list.", "terminal");
+        ctx.ui.toast("Terminal", "No additional shells are installed on this machine.", "terminal");
         focusInput();
       };
       tabsEl.querySelector("[data-new]").addEventListener("click", noMore);

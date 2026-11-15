@@ -154,7 +154,7 @@ export function createRemoteSession(root, ctx, app) {
   });
   node.querySelector("[data-signout]").addEventListener("click", () => {
     startNode.hidden = true;
-    app.notice(`${rawHost} says: sign out is handled by the local session. Use Disconnect.`);
+    app.notice(`${rawHost} says: Windows cannot sign out from this session. Use Disconnect to close it.`);
   });
 
   node.querySelector("[data-open-pc]").addEventListener("click", () => {

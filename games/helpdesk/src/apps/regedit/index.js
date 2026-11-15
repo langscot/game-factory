@@ -292,7 +292,7 @@ export default {
     function renderValues(state) {
       const record = keyRecord(state.keys, state.selected);
       if (!record) {
-        vlist.innerHTML = `<div class="rg-empty">Select a key to view its values.</div>`;
+        vlist.innerHTML = `<div class="rg-empty"></div>`;
         pendingValueFocus = false;
         return;
       }
@@ -1207,14 +1207,14 @@ export default {
       if (!files.length) {
         await ctx.ui.alert(
           "Registry Editor",
-          "There are no .reg files on this PC.\n\nExport a key first, and it will appear in the mock file system.",
+          "There are no .reg files on this PC.\n\nExport a key first, then import it from here.",
         );
         return;
       }
 
       const fileId = await openModal(
         `<h2>Import Registry File</h2>
-        <p>Choose a registry file from this PC. This is a mock file system; the real registry is not touched.</p>
+        <p>Choose a registry file from this PC.</p>
         <select data-file size="6" style="${SELECT_STYLE}">
           ${files
             .map(
@@ -1263,7 +1263,7 @@ export default {
       const state = uiState();
       const result = applyImport(state.keys, parsed);
       if (!result.firstPath && !result.imported) {
-        await ctx.ui.alert("Registry Editor", "Nothing in this file could be applied to the mock registry.");
+        await ctx.ui.alert("Registry Editor", "Nothing in this file could be applied to the registry.");
         return;
       }
       pendingTreeFocus = true;
@@ -1359,7 +1359,7 @@ export default {
     function showAbout() {
       ctx.ui.alert(
         "About Registry Editor",
-        "Registry Editor\nVersion 10.0 (Build 22621)\n\nA faithful mock of regedit.exe. Every hive, key and value here is pretend: nothing in this window can read or change the real registry on your PC.\n\nEdits live in this shift only. Export writes a .reg file into the mock file system; import reads it back.",
+        "Registry Editor\nVersion 10.0 (Build 22621)\n\nRegistry Editor lets you view and change settings in the registry for this computer.\n\nChanges take effect at the next sign-in.",
       );
     }
 

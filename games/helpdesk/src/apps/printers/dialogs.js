@@ -447,7 +447,7 @@ export function openPrinterProperties(ctx, printerId) {
     });
     for (const node of host.querySelectorAll("[data-preferences], [data-drivers], [data-add-port], [data-configure-port], [data-defaults], [data-processor], [data-separator]")) {
       node.addEventListener("click", () =>
-        ctx.ui.toast("Devices and Printers", "That dialog is not part of this build. The printer still works.", "printer"),
+        ctx.ui.toast("Devices and Printers", "That dialog is managed by Halcyon Dynamics IT.", "printer"),
       );
     }
   }

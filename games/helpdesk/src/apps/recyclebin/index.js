@@ -30,7 +30,6 @@ export default {
               </div>`,
             )
             .join("")}</div>
-          <p class="muted tiny">Emptying this is a ticket in itself. A big one. Facilities will not help.</p>
         </div>`);
       container.append(root);
     }

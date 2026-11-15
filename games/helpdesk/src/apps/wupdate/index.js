@@ -410,7 +410,7 @@ export default {
           "busy",
           `<span class="spin">${ICONS.restart}</span>`,
           "Restarting…",
-          "Finishing the update installation. This window will catch up in a moment.",
+          "Finishing the update installation.",
           "",
           progressBar(state.progress, "Restarting"),
         );
@@ -490,7 +490,7 @@ export default {
         <div class="wu-card">
           ${updates.map((update) => updateRow(update, { tag, disabled: paused })).join("")}
         </div>
-        ${paused ? `<p class="wu-hint">Updates are paused. Resume updates when you are ready to install them.</p>` : ""}
+        ${paused ? `<p class="wu-hint">Updates are paused.</p>` : ""}
       </section>`;
     }
 
@@ -591,7 +591,7 @@ export default {
               : `<div class="wu-empty">No update history on this device. Suspiciously clean.</div>`
           }
         </div>
-        <p class="wu-foot">History covers the last 90 days. Error codes are provided for the IT ticket, not for decoration.</p>`;
+        <p class="wu-foot">History covers the last 90 days.</p>`;
     }
 
     function optionalRow(update, state) {
@@ -642,7 +642,7 @@ export default {
           <button class="wu-btn primary" data-optional-install data-focus-key="optional-install" ${selected.length && !busy ? "" : "disabled"}>${busy ? "Installing…" : "Download &amp; install"}</button>
           <span>${selected.length ? `${selected.length} selected` : "Select an update to install"}</span>
         </div>
-        <p class="wu-foot">Optional updates are not installed automatically. Drivers that fail stay in this list so they can be retried or ignored.</p>`;
+        <p class="wu-foot">Optional updates are not installed automatically.</p>`;
     }
 
     function setRow(key, title, body, control) {
@@ -753,7 +753,7 @@ export default {
             save({ view: "main", pauseMenu: false });
             return;
           }
-          ctx.ui.toast("Settings", `${button.dataset.label} is not part of this build. Windows Update is.`, "settings");
+          ctx.ui.toast("Settings", `${button.dataset.label} is managed by Halcyon Dynamics IT.`, "settings");
         });
       }
 

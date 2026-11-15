@@ -155,7 +155,7 @@ export function mountEditor(container, ctx, gpoId) {
             </button>`;
           })
           .join("")
-      : `<div class="gpmc-empty">No settings in this branch. Try Computer Configuration > Policies > Administrative Templates.</div>`;
+      : `<div class="gpmc-empty">No settings in this branch.</div>`;
 
     const detail = selected
       ? `<div class="gpmc-editor-form">
@@ -179,9 +179,7 @@ export function mountEditor(container, ctx, gpoId) {
             </div>
             ${
               selected.kind === "boolean"
-                ? `<p class="gpmc-form-hint">${
-                    enabled ? "The policy is applied as Enabled." : "Choose Enabled to turn the policy on."
-                  }</p>`
+                ? ""
                 : `<label class="gpmc-form-field"><span>${
                     selected.kind === "number" ? "Value" : "Drive mappings"
                   }</span><input data-setting-value type="${selected.kind === "number" ? "number" : "text"}"${
@@ -194,11 +192,6 @@ export function mountEditor(container, ctx, gpoId) {
                     selected.unit ? `<em>${esc(selected.unit)}</em>` : ""
                   }</label>`
             }
-            <p class="gpmc-form-hint">${
-              stateValue === "not-configured"
-                ? "Not Configured means this GPO does not set the value."
-                : "Apply writes the value into this shift's mock policy state."
-            }</p>
             <div class="gpmc-form-actions"><button type="button" class="btn" data-editor-apply>Apply</button>
               <span class="gpmc-muted">${
                 state.lastEdited[gpo.id] ? `Last applied at ${esc(state.lastEdited[gpo.id])}` : "Not applied yet"
@@ -207,9 +200,7 @@ export function mountEditor(container, ctx, gpoId) {
         : `<div class="gpmc-editor-form is-empty">
             <h3>${esc(gpo.name)}</h3>
             <p class="gpmc-desc">${
-              selectedKey === "all"
-                ? "Select a setting to configure it."
-                : "This branch has no settings. Select Administrative Templates to see the policies."
+              selectedKey === "all" ? "No setting is selected." : "This branch has no settings."
             }</p>
           </div>`;
 
@@ -371,7 +362,7 @@ export function mountEditor(container, ctx, gpoId) {
           onClick: () =>
             ctx.ui.alert(
               "Group Policy Management Editor",
-              "The editor is part of the mock Group Policy Management console.\n\nSetting values are stored in this browser tab. Nothing here reads the registry, a directory or the filesystem.",
+              "Group Policy Management Editor\n\nUse this editor to change the settings in a Group Policy object.\n\nVersion 10.0 (Build 22621)",
             ),
         },
       ]);
