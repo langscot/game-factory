@@ -108,8 +108,11 @@ function startDay(index) {
   syncTrust();
   openApp("mail");
   openApp("helpdesk");
-  toast("Mail", `1 new message from ${state.day.memo.from}.`, "mail");
-  toast("Ticket Desk", `${state.day.tickets.length} tickets waiting. Day ${state.day.n}.`, "ticket");
+  toast(
+    "Ticket Desk",
+    `Day ${state.day.n}: ${state.day.tickets.length} tickets waiting, 1 new message from ${state.day.memo.from}.`,
+    "ticket",
+  );
 }
 
 function endDay(reason) {

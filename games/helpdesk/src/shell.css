@@ -762,6 +762,7 @@ table.staff tr:hover td { background: var(--hover); }
   .tray-clock { padding: 0 8px; }
   #clockDate { display: none; }
   .toasts { right: 8px; left: 8px; top: 8px; bottom: auto; flex-direction: column; }
+  .toast:not(:last-child) { display: none; }
   .toast { width: auto; }
   .lock-time { font-size: 60px; }
   .lock-date { font-size: 16px; }
