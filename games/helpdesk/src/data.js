@@ -462,3 +462,91 @@ export const FLAVOUR_MAIL = [
     lines: ["Floor 3 is being reconfigured this weekend. Clear your desk or lose it.", "No, we will not store anything. Yes, we are serious."],
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Files on the machine. Explorer opens the .txt ones in Notepad; Notepad keeps
+// whatever the player types in localStorage, so the desktop feels lived in.
+// ---------------------------------------------------------------------------
+
+export const NOTES = {
+  "notes.txt": `DESK NOTES — terminal 04
+------------------------------
+
+1. A ticket arrives. Read it. All of it.
+2. Look the person up in the Staff Directory: department, employment
+   type, and whether they are remote.
+3. Find the rule in the Policy Handbook. It is always there.
+4. Approve, deny, or escalate. Never improvise.
+
+House rules, condensed:
+  - Password resets: anyone. Their own account only. Never by email.
+  - Laptops: full-time staff with an MG-#### code. No interns.
+    No contractors (their agency supplies the hardware).
+  - Software: Office, Slack, Chrome, VS Code, Notepad++, 7-Zip.
+    Anything else goes to Security, not to you.
+  - Finance share: Finance and Executive only.
+  - Badges, doors, locks: Facilities. Always Facilities.
+  - Odd request, wrong sender, someone else's account: escalate.
+
+A wrong call costs 12 trust. Zero trust and Security walks you out.
+The queue does not care how you feel about it.
+
+— Marge`,
+
+  "handover.txt": `From: night shift
+To: whoever is on at 08:00
+
+Printer on 3 is fine, leave it alone.
+The kettle trips the socket on the left, use the right one.
+Ticket 0995 is a duplicate, do not reply to it, it replies back.
+
+The ticket system keeps reopening ticket 0770 every morning at 09:00
+with no content. Nobody knows why. Do not escalate it, Security has
+enough on its plate.
+
+Coffee is in the drawer. Do not take the good mug.`,
+
+  "vpn-tokens.txt": `VPN TOKENS — do not email, do not print, do not photograph
+------------------------------------------------------------------
+
+priya.raman        8841 2210  -- remote
+dana.okafor        8841 2214  -- remote
+alice.nkemelu      8841 2226  -- remote
+ruth.adeyemi       8841 2233  -- remote
+lena.fischer       8841 2240  -- remote
+
+spare              8841 0000  -- do not hand out, do not ask why
+spare              8841 0001  -- see above
+spare              8841 0002  -- see above
+
+If someone asks for a token by email, read Policy 7 again, then
+escalate. Yes, even if they are nice about it.`,
+
+  "shopping-list.txt": `- milk
+- birthday card for Kenji
+- new mouse (mine double-clicks)
+- those biscuits from the place on the corner
+- do NOT forget the biscuits`,
+};
+
+/** Documents folder listing: name, kind, size, modified. */
+export const DOCS = [
+  { name: "notes.txt", kind: "text", size: "2 KB", date: "15/11/2026 08:41" },
+  { name: "handover.txt", kind: "text", size: "1 KB", date: "14/11/2026 23:58" },
+  { name: "vpn-tokens.txt", kind: "text", size: "1 KB", date: "09/11/2026 17:02" },
+  { name: "shopping-list.txt", kind: "text", size: "1 KB", date: "12/11/2026 12:19" },
+  { name: "IT-Structure-2026.pptx", kind: "office", size: "4.2 MB", date: "02/11/2026 10:14" },
+  { name: "Q3-budget.xlsx", kind: "office", size: "812 KB", date: "30/10/2026 16:45" },
+];
+
+export const DOWNLOADS = [
+  { name: "printer-driver-v3.exe", kind: "exe", size: "18.4 MB", date: "14/11/2026 09:02" },
+  { name: "teamviewer-setup.exe", kind: "exe", size: "41.9 MB", date: "13/11/2026 11:20" },
+  { name: "totally_not_a_virus.exe", kind: "exe", size: "96 KB", date: "13/11/2026 11:24" },
+  { name: "payslip-november.pdf", kind: "pdf", size: "214 KB", date: "28/10/2026 07:00" },
+];
+
+export const PICTURES = [
+  { name: "christmas-party-2019.jpg", kind: "image", size: "3.1 MB", date: "18/12/2019 22:41" },
+  { name: "whiteboard.png", kind: "image", size: "640 KB", date: "04/11/2026 15:33" },
+];
