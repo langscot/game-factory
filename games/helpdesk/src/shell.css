@@ -109,9 +109,13 @@ svg { display: block; }
 .watermark small { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
 
 /* ---------- windows ---------- */
-.windows { position: absolute; inset: 0; z-index: 10; }
+/* The window layer covers the whole desktop so windows can be placed anywhere.
+   It must not swallow input meant for the desktop icons underneath, so the
+   layer itself is click-through and only real windows take pointer events. */
+.windows { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
 .win {
   position: absolute; display: flex; flex-direction: column; min-width: 260px; min-height: 140px;
+  pointer-events: auto;
   background: var(--surface);
   -webkit-backdrop-filter: blur(30px) saturate(140%);
   backdrop-filter: blur(30px) saturate(140%);
