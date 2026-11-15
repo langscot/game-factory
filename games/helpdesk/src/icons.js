@@ -63,6 +63,17 @@ export const ICONS = {
     </g>
     <path d="M5.6 7.2h12.8" stroke="#59606b" stroke-width="1.3" stroke-linecap="round"/>`),
 
+  eventviewer: svg(`
+    <rect x="3" y="2.6" width="18" height="18.8" rx="2.4" fill="#f6f9ff"/>
+    <rect x="3" y="2.6" width="18" height="4.2" rx="2.4" fill="#2f6fd0"/>
+    <rect x="3" y="5" width="18" height="1.8" fill="#2f6fd0"/>
+    <g stroke="#8b9bb1" stroke-width="1.2" stroke-linecap="round">
+      <path d="M6.2 10.4h5.6M6.2 13.2h9.6M6.2 16h7.6"/>
+    </g>
+    <circle cx="16.6" cy="15.4" r="3.1" fill="#e5484d"/>
+    <path d="M16.6 13.7v2.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="16.6" cy="17.6" r=".85" fill="#fff"/>`),
+
   settings: svg(`
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
     <circle cx="12" cy="12" r="3.1" fill="#23272f"/>`),
