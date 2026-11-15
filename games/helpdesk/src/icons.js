@@ -78,6 +78,13 @@ export const ICONS = {
     <circle cx="8.4" cy="9.6" r="1.6" fill="#d5e8ff"/>
     <path d="M4 17.2l4.6-4.3 3.4 3 3-2.6 5 4.2z" fill="#9cc8f7"/>`),
 
+  rdp: svg(`
+    <rect x="1.6" y="4" width="13.4" height="9.6" rx="1.6" fill="#2f7ad6"/>
+    <rect x="3.1" y="5.5" width="10.4" height="6.6" rx=".7" fill="#cfe6ff"/>
+    <rect x="9" y="9.4" width="13.4" height="9.6" rx="1.6" fill="#1e4f8f"/>
+    <rect x="10.5" y="10.9" width="10.4" height="6.6" rx=".7" fill="#8fc7ff"/>
+    <path d="M4.2 21.6h6.2M17 21.6h4.2" stroke="#7ba7d6" stroke-width="1.4" stroke-linecap="round"/>`),
+
   monitor: svg(`
     <rect x="2" y="3.6" width="20" height="13.6" rx="2.2" fill="#2b6cb0"/>
     <rect x="4.2" y="5.9" width="15.6" height="9" rx="1" fill="#bfe0ff"/>
