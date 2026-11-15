@@ -1,7 +1,7 @@
 // The little things mstsc puts on top of its dialog: the connecting window,
-// the Windows Security credential prompt and the error message boxes.
+// the Shitnet Security credential prompt and the error message boxes.
 // They are app-local overlays, not platform dialogs, because they belong to
-// this window and have to look like the real client rather than Windows 11.
+// this window and have to look like the real client rather than Doors 11.
 
 const ERROR_ICON = `<svg viewBox="0 0 32 32" aria-hidden="true">
   <circle cx="16" cy="16" r="13" fill="#c42b1c"/>
@@ -52,7 +52,7 @@ function paragraphBlock({ heading, message }) {
 export function showErrorDialog(root, { heading = null, message, buttons, onClose }) {
   const list = buttons?.length ? buttons : [{ label: "OK" }];
   const markup =
-    titleBar("Remote Desktop Connection") +
+    titleBar("Remote Deskhop") +
     `<div class="rdp-dlg-body"><div class="rdp-glyph">${ERROR_ICON}</div>
       <div class="rdp-dlg-copy">${paragraphBlock({ heading, message })}</div></div>
      <div class="rdp-dlg-actions">${list
@@ -99,7 +99,7 @@ export function showErrorDialog(root, { heading = null, message, buttons, onClos
 /** The "i" box used by Help, Save As and the two Configure buttons. */
 export function showInfoDialog(root, { heading, message, onClose }) {
   const markup =
-    titleBar("Remote Desktop Connection") +
+    titleBar("Remote Deskhop") +
     `<div class="rdp-dlg-body"><div class="rdp-glyph">${INFO_ICON}</div>
       <div class="rdp-dlg-copy">${paragraphBlock({ heading, message })}</div></div>
      <div class="rdp-dlg-actions"><button class="rdp-btn primary" data-ok>OK</button></div>`;
@@ -127,7 +127,7 @@ export function showInfoDialog(root, { heading, message, onClose }) {
 /** The short-lived "Configuring remote session..." window. */
 export function showHandshake(root, { host, onCancel }) {
   const markup =
-    titleBar("Remote Desktop Connection") +
+    titleBar("Remote Deskhop") +
     `<div class="rdp-dlg-body rdp-connect-body">
        <p class="rdp-connect-status" data-status>Connecting to ${esc(host)}...</p>
        <div class="rdp-progress"><i data-bar style="width:12%"></i></div>
@@ -172,13 +172,13 @@ export function showHandshake(root, { host, onCancel }) {
 }
 
 /**
- * Windows Security. The password never leaves this closure: only the user name
+ * Shitnet Security. The password never leaves this closure: only the user name
  * and the remember choice are written to the store.
  */
 export function showCredentialPrompt(root, { host, username, remember, onSubmit, onCancel }) {
   const markup =
-    titleBar("Windows Security") +
-    `<div class="rdp-sec-head">${SHIELD_ICON}<div><b>Windows Security</b><span>Enter your credentials</span></div></div>
+    titleBar("Shitnet Security") +
+    `<div class="rdp-sec-head">${SHIELD_ICON}<div><b>Shitnet Security</b><span>Enter your credentials</span></div></div>
      <div class="rdp-sec-body">
        <p>These credentials will be used to connect to <b>${esc(host)}</b>.</p>
        <div class="rdp-field"><label for="rdp-sec-user">User name</label>

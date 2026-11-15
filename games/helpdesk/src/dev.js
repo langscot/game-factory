@@ -68,7 +68,7 @@ function assert(condition, message) {
 const checks = [
   {
     id: "new-user",
-    title: "Adding a user in the store appears in the Directory and the Outlook GAL",
+    title: "Adding a user in the store appears in the Directory and the Lookout GAL",
     run(api) {
       const { world: view, actions } = api;
       const created = actions.addPerson({
@@ -145,7 +145,7 @@ const checks = [
   },
   {
     id: "software",
-    title: "Installing software reaches Start, Task Manager and file associations",
+    title: "Installing software reaches Start, Task Mangler and file associations",
     run(api) {
       const { world: view, actions } = api;
       const result = actions.installSoftware("m_hayes", "sw_7zip");
@@ -161,13 +161,13 @@ const checks = [
   },
   {
     id: "network",
-    title: "Disabling the network adapter stops ipconfig and Outlook sending",
+    title: "Disabling the network adapter stops ipconfig and Lookout sending",
     run(api) {
       const { world: view, actions } = api;
       assert(view.mail.canSendFrom("p_hayes"), "technician should start online");
       actions.setNetworkState("m_hayes", false);
       assert(view.machines.ipconfig("m_hayes").includes("Media disconnected"), "ipconfig still reports an adapter");
-      assert(!view.mail.canSendFrom("p_hayes"), "Outlook still thinks it can send");
+      assert(!view.mail.canSendFrom("p_hayes"), "Lookout still thinks it can send");
       const send = actions.sendMail({ fromPersonId: "p_hayes", subject: "Offline", lines: ["x"] });
       assert(!send.ok && send.reason === "no-network", `sendMail should fail offline, got ${send.reason}`);
       actions.setNetworkState("m_hayes", true);
@@ -177,7 +177,7 @@ const checks = [
   },
   {
     id: "files-policy",
-    title: "Saving in Notepad shows in Explorer; importing a .reg changes policy",
+    title: "Saving in Typo shows in File Exploder; importing a .reg changes policy",
     run(api) {
       const { world: view, actions } = api;
       const saved = actions.saveFile({
@@ -187,13 +187,13 @@ const checks = [
       });
       assert(saved.ok && saved.file.version === 1, "saveFile did not create the file");
       const listed = view.files.list("C:/Users/m.hayes/Documents").some((file) => file.name === "harness-note.txt");
-      assert(listed, "File Explorer selector does not see the saved file");
+      assert(listed, "File Exploder selector does not see the saved file");
       const reg = view.files.items().find((file) => file.name === "fix-printers.reg");
       assert(reg, "seeded .reg file is missing");
       const imported = actions.importRegistry("m_hayes", reg.id);
       assert(imported.ok, `importRegistry failed: ${imported.reason}`);
       assert(view.directoryServices.policy("AllowPrintSpoolerRemoteCalls") === "1", "policy state did not change");
-      return `saved v1 visible in Explorer; imported ${imported.entries.length} values, AllowPrintSpoolerRemoteCalls = 1.`;
+      return `saved v1 visible in File Exploder; imported ${imported.entries.length} values, AllowPrintSpoolerRemoteCalls = 1.`;
     },
   },
   {

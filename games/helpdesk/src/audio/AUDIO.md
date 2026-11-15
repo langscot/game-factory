@@ -46,7 +46,7 @@ All sounds are synthesised at runtime. Peak and RMS are measured by
 | `menu.close` | A context menu closes | Lower soft tick | 0.065 s |
 | `usb.connect` | Device attached (available to apps) | Low-high two-note bell | 0.66 s |
 | `usb.disconnect` | Device removed (available to apps) | High-low two-note bell | 0.55 s |
-| `empty.bin` | Recycle Bin emptied (available to apps) | Seven noise crinkles + low thump | 0.72 s |
+| `empty.bin` | The Bin emptied (available to apps) | Seven noise crinkles + low thump | 0.72 s |
 | `lock` | Lock / sign out | Metal tick + falling tone | 0.36 s |
 
 Plus `keyboard.key`, `keyboard.enter`, `keyboard.space`, `keyboard.backspace`:

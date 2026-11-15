@@ -1,4 +1,4 @@
-// Services (services.msc). An MMC console over the technician machine's service
+// Servicing (services.msc). An MMC console over the technician machine's service
 // rows in the world. The console owns presentation only: status and startup
 // type come from the store, transitions go through ctx.actions, and the sort,
 // selection and view live in ctx.world.session.ui("services").
@@ -32,7 +32,7 @@ const ICON_RESTART = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.4
 
 export default {
   id: "services",
-  title: "Services",
+  title: "Servicing",
   icon: "services",
   size: [1120, 640],
   desktop: true,
@@ -149,11 +149,11 @@ export default {
       } else {
         ctx.ui.menu(...at, [
           {
-            label: "About Services",
+            label: "About Servicing",
             onClick: () =>
               ctx.ui.alert(
-                "Services",
-                "Services (services.msc) lists the background services on this computer.\n\nVersion 10.0 (Build 22621)",
+                "Servicing",
+                "Servicing (services.msc) lists the background services on this computer. Stopping one is always more exciting than starting it again.\n\nVersion 10.0 (Build 22621)",
               ),
           },
         ]);
@@ -183,8 +183,8 @@ export default {
       const card = ctx.ui.dialog({
         html: `
           <div class="app-services svc-dialog" data-svc-progress>
-            <h2>Services</h2>
-            <p class="svc-progress-line">Windows is attempting to ${VERB[kind]} the ${ctx.ui.esc(
+            <h2>Servicing</h2>
+            <p class="svc-progress-line">Doors is attempting to ${VERB[kind]} the ${ctx.ui.esc(
               service.displayName,
             )}${/service$/i.test(service.displayName) ? "" : " service"} on Local Computer...</p>
             <div class="svc-progress-bar"><i style="animation-duration:${seconds}s"></i></div>
@@ -213,9 +213,9 @@ export default {
         busy = false;
         if (result.ok) {
           record(kind, service);
-          ctx.ui.toast("Services", `${service.displayName} ${PAST[kind]}.`, "services");
+          ctx.ui.toast("Servicing", `${service.displayName} ${PAST[kind]}.`, "services");
         } else {
-          ctx.ui.toast("Services", `${service.displayName}: ${result.reason}.`, "services");
+          ctx.ui.toast("Servicing", `${service.displayName}: ${result.reason}.`, "services");
         }
         closeOurDialog();
         paint();
@@ -233,7 +233,7 @@ export default {
     function showHelp(service) {
       if (!service) return;
       ctx.ui.alert(
-        "Services",
+        "Servicing",
         `${service.displayName}\n${service.description}\n\nService name: ${service.name}\nStartup type: ${service.startupLabel}\nLog on as: ${service.logonAs}`,
       );
     }
@@ -394,7 +394,7 @@ export default {
             <div class="svc-tree">
               <div class="svc-tree-head">Console Root</div>
               <div class="svc-tree-body">
-                <button class="svc-tree-node sel" data-fk="tree:root">${ctx.ui.icon("services")}Services (Local)</button>
+                <button class="svc-tree-node sel" data-fk="tree:root">${ctx.ui.icon("services")}Servicing (Local)</button>
                 <div class="svc-tree-leaf">${
                   target ? `${ctx.ui.esc(target.hostname)} · ${list.length} services` : "No machine assigned"
                 }</div>
@@ -406,7 +406,7 @@ export default {
             </div>
 
             <div class="svc-main">
-              <div class="svc-list-title">Services (Local)</div>
+              <div class="svc-list-title">Servicing (Local)</div>
               <div class="svc-grid">
                 <div class="svc-columns">
                   ${sortedHeader("name", "Name", state)}
@@ -425,7 +425,7 @@ export default {
               standard
                 ? ""
                 : `<div class="svc-actions">
-                    <h4 class="svc-actions-head">Services (Local)</h4>
+                    <h4 class="svc-actions-head">Servicing (Local)</h4>
                     <div class="svc-group">
                       <div class="svc-group-title">Actions</div>
                       ${actionButton("start", "Start")}

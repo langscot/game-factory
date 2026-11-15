@@ -1,4 +1,4 @@
-// Devices and Printers styling. Classic Control Panel light surfaces, scoped
+// Spool & Pray styling. Classic Control Panel light surfaces, scoped
 // under the app id so nothing leaks into the desktop.
 
 export const css = `

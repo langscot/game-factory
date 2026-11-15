@@ -1,4 +1,4 @@
-// The Devices and Printers page and its print-queue window. Both are views of
+// The Spool & Pray page and its print-queue window. Both are views of
 // session.ui.printers; every button commits a change and the ui:changed event
 // paints the page again.
 
@@ -89,14 +89,14 @@ export function renderApp(container, ctx) {
         </span>
         <span class="cp-crumbs">
           <span class="crumb-icon">${ctx.ui.icon("printer")}</span>
-          Control Panel <i>›</i> Hardware and Sound <i>›</i> <b>Devices and Printers</b>
+          Control Freak <i>›</i> Hardware and Sound <i>›</i> <b>Spool &amp; Pray</b>
         </span>
         <label class="cp-search">${ctx.ui.icon("$search")}
-          <input data-search placeholder="Search Devices and Printers" aria-label="Search Devices and Printers" autocomplete="off">
+          <input data-search placeholder="Search Spool & Pray" aria-label="Search Spool & Pray" autocomplete="off">
         </label>
       </div>
 
-      <div class="cp-command" role="toolbar" aria-label="Devices and Printers commands">
+      <div class="cp-command" role="toolbar" aria-label="Spool & Pray commands">
         <button class="cp-btn" data-add-printer>${PLUS}<span>Add a printer</span></button>
         <button class="cp-btn" data-add-device>${PLUS}<span>Add a device</span></button>
         <span class="cp-sep"></span>
@@ -179,7 +179,7 @@ function wirePage(container, ctx, printer, device) {
 
   container.querySelector("[data-add-printer]")?.addEventListener("click", () => openAddPrinterWizard(ctx));
   container.querySelector("[data-add-device]")?.addEventListener("click", () =>
-    ctx.ui.alert("Add a device", "Windows cannot find any new devices.\n\nMake sure the device is turned on and discoverable, then try again."),
+    ctx.ui.alert("Add a device", "Doors cannot find any new devices.\n\nMake sure the device is turned on and discoverable, then try again."),
   );
   container.querySelector("[data-open-queue]")?.addEventListener("click", () => {
     if (!printer) return;
@@ -196,7 +196,7 @@ function wirePage(container, ctx, printer, device) {
     commit(ctx, (draft) => {
       for (const item of draft.printers) item.default = item.id === printer.id;
     });
-    ctx.ui.toast("Devices and Printers", `${printer.name} is now the default printer.`, "printer");
+    ctx.ui.toast("Spool & Pray", `${printer.name} is now the default printer.`, "printer");
   });
   container.querySelector("[data-remove]")?.addEventListener("click", () => {
     const name = printer?.name || device?.name || "this device";
@@ -223,7 +223,7 @@ function openPrinterMenu(ctx, printer, x, y) {
         commit(ctx, (draft) => {
           for (const item of draft.printers) item.default = item.id === printer.id;
         });
-        ctx.ui.toast("Devices and Printers", `${printer.name} is now the default printer.`, "printer");
+        ctx.ui.toast("Spool & Pray", `${printer.name} is now the default printer.`, "printer");
       },
     },
     {
@@ -255,7 +255,7 @@ function queueMarkup(ctx, state, printer, spooler) {
   const canCancel = selected && !["cancelled", "complete"].includes(selected.status);
   const canDelete = Boolean(selected);
   const banner = !spooler.running
-    ? `<div class="q-banner error"><b>Printer offline</b><span>The Print Spooler service is stopped. Restart it in Services, then try again.</span></div>`
+    ? `<div class="q-banner error"><b>Printer offline</b><span>The Print Spooler service is stopped. Restart it in Servicing, then try again.</span></div>`
     : printer.offline
       ? `<div class="q-banner offline"><b>Use Printer Offline</b><span>This printer is set to work offline. Queued documents will wait.</span></div>`
       : printer.status === "error"
@@ -367,7 +367,7 @@ function wireQueue(container, ctx, printer) {
           const item = draft.jobs.find((record) => record.id === job.id);
           if (item && !["cancelled", "complete"].includes(item.status)) item.status = "cancelled";
         });
-        ctx.ui.toast("Devices and Printers", `${job.document} was cancelled.`, "printer");
+        ctx.ui.toast("Spool & Pray", `${job.document} was cancelled.`, "printer");
       } else if (action === "delete") {
         commit(ctx, (draft) => {
           draft.jobs = draft.jobs.filter((record) => record.id !== job.id);
@@ -415,7 +415,7 @@ function openQueueMenu(ctx, printer, x, y) {
           );
           draft.selectedJobId = null;
         });
-        ctx.ui.toast("Devices and Printers", "All documents were cancelled.", "printer");
+        ctx.ui.toast("Spool & Pray", "All documents were cancelled.", "printer");
       },
     },
     { separator: true },

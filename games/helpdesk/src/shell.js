@@ -187,6 +187,7 @@ function renderDesktopIcons() {
     const button = document.createElement("button");
     button.className = "icon";
     button.dataset.app = app.id;
+    button.title = app.title;
     button.innerHTML = `${icon(app.icon)}<span>${app.title}</span>`;
     button.addEventListener("pointerdown", () => selectIcon(button));
     button.addEventListener("dblclick", () => openApp(app.id));
@@ -438,7 +439,7 @@ function wireTaskbar() {
     if (event.target.closest(".tb-app")) return;
     event.preventDefault();
     openMenu(event.clientX, event.clientY, [
-      { label: "Task Manager", icon: "taskmgr", onClick: () => openApp("taskmanager") },
+      { label: "Task Mangler", icon: "taskmgr", onClick: () => openApp("taskmanager") },
       { label: "Taskbar settings", icon: "settings", onClick: () => openApp("settings") },
       { separator: true },
       { label: "Show desktop", onClick: () => forEachMinimise() },
@@ -495,6 +496,7 @@ function renderStart(query = "") {
     const button = document.createElement("button");
     button.className = "start-app";
     button.dataset.app = entry.id;
+    button.title = entry.title;
     button.innerHTML = `${icon(entry.icon)}<span>${entry.title}</span>`;
     button.addEventListener("click", () => {
       if (entry.app) {
@@ -533,7 +535,7 @@ function recentDocuments() {
   docs.push(
     { name: "Policy Handbook", where: "Recent", icon: "book", app: "handbook" },
     { name: "Today's briefing", where: "Mail", icon: "mail", app: "mail" },
-    { name: "Task Manager", where: "System", icon: "taskmgr", app: "taskmanager" },
+    { name: "Task Mangler", where: "System", icon: "taskmgr", app: "taskmanager" },
   );
   return docs;
 }

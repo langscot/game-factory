@@ -1,4 +1,4 @@
-// Windows Terminal, as far as this desktop is concerned: two shells, two
+// ShitShell, as far as this desktop is concerned: two shells, two
 // scrollbacks, one prompt. Every command is a mock handler in commands.js and
 // every path is the fake C: drive in filesystem.js. Tabs, history, drafts and
 // scrollback live in session.ui.terminal so they survive a re-render or a
@@ -25,16 +25,16 @@ const promptFor = (shell, cwd) => `${shell === "ps" ? "PS " : ""}${displayPath(c
 const banner = (shell) => {
   if (shell === "ps") {
     return [
-      out("Windows PowerShell"),
-      out("Copyright (C) Microsoft Corporation. All rights reserved."),
+      out("ShitShell Admin 5.1.22621.4391"),
+      out("Copyright (C) Nadir Systems. All rights reserved."),
       out(""),
-      out("Try the new cross-platform PowerShell https://aka.ms/pscore6"),
+      out("Try the new cross-platform ShitShell. It is the same shell, with a subscription."),
       out(""),
     ];
   }
   return [
-    out("Microsoft Windows [Version 10.0.22621.4317]"),
-    out("(c) Microsoft Corporation. All rights reserved."),
+    out("Nadir Doors [Version 10.0.22621.4317]"),
+    out("(c) Nadir Systems. All rights reserved. Some rights withheld."),
     out(""),
   ];
 };
@@ -81,7 +81,7 @@ function tokenStart(value, caret) {
 
 export default {
   id: "terminal",
-  title: "Terminal",
+  title: "ShitShell",
   icon: "terminal",
   size: [780, 540],
   desktop: true,
@@ -108,11 +108,11 @@ export default {
     container.innerHTML = "";
     const root = ctx.ui.el(`
       <div class="term" data-term>
-        <div class="term-tabs" role="tablist" aria-label="Terminal tabs" data-tabs></div>
+        <div class="term-tabs" role="tablist" aria-label="ShitShell tabs" data-tabs></div>
         <div class="term-body">
           <div class="term-scroll" data-scroll><div data-lines></div><div class="term-line term-inputline" data-inputline></div></div>
         </div>
-        <input class="term-ghost" data-input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
+        <input class="term-ghost" data-input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ShitShell input">
       </div>`);
     container.append(root);
 
@@ -142,10 +142,10 @@ export default {
     function renderTabs() {
       tabsEl.innerHTML = `
         <button class="term-tab${active === "cmd" ? " sel" : ""}" role="tab" data-shell="cmd" aria-selected="${active === "cmd"}">
-          <span class="ico">${ctx.ui.icon("terminal")}</span><span class="label">Command Prompt</span>
+          <span class="ico">${ctx.ui.icon("terminal")}</span><span class="label">ShitShell</span>
         </button>
         <button class="term-tab${active === "ps" ? " sel" : ""}" role="tab" data-shell="ps" aria-selected="${active === "ps"}">
-          <span class="ico">${PS_ICON}</span><span class="label">Windows PowerShell</span>
+          <span class="ico">${PS_ICON}</span><span class="label">ShitShell Admin</span>
         </button>
         <button class="term-new" data-new title="New tab" aria-label="New tab">+</button>
         <button class="term-chev" data-chev title="New tab menu" aria-label="New tab menu" tabindex="-1">⌄</button>`;
@@ -154,7 +154,7 @@ export default {
         button.addEventListener("click", () => switchTab(button.dataset.shell));
       }
       const noMore = () => {
-        ctx.ui.toast("Terminal", "No additional shells are installed on this machine.", "terminal");
+        ctx.ui.toast("ShitShell", "No additional shells are installed on this machine.", "terminal");
         focusInput();
       };
       tabsEl.querySelector("[data-new]").addEventListener("click", noMore);
@@ -167,8 +167,8 @@ export default {
       const fragment = document.createDocumentFragment();
       for (const line of tab.lines) {
         const node = document.createElement("div");
-        // cmd.exe writes errors in the normal console colour; only PowerShell
-        // renders them red. The wording does the work in Command Prompt.
+        // The classic shell writes errors in the normal console colour; only
+        // ShitShell Admin renders them red. The wording does the work in ShitShell.
         const kind = line.k === "err" && active === "cmd" ? "out" : line.k || "out";
         node.className = `term-line ${kind}`;
         node.textContent = line.t;

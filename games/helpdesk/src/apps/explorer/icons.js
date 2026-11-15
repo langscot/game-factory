@@ -1,5 +1,5 @@
-// Small inline SVGs used only by File Explorer. The shared icons.js set
-// carries the app chrome; these are the Explorer-specific glyphs.
+// Small inline SVGs used only by File Exploder. The shared icons.js set
+// carries the app chrome; these are the file-manager glyphs.
 
 const iconSvg = (body, extra = "") =>
   `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ${extra}>${body}</svg>`;

@@ -1,6 +1,6 @@
-// Windows Update. A Settings page, not a standalone program: the left rail is
+// Patchy. A Settings page, not a standalone program: the left rail is
 // the Settings navigation, the breadcrumb carries the location, and the pages
-// below it are the Windows Update surface. All of it is shell — the buttons
+// below it are the Patchy surface. All of it is shell — the buttons
 // drive a mock install loop so a technician can see the states, but nothing
 // here touches the real machine, the registry or the filesystem.
 //
@@ -52,8 +52,8 @@ const ICONS = {
 
 export default {
   id: "wupdate",
-  title: "Windows Update",
-  titleFor: () => "Settings",
+  title: "Patchy",
+  titleFor: () => "Patchy",
   icon: "wupdate",
   size: [880, 620],
   desktop: true,
@@ -185,7 +185,7 @@ export default {
             progress: 0,
             lastChecked: nowText(),
           });
-          ctx.ui.toast("Windows Update", found.length ? `${found.length} update found.` : "You're up to date.", "wupdate");
+          ctx.ui.toast("Patchy", found.length ? `${found.length} update found.` : "You're up to date.", "wupdate");
         },
       });
     }
@@ -207,7 +207,7 @@ export default {
             pendingRestartIds: updates.map((update) => update.id),
             history: [...updates.map((update) => historyEntry(update, { note: "Restart required" })), ...uiState().history],
           });
-          ctx.ui.toast("Windows Update", "Updates installed. A restart is required.", "wupdate");
+          ctx.ui.toast("Patchy", "Updates installed. A restart is required.", "wupdate");
         },
       });
     }
@@ -230,7 +230,7 @@ export default {
             pendingRestartIds: [],
             lastChecked: nowText(),
           });
-          ctx.ui.toast("Windows Update", "Restart complete. This device is up to date.", "wupdate");
+          ctx.ui.toast("Patchy", "Restart complete. This device is up to date.", "wupdate");
         },
       });
     }
@@ -239,12 +239,12 @@ export default {
       if (isBusy()) return;
       const until = addDays(TODAY, weeks * 7);
       save({ pausedUntil: until, pauseWeeks: weeks, pauseMenu: false });
-      ctx.ui.toast("Windows Update", `Updates paused until ${until}.`, "wupdate");
+      ctx.ui.toast("Patchy", `Updates paused until ${until}.`, "wupdate");
     }
 
     function resumeUpdates() {
       save({ pausedUntil: "", pauseWeeks: 0, pauseMenu: false });
-      ctx.ui.toast("Windows Update", "Updates resumed.", "wupdate");
+      ctx.ui.toast("Patchy", "Updates resumed.", "wupdate");
     }
 
     function toggleOptional(id) {
@@ -293,8 +293,8 @@ export default {
               ...current.history,
             ],
           });
-          if (bad.length) ctx.ui.toast("Windows Update", `Driver install failed: ${bad[0].error}.`, "wupdate");
-          else ctx.ui.toast("Windows Update", "Optional update installed.", "wupdate");
+          if (bad.length) ctx.ui.toast("Patchy", `Driver install failed: ${bad[0].error}.`, "wupdate");
+          else ctx.ui.toast("Patchy", "Optional update installed.", "wupdate");
         },
       });
     }
@@ -318,19 +318,19 @@ export default {
 
     function breadcrumb(current) {
       return `<div class="wu-crumbs">
-        <span>Settings</span><span class="wu-sep">›</span><span>System</span><span class="wu-sep">›</span>
+        <span>Control Freak</span><span class="wu-sep">›</span><span>System</span><span class="wu-sep">›</span>
         ${
           current
-            ? `<button class="wu-crumb-link" data-view="main" data-focus-key="crumb-main">Windows Update</button><span class="wu-sep">›</span><span class="wu-crumb-cur" aria-current="page">${ctx.ui.esc(current)}</span>`
-            : `<span class="wu-crumb-cur" aria-current="page">Windows Update</span>`
+            ? `<button class="wu-crumb-link" data-view="main" data-focus-key="crumb-main">Patchy</button><span class="wu-sep">›</span><span class="wu-crumb-cur" aria-current="page">${ctx.ui.esc(current)}</span>`
+            : `<span class="wu-crumb-cur" aria-current="page">Patchy</span>`
         }
       </div>`;
     }
 
     const PAGE_META = {
-      main: ["Windows Update", "Security, quality and driver updates for this device."],
-      history: ["Update history", "Updates installed on this device, newest first. Failures keep their Windows Update error code."],
-      optional: ["Optional updates", "Drivers and other updates Microsoft recommends only when you need them."],
+      main: ["Patchy", "Security, quality and driver updates for this device. Restarting is your problem now."],
+      history: ["Update history", "Updates installed on this device, newest first. Failures keep their Patchy error code."],
+      optional: ["Optional updates", "Drivers and other updates Nadir recommends only when you need them, which is usually after they break something."],
       advanced: ["Advanced options", "Delivery, restart and update behaviour for this device."],
     };
 
@@ -338,7 +338,7 @@ export default {
       const [title, subtitle] = PAGE_META[state.view] || PAGE_META.main;
       const back = state.view === "main"
         ? ""
-        : `<button class="wu-back" data-view="main" data-focus-key="back" aria-label="Back to Windows Update">${ctx.ui.icon("$arrowLeft")}</button>`;
+        : `<button class="wu-back" data-view="main" data-focus-key="back" aria-label="Back to Patchy">${ctx.ui.icon("$arrowLeft")}</button>`;
       return `<div class="wu-head">
         ${breadcrumb(state.view === "main" ? "" : title)}
         <div class="wu-title-row">${back}<h1 class="wu-h1">${ctx.ui.esc(title)}</h1></div>
@@ -544,7 +544,7 @@ export default {
     function note() {
       const device = machine();
       return `<div class="wu-note">${ICONS.shield}<span>Some settings are managed by Halcyon Dynamics IT.</span></div>
-        <p class="wu-foot">${ctx.ui.esc(device?.hostname || "DESKTOP-8H2K9L")} · ${ctx.ui.esc(device?.os || "Windows 11 Pro 22H2")} · OS build 22621.4317</p>`;
+        <p class="wu-foot">${ctx.ui.esc(device?.hostname || "DESKTOP-8H2K9L")} · ${ctx.ui.esc(device?.os || "Doors 11 Pro 22H2")} · OS build 22621.4317</p>`;
     }
 
     function mainView(state) {
@@ -662,9 +662,9 @@ export default {
         <div class="wu-card">
           ${setRow(
             "otherProducts",
-            "Receive updates for other Microsoft products",
-            "Get updates for Office and other Microsoft products when Windows updates.",
-            switchButton("otherProducts", advanced.otherProducts, "Receive updates for other Microsoft products"),
+            "Receive updates for other Nadir products",
+            "Get updates for the office suite and other Nadir products when Doors updates.",
+            switchButton("otherProducts", advanced.otherProducts, "Receive updates for other Nadir products"),
           )}
           ${setRow(
             "getUpToDate",
@@ -673,7 +673,7 @@ export default {
             switchButton("getUpToDate", advanced.getUpToDate, "Get me up to date"),
           )}
           ${setRow("delivery", "Delivery optimisation", "Allow downloads from other PCs on the local network.", `<span class="wu-value">On</span>`)}
-          ${setRow("hours", "Active hours", "Windows will not restart automatically during these hours.", `<span class="wu-value">08:00 – 17:00</span>`)}
+          ${setRow("hours", "Active hours", "Doors will not restart automatically during these hours. It will wait until you are on a call.", `<span class="wu-value">08:00 – 17:00</span>`)}
           ${setRow("restart", "Restart options", "Control when a required restart happens.", `<span class="wu-value">Managed by IT</span>`)}
         </div>
         <p class="wu-foot">These options are managed by Halcyon Dynamics IT on managed devices.</p>`;
@@ -691,7 +691,7 @@ export default {
           <span class="wu-avatar">${ctx.ui.icon("$user")}</span>
           <div><b>${ctx.ui.esc(tech?.displayName || "Morgan Hayes")}</b><span>${ctx.ui.esc(tech?.logonName || "m.hayes")}</span></div>
         </div>
-        <nav class="wu-navlist" aria-label="Settings">
+        <nav class="wu-navlist" aria-label="Control Freak pages">
           ${NAV_ITEMS.map((item) => {
             const selected = item.id === "windowsupdate";
             return `<button class="wu-navitem${selected ? " sel" : ""}" data-nav="${item.id}" data-label="${ctx.ui.esc(item.label)}" data-focus-key="nav-${item.id}" ${selected ? 'aria-current="page"' : ""}>
@@ -701,7 +701,7 @@ export default {
             </button>`;
           }).join("")}
         </nav>
-        <div class="wu-navfoot">Windows 11 Pro<br>22H2 · 22621.4317</div>
+        <div class="wu-navfoot">Doors 11 Pro<br>22H2 · 22621.4317</div>
       </aside>`;
     }
 
@@ -753,7 +753,7 @@ export default {
             save({ view: "main", pauseMenu: false });
             return;
           }
-          ctx.ui.toast("Settings", `${button.dataset.label} is managed by Halcyon Dynamics IT.`, "settings");
+          ctx.ui.toast("Control Freak", `${button.dataset.label} is managed by Halcyon Dynamics IT.`, "settings");
         });
       }
 

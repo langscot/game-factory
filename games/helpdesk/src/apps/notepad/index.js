@@ -1,6 +1,6 @@
-// Notepad. A faithful Windows 11 shell over the shared mock file system:
+// Typo. A faithful Doors 11 shell over the shared mock file system:
 // tabs, menus, a find bar and a status bar. The document text is ephemeral
-// window state; saved text lives in the world store, so File Explorer sees the
+// window state; saved text lives in the world store, so File Exploder sees the
 // same bytes this app wrote. Keyboard shortcuts and dialogs are all wired here.
 
 import {
@@ -24,7 +24,7 @@ const instances = new WeakMap();
 
 export default {
   id: "notepad",
-  title: "Notepad",
+  title: "Typo",
   icon: "notepad",
   size: [700, 540],
   desktop: true,
@@ -32,7 +32,7 @@ export default {
   multi: true,
   order: 6,
   position: [300, 70],
-  titleFor: (options) => `${options?.name || options?.file || NEW_NAME} - Notepad`,
+  titleFor: (options) => `${options?.name || options?.file || NEW_NAME} - Typo`,
 
   mount(container, ctx) {
     ctx.ui.styles("notepad", css);
@@ -75,7 +75,7 @@ export default {
           <div class="np-tabs" data-tabs role="tablist" aria-label="Open documents"></div>
           <button class="np-newtab" data-newtab type="button" title="New tab (Ctrl+N)" aria-label="New tab">+</button>
         </div>
-        <div class="np-menubar" role="menubar" aria-label="Notepad menu">
+        <div class="np-menubar" role="menubar" aria-label="Typo menu">
           <button type="button" role="menuitem" data-menu="file" aria-haspopup="true">File</button>
           <button type="button" role="menuitem" data-menu="edit" aria-haspopup="true">Edit</button>
           <button type="button" role="menuitem" data-menu="view" aria-haspopup="true">View</button>
@@ -96,7 +96,7 @@ export default {
           <span class="np-pos" data-pos>Ln 1, Col 1</span>
           <span class="np-select" data-select></span>
           <span class="np-status-spacer"></span>
-          <span data-eol>Windows (CRLF)</span>
+          <span data-eol>Doors (CRLF)</span>
           <i class="np-sep" aria-hidden="true"></i>
           <span>UTF-8</span>
           <i class="np-sep" aria-hidden="true"></i>
@@ -224,7 +224,7 @@ export default {
 
     function renderTitle() {
       const doc = activeDoc();
-      const title = doc ? `${isDirty(doc) ? "• " : ""}${doc.name} - Notepad` : "Notepad";
+      const title = doc ? `${isDirty(doc) ? "• " : ""}${doc.name} - Typo` : "Typo";
       if (title === lastTitle) return;
       lastTitle = title;
       ctx.window.setTitle(title);
@@ -331,11 +331,11 @@ export default {
     function openInTab(path, name) {
       const file = ctx.world.files.byName(path, name);
       if (!file) {
-        ctx.ui.toast("Notepad", `Could not open ${name}.`, "notepad");
+        ctx.ui.toast("Typo", `Could not open ${name}.`, "notepad");
         return;
       }
       if (file.kind !== "text") {
-        ctx.ui.toast("Notepad", `Notepad cannot open ${name}.`, "notepad");
+        ctx.ui.toast("Typo", `Typo cannot open ${name}.`, "notepad");
         return;
       }
       const existing = docs.find((doc) => doc.path === file.path && doc.name === file.name);
@@ -371,7 +371,7 @@ export default {
         contents: toFileText(doc.text, doc.eol),
       });
       if (!result.ok) {
-        ctx.ui.toast("Notepad", `Could not save: ${result.reason}.`, "notepad");
+        ctx.ui.toast("Typo", `Could not save: ${result.reason}.`, "notepad");
         return false;
       }
 
@@ -556,7 +556,7 @@ export default {
         area.setRangeText(text, area.selectionStart, area.selectionEnd, "end");
         onTextInput();
       } catch {
-        ctx.ui.toast("Notepad", "Clipboard access was blocked. Use Ctrl+V instead.", "notepad");
+        ctx.ui.toast("Typo", "Clipboard access was blocked. Use Ctrl+V instead.", "notepad");
       }
     }
 
@@ -750,7 +750,7 @@ export default {
           setZoom(zoom - ZOOM_STEP);
         } else if (key === "p") {
           event.preventDefault();
-          ctx.ui.toast("Notepad", "Printing is not connected to this PC.", "notepad");
+          ctx.ui.toast("Typo", "Printing is not connected to this PC.", "notepad");
         }
         return;
       }

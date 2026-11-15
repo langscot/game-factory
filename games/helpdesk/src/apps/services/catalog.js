@@ -4,10 +4,10 @@
 // metadata only, so the app never needs a second source of truth for state.
 //
 // Keyed by the short service name, which is exactly what the Name column shows
-// (Spooler, BIT, Windows Update, Workstation, TermService).
+// (Spooler, BIT, Patchy Update, Workstation, TermService).
 
 const FALLBACK = {
-  description: "Windows service hosted by the local service host.",
+  description: "Doors service hosted by the local service host.",
   logonAs: "Local System",
   imagePath: "C:\\Windows\\System32\\svchost.exe -k netsvcs -p",
   dependsOn: [],
@@ -26,8 +26,8 @@ export const SERVICE_META = {
     imagePath: "C:\\Windows\\System32\\svchost.exe -k netsvcs -p",
     dependsOn: ["Workstation"],
   },
-  "Windows Update": {
-    description: "Enables the detection, download and installation of updates for Windows and other programs",
+  "Patchy Update": {
+    description: "Enables the detection, download and installation of updates for Doors and other programs, usually at the worst moment",
     logonAs: "Local System",
     imagePath: "C:\\Windows\\System32\\svchost.exe -k netsvcs -p",
     dependsOn: ["BIT", "Workstation"],

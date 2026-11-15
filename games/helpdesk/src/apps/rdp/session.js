@@ -52,7 +52,7 @@ export function createRemoteSession(root, ctx, app) {
           <div class="rp-mono" aria-hidden="true">${ctx.ui.esc(facts?.initials || "RD")}</div>
           <div class="rp-icons">
             <button class="rp-icon" data-open-pc>${ctx.ui.icon("monitor")}<span>This PC</span></button>
-            <button class="rp-icon" data-open-bin>${ctx.ui.icon("bin")}<span>Recycle Bin</span></button>
+            <button class="rp-icon" data-open-bin>${ctx.ui.icon("bin")}<span>The Bin</span></button>
           </div>
 
           <div class="rp-window" data-pc-window>
@@ -62,8 +62,8 @@ export function createRemoteSession(root, ctx, app) {
             </div>
             <div class="rp-body">
               <section class="rp-sec">
-                <h5>Windows edition</h5>
-                <p>${ctx.ui.esc(facts?.os || "Windows 11 Pro 22H2")}</p>
+                <h5>Doors edition</h5>
+                <p>${ctx.ui.esc(facts?.os || "Doors 11 Pro 22H2")}</p>
               </section>
               <section class="rp-sec">
                 <h5>System</h5>
@@ -73,7 +73,7 @@ export function createRemoteSession(root, ctx, app) {
                   <div><dt>Device name</dt><dd>${host}</dd></div>
                   <div><dt>Signed in as</dt><dd>${user}</dd></div>
                   <div><dt>Owner</dt><dd>${ctx.ui.esc(facts?.owner?.displayName || "Unknown")} · ${ctx.ui.esc(facts?.department || "")}</dd></div>
-                  <div><dt>Remote Desktop</dt><dd class="rp-ok">${facts?.rdpService === "running" ? "Enabled" : "Service stopped"}</dd></div>
+                  <div><dt>Remote Deskhop</dt><dd class="rp-ok">${facts?.rdpService === "running" ? "Enabled" : "Service stopped"}</dd></div>
                   <div><dt>Connection</dt><dd>${ctx.ui.esc(facts?.ip || "")} · 32 ms</dd></div>
                 </dl>
               </section>
@@ -85,12 +85,12 @@ export function createRemoteSession(root, ctx, app) {
                     : "<span>Nothing installed.</span>"
                 }</div>
               </section>
-              <p class="rp-foot">Remote Desktop Services · ${host} · Session 2</p>
+              <p class="rp-foot">Remote Deskhop Services · ${host} · Session 2</p>
             </div>
           </div>
 
           <div class="rp-dialog" data-bin-dialog hidden>
-            <div class="rp-dialog-title"><span>Recycle Bin</span><button data-close-bin aria-label="Close">✕</button></div>
+            <div class="rp-dialog-title"><span>The Bin</span><button data-close-bin aria-label="Close">✕</button></div>
             <div class="rp-dialog-body">This folder is empty.</div>
             <div class="rp-dialog-foot"><button class="rp-dialog-ok" data-close-bin>OK</button></div>
           </div>
@@ -154,7 +154,7 @@ export function createRemoteSession(root, ctx, app) {
   });
   node.querySelector("[data-signout]").addEventListener("click", () => {
     startNode.hidden = true;
-    app.notice(`${rawHost} says: Windows cannot sign out from this session. Use Disconnect to close it.`);
+    app.notice(`${rawHost} says: Doors cannot sign out from this session. Use Disconnect to close it.`);
   });
 
   node.querySelector("[data-open-pc]").addEventListener("click", () => {

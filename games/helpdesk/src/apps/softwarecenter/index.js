@@ -1,5 +1,5 @@
-// Software Center — the Microsoft Configuration Manager client (SCClient.exe).
-// It is not a Windows built-in: it is the app SCCM installs so staff can install
+// Software Bazaar — the Nadir Configuration Manager client (Peddler.exe).
+// It is not a Doors built-in: it is the app the management point installs so staff can install
 // what IT deployed to them. This build is the shell only. Applications go
 // through the world's real install/remove actions; updates and requests are
 // mock state in session.ui because the world has no action for them yet.
@@ -35,7 +35,7 @@ const FILTERS = [
 
 export default {
   id: "softwarecenter",
-  title: "Software Center",
+  title: "Software Bazaar",
   icon: "softwarecenter",
   size: [920, 680],
   desktop: true,
@@ -127,7 +127,7 @@ export default {
         return;
       }
       if (job) {
-        ctx.ui.toast("Software Center", "Another installation is already in progress.", "softwarecenter");
+        ctx.ui.toast("Software Bazaar", "Another installation is already in progress.", "softwarecenter");
         return;
       }
       job = {
@@ -145,17 +145,17 @@ export default {
 
     function uninstallApp(app) {
       if (job) {
-        ctx.ui.toast("Software Center", "Wait for the current installation to finish first.", "softwarecenter");
+        ctx.ui.toast("Software Bazaar", "Wait for the current installation to finish first.", "softwarecenter");
         return;
       }
       const target = machine();
       if (!target) {
-        ctx.ui.toast("Software Center", "No managed device found.", "softwarecenter");
+        ctx.ui.toast("Software Bazaar", "No managed device found.", "softwarecenter");
         return;
       }
       const result = ctx.actions.removeSoftware(target.id, app.id);
       if (!result.ok) {
-        ctx.ui.toast("Software Center", `Could not uninstall ${app.name}: ${result.reason}.`, "softwarecenter");
+        ctx.ui.toast("Software Bazaar", `Could not uninstall ${app.name}: ${result.reason}.`, "softwarecenter");
         return;
       }
       addHistory({
@@ -165,12 +165,12 @@ export default {
         at: clockText(),
         day: ctx.session.day(),
       });
-      ctx.ui.toast("Software Center", `${app.name} was removed from ${target.hostname}.`, "softwarecenter");
+      ctx.ui.toast("Software Bazaar", `${app.name} was removed from ${target.hostname}.`, "softwarecenter");
     }
 
     function requestApp(app) {
       if (requests().some((entry) => entry.softwareId === app.id)) {
-        ctx.ui.toast("Software Center", `${app.name} has already been requested.`, "softwarecenter");
+        ctx.ui.toast("Software Bazaar", `${app.name} has already been requested.`, "softwarecenter");
         return;
       }
       const request = {
@@ -181,13 +181,13 @@ export default {
         day: ctx.session.day(),
       };
       ctx.actions.setUi("softwarecenter", { requests: [request, ...requests()] });
-      ctx.ui.toast("Software Center", `Request for ${app.name} sent to the IT Service Desk.`, "softwarecenter");
+      ctx.ui.toast("Software Bazaar", `Request for ${app.name} sent to the IT Service Desk.`, "softwarecenter");
     }
 
     function installUpdates(pending) {
       if (!pending.length) return;
       if (job) {
-        ctx.ui.toast("Software Center", "Another installation is already in progress.", "softwarecenter");
+        ctx.ui.toast("Software Bazaar", "Another installation is already in progress.", "softwarecenter");
         return;
       }
       job = {
@@ -223,7 +223,7 @@ export default {
           history: [...rows, ...history()].slice(0, HISTORY_LIMIT),
         });
         ctx.ui.toast(
-          "Software Center",
+          "Software Bazaar",
           `${finished.updateRows.length} update${finished.updateRows.length === 1 ? "" : "s"} installed.`,
           "softwarecenter",
         );
@@ -246,7 +246,7 @@ export default {
           day,
         });
         ctx.ui.toast(
-          "Software Center",
+          "Software Bazaar",
           `Could not install ${finished.name}: ${String(result.reason).replace(/-/g, " ")}.`,
           "softwarecenter",
         );
@@ -261,7 +261,7 @@ export default {
         at,
         day,
       });
-      ctx.ui.toast("Software Center", `${finished.name} is installed on ${target.hostname}.`, "softwarecenter");
+      ctx.ui.toast("Software Bazaar", `${finished.name} is installed on ${target.hostname}.`, "softwarecenter");
     }
 
     // The clock pauses while the tab is hidden, so progress freezes with it.
@@ -325,12 +325,12 @@ export default {
             <div class="sc-head-row">
               <span class="sc-logo">${ctx.ui.icon("softwarecenter")}</span>
               <div>
-                <div class="sc-title">Software Center</div>
-                <div class="sc-sub">Microsoft Configuration Manager · SCClient.exe</div>
+                <div class="sc-title">Software Bazaar</div>
+                <div class="sc-sub">Nadir Configuration Manager · Peddler.exe</div>
               </div>
               <div class="sc-device">${esc(hostname())}<small>Halcyon Dynamics IT · Managed device</small></div>
             </div>
-            <div class="sc-tabs" role="tablist" aria-label="Software Center sections">
+            <div class="sc-tabs" role="tablist" aria-label="Software Bazaar sections">
               ${TABS.map(
                 (entry) =>
                   `<button class="sc-tab${entry.id === tab ? " sel" : ""}" role="tab" aria-selected="${
@@ -346,7 +346,7 @@ export default {
             <span class="sc-bar"${job ? "" : " hidden"}><i data-job-bar style="width:${percent}%"></i></span>
             <span data-job-pct>${job ? `${percent}%` : ""}</span>
             <span class="grow"></span>
-            <span>Last checked ${esc(clockText())} · Software Center 5.0.8912.1000</span>
+            <span>Last checked ${esc(clockText())} · Software Bazaar 5.0.8912.1000</span>
           </footer>
         </div>`);
 
@@ -490,13 +490,13 @@ export default {
                     .join("")}</div>`
                 : `<div class="sc-empty">${
                     filter === "installed"
-                      ? "Nothing installed from Software Center yet."
+                      ? "Nothing installed from Software Bazaar yet."
                       : "Everything approved is already installed on this device."
                   }</div>`
             }
             ${
               blocked.length
-                ? `<div class="sc-section-title">Not available in Software Center</div>
+                ? `<div class="sc-section-title">Not available in Software Bazaar</div>
                    <div class="sc-grid">${blocked
                      .map((app) => cardHtml(app, ids.has(app.id), app.id === selectedId))
                      .join("")}</div>`
@@ -631,7 +631,7 @@ export default {
             deployment.name,
             `${deployment.description}\n\nType: ${deployment.type}\nVersion: ${deployment.version}\nSize: ${formatSize(
               deployment.sizeMb,
-            )}\nStatus: ${deployment.status}\n\nDeployments run in the IT maintenance window. Nothing starts from Software Center.`,
+            )}\nStatus: ${deployment.status}\n\nDeployments run in the IT maintenance window. Nothing starts from Software Bazaar.`,
           );
         });
       }
@@ -737,7 +737,7 @@ export default {
       main.innerHTML = `
         <div class="sc-page sc-opt">
           <h2 class="sc-h">Options</h2>
-          <div class="sc-hint">How Software Center behaves on ${esc(hostname())}.</div>
+          <div class="sc-hint">How Software Bazaar behaves on ${esc(hostname())}.</div>
 
           <section class="sc-block">
             <h3>Computer maintenance</h3>
@@ -786,8 +786,8 @@ export default {
           <div class="sc-row"><button class="sc-btn ghost" data-reset-options>Restore policy defaults</button></div>
 
           <div class="sc-about">
-            Software Center 5.0.8912.1000<br>
-            Configuration Manager client 5.00.9128.1000<br>
+            Software Bazaar 5.0.8912.1000<br>
+            Nadir Configuration Manager client 5.00.9128.1000<br>
             Site HAL · Management point ccm.halcyon.co<br>
             Settings are stored on this device and applied by Halcyon Dynamics IT policy.
           </div>
@@ -805,7 +805,7 @@ export default {
 
       main.querySelector("[data-reset-options]")?.addEventListener("click", () => {
         ctx.actions.setUi("softwarecenter", { options: { ...DEFAULT_OPTIONS } });
-        ctx.ui.toast("Software Center", "Policy defaults restored.", "softwarecenter");
+        ctx.ui.toast("Software Bazaar", "Policy defaults restored.", "softwarecenter");
       });
     }
 

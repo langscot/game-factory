@@ -1,4 +1,4 @@
-// Task Manager, rebuilt as a Windows 11 shell. The open windows are real
+// Task Mangler, rebuilt as a Doors 11 shell. The open windows are real
 // (ctx.ui.windows()); everything else on the Processes tab is seeded mock data.
 // The app owns no world state: selection, tab, filters and startup toggles go
 // through actions.setUi("taskmanager", …), and End task asks the platform to
@@ -30,7 +30,7 @@ const TABS = [
 const SECTIONS = [
   { key: "apps", label: "Apps" },
   { key: "background", label: "Background processes" },
-  { key: "system", label: "Windows processes" },
+  { key: "system", label: "Doors processes" },
 ];
 
 // How often the figures move, in visible-clock seconds.
@@ -211,7 +211,7 @@ function drawChart(canvas, values, { max, grid }) {
 
 export default {
   id: "taskmanager",
-  title: "Task Manager",
+  title: "Task Mangler",
   icon: "taskmgr",
   size: [920, 620],
   desktop: true,
@@ -391,7 +391,7 @@ export default {
           <span>Memory <b data-foot="mem"></b></span>
           <span>Disk <b data-foot="disk"></b></span>
           <span>Network <b data-foot="net"></b></span>
-          <span class="spacer">Windows 11 Pro · 22H2</span>
+          <span class="spacer">Doors 11 Pro · 22H2</span>
         </div>`);
 
       const searchInput = subbar.querySelector("[data-search]");
@@ -584,12 +584,12 @@ export default {
 
       if (process.kind === "system" || process.kind === "service") {
         const confirmed = await ctx.ui.confirm(
-          "Task Manager",
+          "Task Mangler",
           `If you end a system process, the system might become unstable or stop responding.\n\nAre you sure you want to end ${name}?`,
           { ok: "End process" },
         );
         if (confirmed) {
-          await ctx.ui.alert("Task Manager", "The operation could not be completed.\n\nAccess is denied.");
+          await ctx.ui.alert("Task Mangler", "The operation could not be completed.\n\nAccess is denied.");
         }
         return;
       }
@@ -597,14 +597,14 @@ export default {
       if (group.windowId) {
         const self = group.windowId === ctx.window.id;
         if (self) {
-          ctx.ui.toast("Task Manager", "Ending Task Manager…", "taskmgr");
+          ctx.ui.toast("Task Mangler", "Ending Task Mangler…", "taskmgr");
           ctx.ui.endWindow(group.windowId);
           return;
         }
         ctx.ui.endWindow(group.windowId);
         state.selection = null;
         persist();
-        ctx.ui.toast("Task Manager", `${name} has been ended.`, "taskmgr");
+        ctx.ui.toast("Task Mangler", `${name} has been ended.`, "taskmgr");
         renderView();
         return;
       }
@@ -612,7 +612,7 @@ export default {
       stopped.add(process.id);
       state.selection = null;
       persist();
-      ctx.ui.toast("Task Manager", `${name} has been ended.`, "taskmgr");
+      ctx.ui.toast("Task Mangler", `${name} has been ended.`, "taskmgr");
       renderView();
     }
 
@@ -896,7 +896,7 @@ export default {
       ctx.ui.dialog({
         html: `
           <h2>Create new task</h2>
-          <p>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p>
+          <p>Type the name of a program, folder, document, or Internet resource, and Doors will open it for you.</p>
           <label style="display:block;font-size:12px;color:var(--text-3);margin-top:12px">Open:
             <input data-run-input placeholder="notepad" autocomplete="off" spellcheck="false"
               style="display:block;width:100%;margin-top:4px;padding:6px 8px;border:1px solid var(--stroke-2);border-radius:4px;background:rgba(255,255,255,.06);color:var(--text);font-size:12.5px;outline:none">
@@ -922,11 +922,11 @@ export default {
             const appId = RUN_ALIASES[cleaned] || cleaned;
             const handle = ctx.open(appId);
             if (handle) {
-              ctx.ui.toast("Task Manager", `Started ${raw}${elevated.checked ? " with elevated privileges" : ""}.`, "taskmgr");
+              ctx.ui.toast("Task Mangler", `Started ${raw}${elevated.checked ? " with elevated privileges" : ""}.`, "taskmgr");
             } else {
               ctx.ui.alert(
-                "Task Manager",
-                `Windows cannot find '${raw}'. Make sure you typed the name correctly, and then try again.`,
+                "Task Mangler",
+                `Doors cannot find '${raw}'. Make sure you typed the name correctly, and then try again.`,
               );
             }
           };
@@ -970,7 +970,7 @@ export default {
           },
         },
         {
-          label: "Reset Task Manager layout",
+          label: "Reset Task Mangler layout",
           onClick: () => {
             state.tab = "processes";
             state.selection = null;

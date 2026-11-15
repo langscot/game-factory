@@ -1,4 +1,4 @@
-// Browser: a tab strip, an address bar, a bookmarks bar and a content area that
+// Glorp: a tab strip, an address bar, a bookmarks bar and a content area that
 // renders local site modules. There is no network here — a hostname is a lookup
 // in src/content/sites, and an unknown one gets an in-world error page.
 //
@@ -188,7 +188,7 @@ function applyLaunch(tabs, active, value) {
 
 export default {
   id: APP_ID,
-  title: "Browser",
+  title: "Glorp",
   icon: "browser",
   size: [880, 600],
   desktop: true,
@@ -211,7 +211,7 @@ export default {
     const root = ctx.ui.el(`
       <div class="bw">
         <div class="bw-tabstrip">
-          <div class="bw-tablist" role="tablist" aria-label="Browser tabs" data-tablist></div>
+          <div class="bw-tablist" role="tablist" aria-label="Glorp tabs" data-tablist></div>
           <button class="bw-newtab" data-newtab title="New tab" aria-label="New tab">+</button>
         </div>
 
@@ -344,7 +344,7 @@ export default {
       star.title = bookmarked ? "Remove bookmark" : "Bookmark this page";
       star.setAttribute("aria-pressed", String(bookmarked));
 
-      ctx.window.setTitle(`${tab.title} — Browser`);
+      ctx.window.setTitle(`${tab.title} — Glorp`);
     }
 
     // --------------------------------------------------------------- content
@@ -511,7 +511,7 @@ export default {
 
     function createTab() {
       if (tabs.length >= MAX_TABS) {
-        ctx.ui.toast("Browser", "That is as many tabs as this browser will hold. Close one first.", APP_ID);
+        ctx.ui.toast("Glorp", "That is as many tabs as Glorp will hold. Close one first. Or keep them all and let the fan deal with it.", APP_ID);
         return;
       }
       const tab = emptyTab(`tab_${nextId++}`);
@@ -546,7 +546,7 @@ export default {
       if (bookmarks.includes(host)) {
         bookmarks = bookmarks.filter((entry) => entry !== host);
       } else if (bookmarks.length >= MAX_BOOKMARKS) {
-        ctx.ui.toast("Browser", "The bookmarks bar is full. Remove one before adding another.", APP_ID);
+        ctx.ui.toast("Glorp", "The bookmarks bar is full. Remove one before adding another.", APP_ID);
         return;
       } else {
         bookmarks = [...bookmarks, host];

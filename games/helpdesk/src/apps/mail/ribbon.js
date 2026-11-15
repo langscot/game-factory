@@ -1,4 +1,4 @@
-// The ribbon, as data. Tabs and groups follow classic Outlook; the app wires
+// The ribbon, as data. Tabs and groups follow classic Lookout; the app wires
 // every `cmd` in one click handler, so rebuilding the ribbon never loses an
 // event listener.
 

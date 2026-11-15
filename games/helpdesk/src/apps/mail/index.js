@@ -1,4 +1,4 @@
-// Outlook, classic desktop client.
+// Lookout, classic desktop mail client.
 //
 // The id stays `mail` so the day-start, desktop link, Start menu and ticket
 // flows keep opening the same app. Everything below is the shell: ribbon,
@@ -46,7 +46,7 @@ const EMPTY =
 
 export default {
   id: "mail",
-  title: "Outlook",
+  title: "Lookout",
   icon: "mail",
   size: [980, 640],
   desktop: true,
@@ -101,7 +101,7 @@ export default {
               <div><b data-tech-name>Morgan Hayes</b><small data-tech-mail>m.hayes@halcyon.co</small></div>
             </div>
             <div class="fp-scroll" data-folders></div>
-            <div class="fp-foot">Outlook · Microsoft Exchange</div>
+            <div class="fp-foot">Lookout · Halcyon Post</div>
           </aside>
           <section class="list-pane">
             <div class="lp-head">
@@ -114,7 +114,7 @@ export default {
           <section class="read-pane" data-read></section>
         </div>
         <div class="statusbar">
-          <span class="conn" data-conn><i class="dot"></i><span data-conn-text>Connected to Microsoft Exchange</span></span>
+          <span class="conn" data-conn><i class="dot"></i><span data-conn-text>Connected to Halcyon Post</span></span>
           <span data-status-count></span>
           <span class="grow"></span>
           <span>All items are up to date</span>
@@ -160,13 +160,13 @@ export default {
         };
         refs.search.value = "";
         setUi({ sentDetails, folder: "sent", selectedId: details.mail.id, search: "" });
-        ctx.ui.toast("Outlook", "Message sent. It is in Sent Items.", "mail");
+        ctx.ui.toast("Lookout", "Message sent. It is in Sent Items.", "mail");
       },
       onDraft(draft) {
         const index = drafts.findIndex((entry) => entry.id === draft.id);
         if (index >= 0) drafts[index] = draft;
         else drafts.push(draft);
-        ctx.ui.toast("Outlook", "Draft saved in Drafts.", "mail");
+        ctx.ui.toast("Lookout", "Draft saved in Drafts.", "mail");
         paint();
       },
     });
@@ -187,7 +187,7 @@ export default {
 
     function openComposer(args) {
       if (composer.isOpen()) {
-        ctx.ui.toast("Outlook", "Finish or discard the open message first.", "mail");
+        ctx.ui.toast("Lookout", "Finish or discard the open message first.", "mail");
         return;
       }
       if (backstagePage) closeBackstage();
@@ -390,7 +390,7 @@ export default {
       const tech = ctx.world.session.current().technician;
       const connected = ctx.world.mail.canSendFrom(tech.id);
       refs.conn.classList.toggle("off", !connected);
-      refs.connText.textContent = connected ? "Connected to Microsoft Exchange" : "Working offline";
+      refs.connText.textContent = connected ? "Connected to Halcyon Post" : "Working offline";
       const unread = currentList.filter((message) => !message.read).length;
       refs.statusCount.textContent = `${currentList.length} item${currentList.length === 1 ? "" : "s"}${
         unread ? `, ${unread} unread` : ""
@@ -452,7 +452,7 @@ export default {
     }
 
     function toast(message) {
-      ctx.ui.toast("Outlook", message, "mail");
+      ctx.ui.toast("Lookout", message, "mail");
     }
 
     function moveSelected(folder) {
@@ -510,7 +510,7 @@ export default {
             <div class="bs-avatar">${ctx.ui.esc(initials(tech?.displayName || "MH"))}</div>
             <div>
               <b>${ctx.ui.esc(tech?.displayName || "Morgan Hayes")}</b>
-              <span>${ctx.ui.esc(tech?.email || "m.hayes@halcyon.co")} · Microsoft Exchange</span>
+              <span>${ctx.ui.esc(tech?.email || "m.hayes@halcyon.co")} · Halcyon Post</span>
               <span>Current folder: ${ctx.ui.esc(folder)}</span>
             </div>
           </div>
@@ -564,8 +564,8 @@ export default {
       ];
       bsEl.innerHTML = `
         <aside class="bs-side">
-          <button class="bs-back" data-bs-close title="Back to Outlook" aria-label="Back to Outlook">${glyph("chevron")}</button>
-          <div class="bs-logo">Outlook</div>
+          <button class="bs-back" data-bs-close title="Back to Lookout" aria-label="Back to Lookout">${glyph("chevron")}</button>
+          <div class="bs-logo">Lookout</div>
           <nav class="bs-nav">
             ${nav.map(([id, label]) => `<button data-bs-page="${id}" class="${page === id ? "sel" : ""}">${label}</button>`).join("")}
             <div class="bs-sep"></div>
@@ -639,7 +639,7 @@ export default {
         case "offline":
           toast(
             ctx.world.mail.canSendFrom(ctx.world.session.current().technicianId)
-              ? "Connected to HALCYON Exchange."
+              ? "Connected to HALCYON Post."
               : "Working offline. Changes will sync when you reconnect.",
           );
           break;

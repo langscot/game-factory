@@ -1,4 +1,4 @@
-// Active Directory Users and Computers — a dsa.msc shell over the shared
+// Inactive Directory Users & Computers — a dsa.msc shell over the shared
 // people table. Every account and group change goes through ctx.actions, so the
 // ticket watcher sees the same events a real technician would generate.
 //
@@ -16,7 +16,7 @@ const ACCOUNT_LABEL = { enabled: "Enabled", locked: "Locked out", disabled: "Dis
 
 export default {
   id: "aduc",
-  title: "Active Directory Users and Computers",
+  title: "Inactive Directory Users & Computers",
   icon: "aduc",
   size: [880, 620],
   desktop: true,
@@ -125,7 +125,7 @@ export default {
     }
 
     function containerPath(id) {
-      const trail = ["Active Directory Users and Computers"];
+      const trail = ["Inactive Directory Users & Computers"];
       const byId = new Map(containers().map((entry) => [entry.id, entry]));
       const chain = [];
       let current = byId.get(id);
@@ -206,7 +206,7 @@ export default {
       };
 
       const rootExpanded = !collapsed.has("root");
-      let html = row("root", "Active Directory Users and Computers", 0, "root", true, rootExpanded, false);
+      let html = row("root", "Inactive Directory Users & Computers", 0, "root", true, rootExpanded, false);
       if (rootExpanded) html += branch(byId.get("domain"), 1);
       treePane.innerHTML = html;
     }
@@ -298,7 +298,7 @@ export default {
 
     function notify(message) {
       lastAction = message;
-      ctx.ui.toast("Active Directory Users and Computers", message, "aduc");
+      ctx.ui.toast("Inactive Directory Users & Computers", message, "aduc");
       paintStatus();
     }
 
@@ -377,12 +377,12 @@ export default {
       } else {
         items = [
           {
-            label: "About Active Directory Users and Computers",
+            label: "About Inactive Directory Users & Computers",
             icon: "$info",
             onClick: () =>
               ctx.ui.alert(
-                "Active Directory Users and Computers",
-                "dsa.msc · Halcyon Dynamics\n\nA console for managing users, groups and organizational units in the HALCYON domain.\n\nVersion 10.0 (Build 22621)",
+                "Inactive Directory Users & Computers",
+                "dsa.msc · Halcyon Dynamics\n\nA console for managing users, groups and organizational units in the HALCYON domain. Most of them are inactive.\n\nVersion 10.0 (Build 22621)",
               ),
           },
         ];
@@ -912,7 +912,7 @@ export default {
         <div class="prop-form">
           <label>User logon name:</label>
           <div class="logon"><input readonly value="${ctx.ui.esc(person.logonName)}"><span class="suffix">@${DOMAIN}</span></div>
-          <label>User logon name (pre-Windows 2000):</label>
+          <label>User logon name (pre-Doors 2000):</label>
           <input readonly value="HALCYON\\${ctx.ui.esc(person.logonName)}">
         </div>
         <div class="account-actions">

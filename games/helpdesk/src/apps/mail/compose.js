@@ -1,4 +1,4 @@
-// The compose panel. Classic Outlook opens a separate window for a message;
+// The compose panel. Classic mail clients open a separate window for a message;
 // inside one game window the honest equivalent is a modal-ish panel with its
 // own title bar and mini ribbon. Drafts are app-local (the world has no drafts
 // table), but sending goes through the real `sendMail` action, so sent mail
@@ -18,9 +18,9 @@ const REPLY_ALL_CC = "IT Service Desk <it-service-desk@halcyon.co>";
 
 const SEND_ERRORS = {
   "no-network": "You are working offline. Reconnect the adapter in Settings, then send again.",
-  "recipient-disabled": "That mailbox is disabled, so Exchange will not deliver to it.",
+  "recipient-disabled": "That mailbox is disabled, so Halcyon Post will not deliver to it.",
   "unknown-recipient": "That recipient is not in the directory.",
-  "unknown-sender": "The signed-in mailbox is missing, so Outlook cannot send.",
+  "unknown-sender": "The signed-in mailbox is missing, so Lookout cannot send.",
 };
 
 const prefix = (subject, tag) => {
@@ -154,7 +154,7 @@ export function createComposer(host, ctx, handlers) {
     });
 
     if (!result.ok) {
-      setStatus(SEND_ERRORS[result.reason] || `Outlook could not send this message (${result.reason}).`);
+      setStatus(SEND_ERRORS[result.reason] || `Lookout could not send this message (${result.reason}).`);
       return;
     }
 
@@ -196,7 +196,7 @@ export function createComposer(host, ctx, handlers) {
       return;
     }
     ctx.ui
-      .confirm("Outlook", "Discard this message? Choose Cancel to keep editing.", {
+      .confirm("Lookout", "Discard this message? Choose Cancel to keep editing.", {
         ok: "Discard",
         cancel: "Keep editing",
       })

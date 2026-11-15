@@ -1,4 +1,4 @@
-// Registry Editor (regedit.exe). Shell only: a two-pane key tree and value
+// Regret Editor (regedit.exe). Shell only: a two-pane key tree and value
 // list over a mock registry. The seeded content is copied into
 // session.ui("regedit") on first open and every edit lives there; export writes
 // a .reg file into the mock file system, import merges one back in.
@@ -39,7 +39,7 @@ const PROTECTED_PREFIXES = ["hkey_local_machine\\software\\policies", "hkey_loca
 
 export default {
   id: "regedit",
-  title: "Registry Editor",
+  title: "Regret Editor",
   icon: "regedit",
   size: [920, 600],
   desktop: true,
@@ -228,7 +228,7 @@ export default {
       return [
         { label: "Help Topics", disabled: true },
         { separator: true },
-        { label: "About Registry Editor", onClick: showAbout },
+        { label: "About Regret Editor", onClick: showAbout },
       ];
     }
 
@@ -352,7 +352,7 @@ export default {
       const state = uiState();
       const record = keyRecord(state.keys, path);
       if (!record) {
-        ctx.ui.alert("Registry Editor", "The selected key no longer exists. It may have been deleted or imported over.");
+        ctx.ui.alert("Regret Editor", "The selected key no longer exists. It may have been deleted or imported over.");
         return;
       }
       if (valueName) pendingValueFocus = true;
@@ -767,7 +767,7 @@ export default {
     async function newKey() {
       const state = uiState();
       if (state.selected === ROOT) {
-        await ctx.ui.alert("Registry Editor", "Select a key before creating a subkey.");
+        await ctx.ui.alert("Regret Editor", "Select a key before creating a subkey.");
         return;
       }
       const parent = state.selected;
@@ -780,11 +780,11 @@ export default {
       if (name === null) return;
       const clean = name.trim();
       if (!validKeyPart(clean)) {
-        await ctx.ui.alert("Registry Editor", "A key name cannot be empty or contain a backslash.");
+        await ctx.ui.alert("Regret Editor", "A key name cannot be empty or contain a backslash.");
         return;
       }
       if (siblings.some((sibling) => eq(sibling, clean))) {
-        await ctx.ui.alert("Registry Editor", "A key with this name already exists.");
+        await ctx.ui.alert("Regret Editor", "A key with this name already exists.");
         return;
       }
       const path = `${parent}\\${clean}`;
@@ -800,7 +800,7 @@ export default {
     async function newValue(type) {
       const state = uiState();
       if (state.selected === ROOT) {
-        await ctx.ui.alert("Registry Editor", "Select a key before creating a value.");
+        await ctx.ui.alert("Regret Editor", "Select a key before creating a value.");
         return;
       }
       const record = keyRecord(state.keys, state.selected);
@@ -826,17 +826,17 @@ export default {
       if (!result) return;
       const name = result.name.trim();
       if (!name || eq(name, DEFAULT_VALUE)) {
-        await ctx.ui.alert("Registry Editor", "That value name is reserved.");
+        await ctx.ui.alert("Regret Editor", "That value name is reserved.");
         return;
       }
       if (record.values.some((value) => eq(value.name, name))) {
-        await ctx.ui.alert("Registry Editor", "A value with this name already exists.");
+        await ctx.ui.alert("Regret Editor", "A value with this name already exists.");
         return;
       }
       if (isProtectedPath(state.selected)) {
         const proceed = await warningDialog(
-          "Registry Editor",
-          `This key is used by Windows and by Halcyon policy. Adding a value here affects every account on this PC.\n\nKey: ${state.selected}`,
+          "Regret Editor",
+          `This key is used by Doors and by Halcyon policy. Adding a value here affects every account on this PC.\n\nKey: ${state.selected}`,
           "Yes",
           "No",
         );
@@ -860,7 +860,7 @@ export default {
 
       if (isProtectedPath(state.selected)) {
         const proceed = await warningDialog(
-          "Registry Editor",
+          "Regret Editor",
           `Changing this value affects every account on this PC and cannot be undone.\n\nKey: ${state.selected}\nValue: ${name}`,
           "Yes",
           "No",
@@ -888,11 +888,11 @@ export default {
 
       const nextName = result.name.trim();
       if (!nextName || (eq(nextName, DEFAULT_VALUE) && !isDefault)) {
-        await ctx.ui.alert("Registry Editor", "That value name is reserved.");
+        await ctx.ui.alert("Regret Editor", "That value name is reserved.");
         return;
       }
       if (!isDefault && record.values.some((value) => eq(value.name, nextName) && !eq(value.name, name))) {
-        await ctx.ui.alert("Registry Editor", "A value with this name already exists.");
+        await ctx.ui.alert("Regret Editor", "A value with this name already exists.");
         return;
       }
 
@@ -909,24 +909,24 @@ export default {
     async function renameValue(name) {
       const state = uiState();
       if (eq(name, DEFAULT_VALUE)) {
-        await ctx.ui.alert("Registry Editor", "The (Default) value cannot be renamed.");
+        await ctx.ui.alert("Regret Editor", "The (Default) value cannot be renamed.");
         return;
       }
       const record = keyRecord(state.keys, state.selected);
       const value = findValue(record, name);
       if (!value) {
-        await ctx.ui.alert("Registry Editor", "There is no value to rename.");
+        await ctx.ui.alert("Regret Editor", "There is no value to rename.");
         return;
       }
       const nextNameRaw = await textPrompt({ title: "Rename Value", label: "Value name:", value: name });
       if (nextNameRaw === null) return;
       const nextName = nextNameRaw.trim();
       if (!nextName || eq(nextName, DEFAULT_VALUE)) {
-        await ctx.ui.alert("Registry Editor", "That value name is reserved.");
+        await ctx.ui.alert("Regret Editor", "That value name is reserved.");
         return;
       }
       if (record.values.some((entry) => eq(entry.name, nextName) && !eq(entry.name, name))) {
-        await ctx.ui.alert("Registry Editor", "A value with this name already exists.");
+        await ctx.ui.alert("Regret Editor", "A value with this name already exists.");
         return;
       }
       const next = state.keys.map((key) =>
@@ -944,7 +944,7 @@ export default {
     async function renameKey(path) {
       const state = uiState();
       if (path === ROOT || isHive(path)) {
-        await ctx.ui.alert("Registry Editor", "This key cannot be renamed.");
+        await ctx.ui.alert("Regret Editor", "This key cannot be renamed.");
         return;
       }
       const record = keyRecord(state.keys, path);
@@ -955,12 +955,12 @@ export default {
       if (nextNameRaw === null) return;
       const nextName = nextNameRaw.trim();
       if (!validKeyPart(nextName)) {
-        await ctx.ui.alert("Registry Editor", "A key name cannot be empty or contain a backslash.");
+        await ctx.ui.alert("Regret Editor", "A key name cannot be empty or contain a backslash.");
         return;
       }
       const siblings = childrenOf(state.keys, parent);
       if (siblings.some((sibling) => eq(sibling, nextName) && !eq(sibling, oldLeaf))) {
-        await ctx.ui.alert("Registry Editor", "A key with this name already exists.");
+        await ctx.ui.alert("Regret Editor", "A key with this name already exists.");
         return;
       }
       const newPath = `${parent}\\${nextName}`;
@@ -1003,7 +1003,7 @@ export default {
       const record = keyRecord(state.keys, state.selected);
       const value = findValue(record, name);
       if (!value) {
-        await ctx.ui.alert("Registry Editor", "There is no value to delete.");
+        await ctx.ui.alert("Regret Editor", "There is no value to delete.");
         return;
       }
       const ok = await warningDialog(
@@ -1031,7 +1031,7 @@ export default {
       const state = uiState();
       if (path === ROOT) return;
       if (isHive(path)) {
-        await ctx.ui.alert("Registry Editor", `Cannot delete ${leafName(path)}.\n\nAccess is denied.`);
+        await ctx.ui.alert("Regret Editor", `Cannot delete ${leafName(path)}.\n\nAccess is denied.`);
         return;
       }
       const record = keyRecord(state.keys, path);
@@ -1075,12 +1075,12 @@ export default {
       const state = uiState();
       if (state.selected === ROOT) return;
       if ((state.favorites || []).some((favorite) => eq(favorite.path, state.selected))) {
-        ctx.ui.toast("Registry Editor", "This key is already in Favorites.", "regedit");
+        ctx.ui.toast("Regret Editor", "This key is already in Favorites.", "regedit");
         return;
       }
       const favorite = { label: leafName(state.selected) || state.selected, path: state.selected };
       commit({ favorites: [...(state.favorites || []), favorite] });
-      ctx.ui.toast("Registry Editor", `${favorite.label} added to Favorites.`, "regedit");
+      ctx.ui.toast("Regret Editor", `${favorite.label} added to Favorites.`, "regedit");
     }
 
     function removeFavorite() {
@@ -1150,7 +1150,7 @@ export default {
     async function openFind() {
       const result = await findDialog();
       if (result?.notFound) {
-        await ctx.ui.alert("Registry Editor", "Finished searching the registry.");
+        await ctx.ui.alert("Regret Editor", "Finished searching the registry.");
       }
     }
 
@@ -1160,7 +1160,7 @@ export default {
         return;
       }
       if (!findNext(findState.term, findState.options)) {
-        await ctx.ui.alert("Registry Editor", "Finished searching the registry.");
+        await ctx.ui.alert("Regret Editor", "Finished searching the registry.");
       }
     }
 
@@ -1206,7 +1206,7 @@ export default {
         .sort((a, b) => a.name.localeCompare(b.name, "en-GB", { sensitivity: "base" }));
       if (!files.length) {
         await ctx.ui.alert(
-          "Registry Editor",
+          "Regret Editor",
           "There are no .reg files on this PC.\n\nExport a key first, then import it from here.",
         );
         return;
@@ -1247,7 +1247,7 @@ export default {
       if (!file) return;
 
       const proceed = await warningDialog(
-        "Registry Editor",
+        "Regret Editor",
         `Adding information can unintentionally change or delete values and cause components to stop working correctly. If you do not trust the source of this file, do not add the information to the registry.\n\n${file.path}/${file.name}`,
         "Yes",
         "No",
@@ -1256,14 +1256,14 @@ export default {
 
       const parsed = parseReg(ctx.world.files.read(file.id));
       if (!parsed.sectionPaths.length && !parsed.entries.length) {
-        await ctx.ui.alert("Registry Editor", "This file does not contain any registry data.");
+        await ctx.ui.alert("Regret Editor", "This file does not contain any registry data.");
         return;
       }
 
       const state = uiState();
       const result = applyImport(state.keys, parsed);
       if (!result.firstPath && !result.imported) {
-        await ctx.ui.alert("Registry Editor", "Nothing in this file could be applied to the registry.");
+        await ctx.ui.alert("Regret Editor", "Nothing in this file could be applied to the registry.");
         return;
       }
       pendingTreeFocus = true;
@@ -1274,7 +1274,7 @@ export default {
         expanded: result.firstPath ? expandPaths(state, result.firstPath) : state.expanded,
       });
       ctx.ui.toast(
-        "Registry Editor",
+        "Regret Editor",
         `${result.imported} value${result.imported === 1 ? "" : "s"} imported from ${file.name}.`,
         "regedit",
       );
@@ -1322,7 +1322,7 @@ export default {
       if (!name) return;
       if (!/\.reg$/i.test(name)) name += ".reg";
       if (/[\\/:*?"<>|]/.test(name)) {
-        await ctx.ui.alert("Registry Editor", "The file name contains characters that are not allowed.");
+        await ctx.ui.alert("Regret Editor", "The file name contains characters that are not allowed.");
         return;
       }
 
@@ -1340,10 +1340,10 @@ export default {
       const contents = exportReg(latest.keys, latest.selected);
       const saved = ctx.actions.saveFile({ path: EXPORT_FOLDER, name, contents, kind: "registry" });
       if (!saved.ok) {
-        await ctx.ui.alert("Registry Editor", `Export failed: ${saved.reason}.`);
+        await ctx.ui.alert("Regret Editor", `Export failed: ${saved.reason}.`);
         return;
       }
-      ctx.ui.toast("Registry Editor", `${name} exported to ${EXPORT_FOLDER}.`, "regedit");
+      ctx.ui.toast("Regret Editor", `${name} exported to ${EXPORT_FOLDER}.`, "regedit");
     }
 
     // --------------------------------------------------------------- misc
@@ -1358,8 +1358,8 @@ export default {
 
     function showAbout() {
       ctx.ui.alert(
-        "About Registry Editor",
-        "Registry Editor\nVersion 10.0 (Build 22621)\n\nRegistry Editor lets you view and change settings in the registry for this computer.\n\nChanges take effect at the next sign-in.",
+        "About Regret Editor",
+        "Regret Editor\nVersion 10.0 (Build 22621)\n\nRegret Editor lets you view and change settings in the registry for this computer. Every change is one you will regret.\n\nChanges take effect at the next sign-in.",
       );
     }
 

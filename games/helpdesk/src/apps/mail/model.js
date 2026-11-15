@@ -1,4 +1,4 @@
-// Read-only projections for the Outlook shell.
+// Read-only projections for the Lookout shell.
 //
 // The world owns the mailbox: `world.mail` rows, `world.tickets` for the support
 // queue, and `world.people.gal()` for recipients. This module only derives what
@@ -17,7 +17,7 @@ export const FOLDERS = [
 ];
 
 // The support queue is the existing ticket/mail integration. It is a custom
-// Outlook folder, kept separate from the six standard ones so the game's mail
+// Lookout folder, kept separate from the six standard ones so the game's mail
 // data still has an obvious home.
 export const SUPPORT_FOLDER = { id: "support", label: "Support Queue", glyph: "support", custom: true };
 
@@ -150,7 +150,7 @@ export function folderMessages(ctx, ui, folder, drafts = []) {
   }
 
   // The inbox keeps the world's order (briefing first); the other folders read
-  // newest first, the way Outlook shows Sent and Deleted Items.
+  // newest first, the way Lookout shows Sent and Deleted Items.
   if (!["inbox", "support", "drafts"].includes(folder)) {
     list.sort((a, b) => minutes(b.when) - minutes(a.when) || String(b.id).localeCompare(String(a.id)));
   }
@@ -244,7 +244,7 @@ export function internetHeaders(ctx, message) {
  by mx1.${MAIL_DOMAIN} (10.20.4.11) with ESMTPS id 4F2A9C1B;
  ${date}`
     : `from mx1.${MAIL_DOMAIN} (10.20.4.11)
- by EXCH-01.${MAIL_DOMAIN} (10.20.4.20) with Microsoft SMTP Server (version=TLS1_2) id 15.20.7;
+ by EXCH-01.${MAIL_DOMAIN} (10.20.4.20) with Halcyon SMTP (version=TLS1_2) id 15.20.7;
  ${date}`;
 
   const lines = [
@@ -258,7 +258,7 @@ export function internetHeaders(ctx, message) {
     `Message-ID: <${message.id}@mail.${MAIL_DOMAIN}>`,
     "MIME-Version: 1.0",
     'Content-Type: text/plain; charset="utf-8"',
-    "X-Mailer: Microsoft Outlook 16.0",
+    "X-Mailer: Lookout 16.0",
   ];
   if (external) {
     lines.push(`Authentication-Results: mx1.${MAIL_DOMAIN}; spf=softfail smtp.mailfrom=${senderDomain}`);

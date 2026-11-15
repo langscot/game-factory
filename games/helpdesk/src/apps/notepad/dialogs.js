@@ -1,4 +1,4 @@
-// The two dialogs Notepad needs: a file picker over the mock file system and
+// The two dialogs Typo needs: a file picker over the mock file system and
 // the three-way Save / Don't save / Cancel prompt. They are created per app
 // instance so closing a window can close whatever it left open.
 
@@ -57,7 +57,7 @@ export function createDialogs({ ctx, isLight, getActiveDoc }) {
     const light = isLight() ? " np-light" : "";
     return modal(
       `<div class="app-notepad${light}"><div class="np-prompt">
-        <h2>Notepad</h2>
+        <h2>Typo</h2>
         <p>Do you want to save changes to ${ctx.ui.esc(doc.name)}?</p>
         <div class="row">
           <button class="btn" data-save data-dialog-ok type="button">Save</button>
@@ -137,7 +137,7 @@ export function createDialogs({ ctx, isLight, getActiveDoc }) {
               return;
             }
             if (file.kind !== "text") {
-              message.textContent = "Notepad can only open text files.";
+              message.textContent = "Typo can only open text files.";
               return;
             }
             finish({ path, name });

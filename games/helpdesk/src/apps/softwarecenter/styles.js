@@ -1,4 +1,4 @@
-// Software Center styles. Every selector is scoped under .app-softwarecenter;
+// Software Bazaar styles. Every selector is scoped under .app-softwarecenter;
 // the only global rule is the uniquely named pulse keyframe.
 
 export const css = `

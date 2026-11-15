@@ -622,7 +622,7 @@ export default {
                 person ? world.people.departmentName(person.id) : "—",
               )}${esc(remote)}</dd></div>
               <div><dt>Machine</dt><dd>${esc(machine?.hostname || "—")}<span class="sd-sub">${
-                machine ? `${esc(machine.os || "Windows")} · tier ${machine.hardwareTier}${machine.network?.connected ? "" : " · offline"}` : "No managed device"
+                machine ? `${esc(machine.os || "Doors")} · tier ${machine.hardwareTier}${machine.network?.connected ? "" : " · offline"}` : "No managed device"
               }</span></dd></div>
               <div><dt>Policy</dt><dd>Policy ${ticket.ruleId} — ${esc(policy?.title || "Unfiled")}</dd></div>
               <div><dt>Requested</dt><dd>Day ${ticket.day} · ${esc(mailTime)}</dd></div>

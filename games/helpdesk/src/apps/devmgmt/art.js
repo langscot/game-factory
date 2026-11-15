@@ -1,4 +1,4 @@
-// Every icon in Device Manager is drawn here: flat line glyphs for the tree and
+// Every icon in Device Mangler is drawn here: flat line glyphs for the tree and
 // result pane, plus the warning/down-arrow overlays Windows puts on a device.
 
 const svg = (body) =>
