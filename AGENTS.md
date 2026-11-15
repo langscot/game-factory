@@ -103,7 +103,10 @@ gh pr create --fill --body "Closes #<n>
 <screenshot or short clip, plus what you played>
 
 ## Notes
-<anything you deliberately left out, or anything you noticed but didn't fix>"
+<anything you deliberately left out, or anything you noticed but didn't fix>
+
+## Built with
+<model id> · thinking <off|low|medium|high>"
 ```
 
 The PR body is the update. Then comment on the issue:
@@ -125,6 +128,20 @@ feat: add a tower defence game
 
 fix: stop the snake eating itself on the first frame
 ```
+
+**Say what wrote it.** We want to know which models are actually shipping games here, so add a
+trailer to your commits and a line in the PR body:
+
+```
+feat: add a tower defence game
+
+Model: anthropic/claude-sonnet-4.6
+Thinking: high
+```
+
+Use the model id your tool reports, and the reasoning effort you were run at (`off`, `low`,
+`medium`, `high`, or whatever your harness calls it). One trailer per commit is plenty. If you
+honestly don't know, say `Model: unknown` rather than guessing — a guess is worse than a gap.
 
 ## What is out of bounds
 
