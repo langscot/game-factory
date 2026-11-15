@@ -198,29 +198,39 @@ const checks = [
   },
   {
     id: "reset-resolves",
-    title: "Resetting the right user's password resolves the ticket from evidence",
+    title: "The right password reset leaves the case ready, not resolved",
     run(api) {
       const { world: view, actions, session } = api;
       assert(session.startShift().ok, "shift did not start");
-      api.actions.setUi("ticketdesk", { selectedId: 1001 });
+      actions.setUi("ticketdesk", { selectedId: 1001 });
       const before = view.session.trust();
       const result = actions.resetPassword("p_priya", { role: "helpdesk" });
       assert(result.ok, `resetPassword failed: ${result.reason}`);
-      const ticket = view.tickets.get(1001);
-      assert(ticket.status === "resolved", "ticket did not resolve from the action");
-      assert(ticket.outcome === "correct", "correct evidence was scored as incorrect");
-      assert(ticket.evidence.length === 1, "expected one evidence record");
-      assert(ticket.evidence[0].action === "account:password-reset", "evidence does not name the action");
-      assert(ticket.evidence[0].role === "helpdesk", "evidence does not record the role");
-      assert(view.session.trust() === before, "a clean resolution changed trust");
+      let ticket = view.tickets.get(1001);
+      assert(ticket.status === "open", "ticket closed itself instead of becoming ready");
+      assert(ticket.readyToClose === true, "ticket is not ready to close");
+      assert(view.audit.forTicket(1001).filter((event) => event.type === "ticket:resolved").length === 0, "scored before closure");
+      assert(view.session.trust() === before, "trust changed before closure");
+
+      const closed = actions.closeTicket(1001, {
+        category: "resolved",
+        note: "Password reset and handed back to Priya on the phone.",
+      });
+      assert(closed.ok, `closeTicket failed: ${closed.reason}`);
+      ticket = view.tickets.get(1001);
+      assert(ticket.status === "resolved" && ticket.outcome === "correct", "manual closure did not score correctly");
+      assert(ticket.closure.category === "resolved", "closure category missing");
+      assert(ticket.closure.note.length > 10 && ticket.closure.byId === "p_hayes", "closure note/actor missing");
+      assert(ticket.closure.evidenceSnapshot.length === 1, "closure did not snapshot the evidence");
+      assert(view.session.trust() === before, "a clean closure changed trust");
       const resolved = view.audit.forTicket(1001).filter((event) => event.type === "ticket:resolved");
-      assert(resolved.length === 1 && resolved[0].data.ruleId === 1, "resolution event does not cite Policy 1");
-      return `#1001 resolved correct from ${ticket.evidence[0].actionLabel}; trust ${view.session.trust()}, event ${resolved[0].id} cites Policy 1.`;
+      assert(resolved.length === 1 && resolved[0].data.ruleId === 1, "closure event does not cite Policy 1");
+      return `#1001 ready after the reset (open, trust ${before}), closed Resolved with a note; event ${resolved[0].id} cites Policy 1.`;
     },
   },
   {
     id: "wrong-target",
-    title: "Resetting the wrong user leaves the case open with a wrong-action, then scores it wrong",
+    title: "Resetting the wrong user leaves the case open with a wrong-action, then scores the closure wrong",
     run(api) {
       const { world: view, actions, session } = api;
       assert(session.startShift().ok, "shift did not start");
@@ -233,33 +243,46 @@ const checks = [
       assert(ticket.objectives.some((objective) => objective.status === "wrong"), "checklist does not show the wrong action");
       actions.resetPassword("p_priya", { role: "helpdesk" });
       ticket = view.tickets.get(1001);
-      assert(ticket.status === "resolved" && ticket.outcome === "incorrect", "case should resolve but score wrong");
+      assert(ticket.status === "open" && ticket.readyToClose, "case should be ready after the right action");
+      const closed = actions.closeTicket(1001, { category: "resolved", note: "Reset after the wrong account was touched." });
+      assert(closed.ok, `closeTicket failed: ${closed.reason}`);
+      ticket = view.tickets.get(1001);
+      assert(ticket.status === "resolved" && ticket.outcome === "incorrect", "case should close as incorrect");
       assert(view.session.trust() === before - 12, `trust should be ${before - 12}, got ${view.session.trust()}`);
-      return `wrong reset on Tom: case stayed open, then correct reset closed it as ${ticket.outcome} at trust ${view.session.trust()}.`;
+      return `wrong reset on Tom stayed open, then Resolved closed it as ${ticket.outcome} at trust ${view.session.trust()}.`;
     },
   },
   {
     id: "escalation",
-    title: "Escalation is an objective completed by the escalation action",
+    title: "Escalation meets the objective, then the player closes the case manually",
     run(api) {
       const { world: view, actions, session } = api;
       assert(session.startShift().ok, "shift did not start");
-      const wrong = actions.escalateTicket(1007, "security", "trying the wrong team");
-      assert(wrong.ok, "escalation action failed");
-      let ticket = view.tickets.get(1007);
-      assert(ticket.status === "open", "wrong team should not close the case");
-      assert(ticket.wrongActions.some((entry) => entry.reason === "wrong-team"), "wrong team was not recorded");
       actions.escalateTicket(1007, "facilities", "badge reader on east door");
+      let ticket = view.tickets.get(1007);
+      assert(ticket.status === "open" && ticket.readyToClose, "escalation should make the case ready, not resolved");
+      let closed = actions.closeTicket(1007, { category: "escalated", note: "Handed to Facilities with the door reader details." });
+      assert(closed.ok, `escalated closure failed: ${closed.reason}`);
       ticket = view.tickets.get(1007);
-      assert(ticket.status === "resolved" && ticket.outcome === "incorrect", "wrong-team case should resolve incorrect");
-      assert(ticket.escalations.some((entry) => entry.teamId === "facilities"), "facilities escalation missing");
-      assert(ticket.objectives.every((objective) => objective.status === "met"), "escalation objective not met");
-      return `#1007: wrong team recorded, then Facilities escalation met the objective and closed the case as ${ticket.outcome}.`;
+      assert(ticket.status === "resolved" && ticket.outcome === "correct", "escalated closure should be correct");
+      assert(ticket.closure.category === "escalated", "closure category should be escalated");
+
+      actions.resetWorld();
+      assert(session.startShift().ok, "second shift did not start");
+      actions.escalateTicket(1007, "security", "trying the wrong team");
+      actions.escalateTicket(1007, "facilities", "correct team");
+      ticket = view.tickets.get(1007);
+      assert(ticket.wrongActions.some((entry) => entry.reason === "wrong-team"), "wrong team was not recorded");
+      closed = actions.closeTicket(1007, { category: "escalated", note: "Closed as escalated after correcting the team." });
+      assert(closed.ok, "second escalated closure failed");
+      ticket = view.tickets.get(1007);
+      assert(ticket.outcome === "incorrect", "wrong-team case should close as incorrect");
+      return `#1007 ready after Facilities escalation and closed Escalated as ${ticket.outcome}; wrong team was recorded first.`;
     },
   },
   {
     id: "over-permission",
-    title: "Granting Finance to Marketing is flagged as over-permission, and the reply closes it wrong",
+    title: "Granting Finance to Marketing is flagged, and the manual closure scores it wrong",
     run(api) {
       const { world: view, actions, session } = api;
       assert(session.startShift().ok, "shift did not start");
@@ -268,12 +291,71 @@ const checks = [
       let ticket = view.tickets.get(1005);
       assert(ticket.status === "open", "over-permission should not close the case");
       assert(ticket.wrongActions.some((entry) => entry.reason === "over-permission"), "over-permission was not recorded");
-      assert(view.files.shareAccess("share_finance", "p_alice") === "read", "Alice did not gain the share");
-      const reply = actions.replyToTicket(1005, { template: "deny", text: "" });
-      assert(reply.ok, `reply failed: ${reply.reason}`);
+      actions.replyToTicket(1005, { template: "deny", text: "" });
+      ticket = view.tickets.get(1005);
+      assert(ticket.status === "open" && ticket.readyToClose, "deny reply should make the case ready");
+      const closed = actions.closeTicket(1005, { category: "resolved", note: "Denied access after the over-grant was spotted." });
+      assert(closed.ok, `closeTicket failed: ${closed.reason}`);
       ticket = view.tickets.get(1005);
       assert(ticket.status === "resolved" && ticket.outcome === "incorrect", "case should close as incorrect");
-      return `Finance granted to Marketing: over-permission recorded, deny reply closed #1005 as ${ticket.outcome}.`;
+      return `Finance granted to Marketing: over-permission recorded, manual closure scored ${ticket.outcome}.`;
+    },
+  },
+  {
+    id: "note-rejected",
+    title: "Closing notes shorter than ten characters are rejected",
+    run(api) {
+      const { world: view, actions, session } = api;
+      assert(session.startShift().ok, "shift did not start");
+      actions.resetPassword("p_priya", { role: "helpdesk" });
+      assert(view.tickets.get(1001).readyToClose, "case should be ready");
+      const empty = actions.closeTicket(1001, { category: "resolved", note: "   " });
+      assert(!empty.ok && empty.reason === "note-too-short", `empty note should fail, got ${empty.reason}`);
+      const short = actions.closeTicket(1001, { category: "resolved", note: "done" });
+      assert(!short.ok && short.reason === "note-too-short", `short note should fail, got ${short.reason}`);
+      assert(view.tickets.get(1001).status === "open", "case closed despite the rejected note");
+      const ok = actions.closeTicket(1001, { category: "resolved", note: "Reset and confirmed." });
+      assert(ok.ok, "valid note was rejected");
+      return "empty and 4-character notes rejected with note-too-short; 20-character note closed the case.";
+    },
+  },
+  {
+    id: "resolved-unavailable",
+    title: "Resolved is unavailable before every objective is met",
+    run(api) {
+      const { world: view, actions, session } = api;
+      assert(session.startShift().ok, "shift did not start");
+      const ticket = view.tickets.get(1002);
+      assert(!ticket.readyToClose, "Ben's laptop ticket should not be ready");
+      const early = actions.closeTicket(1002, { category: "resolved", note: "Trying to skip the work entirely." });
+      assert(!early.ok && early.reason === "objectives-incomplete", `resolved should be blocked, got ${early.reason}`);
+      assert(view.tickets.get(1002).status === "open", "blocked resolution still closed the case");
+      const noEscalation = actions.closeTicket(1002, { category: "escalated", note: "Closing as escalated without escalating." });
+      assert(!noEscalation.ok && noEscalation.reason === "escalation-required", "escalated closure without escalation should fail");
+      return "resolved -> objectives-incomplete; escalated without an escalation -> escalation-required; case still open.";
+    },
+  },
+  {
+    id: "wrong-closure",
+    title: "Closing a fully-evidenced case as Returned to user is a scored wrong closure",
+    run(api) {
+      const { world: view, actions, session } = api;
+      assert(session.startShift().ok, "shift did not start");
+      actions.resetPassword("p_priya", { role: "helpdesk" });
+      assert(view.tickets.get(1001).readyToClose, "case should be ready");
+      const before = view.session.trust();
+      const closed = actions.closeTicket(1001, {
+        category: "returned",
+        note: "Bouncing it back to the user even though the reset was done.",
+      });
+      assert(closed.ok, `closeTicket failed: ${closed.reason}`);
+      const ticket = view.tickets.get(1001);
+      assert(ticket.status === "resolved", "case should close");
+      assert(ticket.outcome === "incorrect", "wrong closure should score incorrect");
+      assert(ticket.wrongClosures.length === 1 && ticket.wrongClosures[0].reason === "wrong-closure", "wrong closure was not recorded");
+      assert(ticket.closure.category === "returned", "closure category should be returned");
+      assert(view.session.trust() === before - 12, `trust should be ${before - 12}, got ${view.session.trust()}`);
+      return `evidence complete but closed as returned: wrong-closure recorded, outcome ${ticket.outcome}, trust ${view.session.trust()}.`;
     },
   },
   {
