@@ -12,13 +12,14 @@ import calculator from "./calculator/index.js";
 import settings from "./settings/index.js";
 import taskmanager from "./taskmanager/index.js";
 import recyclebin from "./recyclebin/index.js";
+import printers from "./printers/index.js";
 
 let registered = false;
 
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin]);
+  registerApps([ticketdesk, mail, handbook, directory, explorer, notepad, calculator, settings, taskmanager, recyclebin, printers]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";
