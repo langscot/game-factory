@@ -18,6 +18,9 @@ export function createAppContext({ platform, ui, app, handle, options = {}, open
       log: () => platform.world.audit.all(),
     },
     clock: platform.clock,
+    // The OS audio service. Undefined in harnesses that do not build a shell;
+    // apps should feature-detect before asking for a cue.
+    audio: platform.audio,
     session: {
       day: () => platform.world.session.day(),
       trust: () => platform.world.session.trust(),
