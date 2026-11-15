@@ -126,6 +126,11 @@ export const ICONS = {
     <path d="M14.2 3L19 7.8h-4.8z" fill="#b9cbe2"/>
     <g stroke="#8fa6c4" stroke-width="1.2" stroke-linecap="round"><path d="M7.6 11h8.4M7.6 14h8.4M7.6 17h5.6"/></g>`),
 
+  defender: svg(`
+    <path d="M12 1.8l8.3 3v6.5c0 5.3-3.4 9.2-8.3 12-4.9-2.8-8.3-6.7-8.3-12V4.8z" fill="#1b6ec2"/>
+    <path d="M12 4.2l6.1 2.2v4.8c0 4-2.5 7.1-6.1 9.4-3.6-2.3-6.1-5.4-6.1-9.4V6.4z" fill="#2f8fe0"/>
+    <path d="M8.1 11.8l2.7 2.7 5.1-5.4" stroke="#8be28b" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+
   $chevron: svg(`<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`),
   $check: svg(`<path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`),
   $wifi: svg(`
