@@ -115,53 +115,7 @@ export default {
           <span class="wide"><i>Share access</i>${
             shares.map((s) => `${ctx.ui.esc(s.label)} (${s.access})`).join(", ") || "None"
           }</span>
-        </div>
-        <div class="stopgap">
-          <span class="stopgap-note">Stopgap account console. ADUC (#13) replaces this.</span>
-          <div class="dir-actions">
-            <button class="btn" data-reset>Reset password</button>
-            <button class="btn" data-unlock${person.account.state === "locked" ? "" : " disabled"}>Unlock</button>
-            <button class="btn no" data-disable${person.account.state === "disabled" ? " disabled" : ""}>Disable account</button>
-            <select data-group aria-label="Add to group">
-              <option value="">Add to group…</option>
-              ${ctx.world.org
-                .groups()
-                .filter((group) => group.id !== "g_all" && !person.groupIds.includes(group.id))
-                .map((group) => `<option value="${group.id}">${ctx.ui.esc(group.name)}</option>`)
-                .join("")}
-            </select>
-            <button class="btn" data-group-add>Add</button>
-          </div>
         </div>`;
-
-      detail.querySelector("[data-reset]").addEventListener("click", () => {
-        const result = ctx.actions.resetPassword(person.id, { role: "helpdesk" });
-        if (result.ok) ctx.ui.toast("Directory", `Password reset for ${person.logonName}.`, "people");
-      });
-      detail.querySelector("[data-unlock]").addEventListener("click", () => {
-        const result = ctx.actions.setAccountLocked(person.id, false, { role: "helpdesk" });
-        if (result.ok) ctx.ui.toast("Directory", `${person.logonName} unlocked.`, "people");
-      });
-      detail.querySelector("[data-disable]").addEventListener("click", async () => {
-        const yes = await ctx.ui.confirm(
-          "Disable account",
-          `Disable ${person.displayName} (${person.logonName})? They will lose mail delivery and sign-in until re-enabled.`,
-          { ok: "Disable", cancel: "Cancel" },
-        );
-        if (!yes) return;
-        const result = ctx.actions.setAccountEnabled(person.id, false, { role: "helpdesk" });
-        if (result.ok) ctx.ui.toast("Directory", `${person.logonName} disabled.`, "people");
-      });
-      detail.querySelector("[data-group-add]").addEventListener("click", () => {
-        const groupId = detail.querySelector("[data-group]").value;
-        if (!groupId) return;
-        const result = ctx.actions.addToGroup(person.id, groupId, { role: "helpdesk" });
-        if (!result.ok) {
-          ctx.ui.toast("Directory", `Group change failed: ${result.reason}.`, "people");
-          return;
-        }
-        ctx.ui.toast("Directory", `${person.logonName} added to ${ctx.world.org.group(groupId)?.name}.`, "people");
-      });
     }
 
     input.addEventListener("input", () => {
@@ -223,13 +177,4 @@ const css = `
 .app-directory .facts span.wide { grid-column: 1 / -1; }
 .app-directory .facts i { font-style: normal; color: var(--text-3); display: inline-block; min-width: 74px; }
 .app-directory .facts b.bad { color: #ff9a9a; font-weight: 600; }
-.app-directory .stopgap { margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--stroke-2); }
-.app-directory .stopgap-note { display: block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
-.app-directory .dir-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.app-directory .dir-actions .btn { padding: 4px 9px; font-size: 11.5px; }
-.app-directory .dir-actions select {
-  background: rgba(0, 0, 0, 0.22); border: 1px solid var(--stroke-2); border-radius: 4px;
-  padding: 4px 6px; font-size: 11.5px; color: var(--text); outline: 0;
-}
-.app-directory .dir-actions select:focus { border-color: var(--accent); }
 `;
