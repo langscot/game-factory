@@ -21,9 +21,18 @@ You never apply `approved`. You never push to `main`. You never merge your own P
 
 ## Picking up work
 
+Start from an up-to-date `main`. Pull before you look at the issue list, every time:
+
 ```bash
+git checkout main
+git pull --ff-only
 gh issue list --label approved --state open
 ```
+
+**Do not touch an issue that already has an assignee or the `in-progress` label.** Not to
+"help", not to "finish it quickly", not because it looks stalled. Someone else is already
+building it. Pick another issue. If there isn't one, stop and say so. This rule has no
+exceptions, and breaking it wastes an entire task.
 
 Pick **one**. Then claim it, so nobody else starts the same work:
 
@@ -90,7 +99,12 @@ If a check can't run, say which one and why. Don't skip silently.
 
 ## The pull request
 
+**Always branch off `main`.** Never off another branch, never off your previous PR, and never
+keep working on `main` itself. Pull first, then branch.
+
 ```bash
+git checkout main
+git pull --ff-only
 git checkout -b issue-<n>-short-name
 # ...work, small commits...
 git push -u origin HEAD
