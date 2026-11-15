@@ -18,6 +18,16 @@ export const ICONS = {
       <path d="M7.2 10.4h9.6M7.2 13.4h9.6M7.2 16.4h6.4"/>
     </g>`),
 
+  printer: svg(`
+    <path d="M7 8V3.6h10V8" fill="#dbe6f3" stroke="#8ba0b6" stroke-width="1.1"/>
+    <rect x="2.6" y="7.4" width="18.8" height="9.6" rx="2.2" fill="#3f8ae0"/>
+    <rect x="5.2" y="9.6" width="13.6" height="2.1" rx="1" fill="#bfe0ff" opacity=".9"/>
+    <circle cx="18.1" cy="12.5" r=".9" fill="#7ee787"/>
+    <path d="M6.4 14.2h11.2v6.2H6.4z" fill="#f7f9fc"/>
+    <g stroke="#9fb2c6" stroke-width="1.1" stroke-linecap="round">
+      <path d="M9 16.6h6M9 18.6h4"/>
+    </g>`),
+
   calculator: svg(`
     <rect x="3" y="2.5" width="18" height="19" rx="3" fill="#1b5fa8"/>
     <rect x="5.4" y="5" width="13.2" height="4" rx="1.2" fill="#d5e8ff"/>
