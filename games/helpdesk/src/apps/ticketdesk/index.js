@@ -19,7 +19,10 @@ const STATUS_LABEL = { pending: "pending", met: "met", wrong: "wrong action" };
 
 const pairs = (value) =>
   Object.entries(value || {})
-    .map(([key, item]) => `${key}: ${Array.isArray(item) ? item.join(", ") : item}`)
+    .map(([key, item]) => {
+      const shown = Array.isArray(item) ? (item.length ? item.join(", ") : "(none)") : item === undefined || item === null ? "(none)" : item;
+      return `${key}: ${shown}`;
+    })
     .join(" · ");
 
 export default {
