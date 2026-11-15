@@ -816,10 +816,13 @@ export function seedWorld({ seed = 20261115 } = {}) {
       ruleId,
       why,
       status: "open",
+      readyToClose: false,
       resolvedDay: null,
       resolvedAt: null,
       outcome: null,
       trustDelta: 0,
+      closure: null,
+      wrongClosures: [],
       objectives: objectiveSpecs.map(([kind, extra = {}], index) => ({
         id: `obj_${id}_${index + 1}`,
         kind,
