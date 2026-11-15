@@ -48,7 +48,6 @@ export function createEventBus({ store, clock }) {
       state.events.push(entry);
     });
     dispatch(type, entry);
-    dispatch("*", entry);
     return entry;
   }
 
@@ -56,7 +55,6 @@ export function createEventBus({ store, clock }) {
   function bump(reason = "world:changed") {
     const payload = { type: reason };
     dispatch(reason, payload);
-    dispatch("*", payload);
   }
 
   /** Re-point the sequence at a freshly seeded world. */
