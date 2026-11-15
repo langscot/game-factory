@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snake</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; display: grid; place-items: center; gap: 1rem;
+    background: #0a0d0b;
+    color: #dfe7e0;
+    font: 15px/1.4 ui-rounded, -apple-system, "Segoe UI", system-ui, sans-serif;
+    touch-action: none; overscroll-behavior: none;
+    user-select: none;
+  }
+  .wrap { display: grid; gap: .75rem; justify-items: center; padding: 1rem; }
+  .hud {
+    display: flex; gap: 1.25rem; font-size: .78rem; letter-spacing: .12em;
+    text-transform: uppercase; color: #6e7f72; width: 100%;
+  }
+  .hud b { color: #b9f6c4; font-weight: 500; letter-spacing: .06em; }
+  canvas {
+    border-radius: .5rem; display: block; max-width: min(78vh, 92vw);
+    box-shadow: 0 0 0 1px rgba(160,255,190,.10), 0 24px 60px -20px rgba(0,0,0,.9);
+  }
+  .hint { font-size: .72rem; color: #4d5a50; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hud">
+    <span>Score <b id="score">0</b></span>
+    <span>Best <b id="best">0</b></span>
+  </div>
+  <canvas id="game"></canvas>
+  <p class="hint">Arrows or WASD · space to start · p to pause</p>
+</div>
+<script defer src="./src/game.js"></script>
+</body>
+</html>

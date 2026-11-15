@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the site: one folder per game, plus a generated hub page.
+// Builds the site: one folder per game, plus the hub page rendered from scripts/hub.html.
 // No dependencies, no config. `node scripts/build.mjs` → dist/
 
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
@@ -10,11 +10,9 @@ import { join } from "node:path";
 const ROOT = new URL("..", import.meta.url).pathname;
 const GAMES = join(ROOT, "games");
 const DIST = join(ROOT, "dist");
+const HUB = join(ROOT, "scripts", "hub.html");
 
 const SKIP = new Set(["node_modules", ".git", ".github", "package.json", "package-lock.json"]);
-
-const esc = (s) =>
-  String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
 
@@ -93,61 +91,7 @@ for (const entry of await readdir(GAMES, { withFileTypes: true })) {
 
 found.sort((a, b) => a.title.localeCompare(b.title));
 
-const cards = found
-  .map(
-    (g) => `
-      <a class="card" href="./games/${esc(g.slug)}/">
-        <h2>${esc(g.title)}</h2>
-        <p>${esc(g.genre)}${g.genre && g.author ? " · " : ""}${esc(g.author)}</p>
-      </a>`,
-  )
-  .join("");
-
-await writeFile(
-  join(DIST, "index.html"),
-  `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Game Factory</title>
-<style>
-  :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 3rem 1.5rem; min-height: 100vh;
-    background: #0d0d10; color: #e8e8ee;
-    font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
-  }
-  main { max-width: 60rem; margin: 0 auto; }
-  h1 { font-size: 1.6rem; letter-spacing: -0.02em; margin: 0 0 .25rem; }
-  .sub { color: #8b8b9a; margin: 0 0 2.5rem; font-size: .95rem; }
-  .sub a { color: inherit; }
-  .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
-  .card { display: block; padding: 1.1rem 1.2rem; border: 1px solid #26262f; border-radius: .6rem;
-          background: #141419; color: inherit; text-decoration: none; transition: border-color .12s, transform .12s; }
-  .card:hover { border-color: #4a4a5c; transform: translateY(-1px); }
-  .card h2 { font-size: 1rem; margin: 0 0 .2rem; }
-  .card p { margin: 0; font-size: .82rem; color: #8b8b9a; }
-  .empty { color: #6b6b7a; font-size: .95rem; }
-  footer { margin-top: 3rem; font-size: .8rem; color: #5a5a68; }
-  footer a { color: #8b8b9a; }
-</style>
-</head>
-<body>
-<main>
-  <h1>Game Factory</h1>
-  <p class="sub">Small browser games, built by anyone's agent, from GitHub issues.</p>
-  ${
-    found.length
-      ? `<div class="grid">${cards}</div>`
-      : `<p class="empty">No games yet. <a href="https://github.com/langscot/game-factory/issues">Open an issue</a> and it might become one.</p>`
-  }
-  <footer><a href="https://github.com/langscot/game-factory">Source and issues on GitHub</a> · ${found.length} game${found.length === 1 ? "" : "s"}</footer>
-</main>
-</body>
-</html>
-`,
-);
+const hub = await readFile(HUB, "utf8");
+await writeFile(join(DIST, "index.html"), hub.replace("__GAMES__", () => JSON.stringify(found)));
 
 console.log(`\ndist/ ready — ${found.length} game${found.length === 1 ? "" : "s"}`);
