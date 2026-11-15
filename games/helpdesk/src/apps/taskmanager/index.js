@@ -65,7 +65,7 @@ const METRICS = [
     max: 100,
     big: "In use",
     value: (snap) => formatPercent(snap.memory),
-    subtitle: (model) => `${model.totalMemoryGB}.0 GB DDR4`,
+    subtitle: (model) => `${model.totalMemoryGB}.0 GB ${model.memoryType}`,
   },
   {
     id: "disk",
@@ -74,7 +74,7 @@ const METRICS = [
     max: 100,
     big: "Active time",
     value: (snap) => formatPercent(snap.disk),
-    subtitle: () => "NVMe SSD · 476 GB",
+    subtitle: (model) => model.diskLabel,
   },
   {
     id: "ethernet",
@@ -391,7 +391,7 @@ export default {
           <span>Memory <b data-foot="mem"></b></span>
           <span>Disk <b data-foot="disk"></b></span>
           <span>Network <b data-foot="net"></b></span>
-          <span class="spacer">Doors 11 Pro · 22H2</span>
+          <span class="spacer">Doors 11 Pro · ${esc(model.tier.name)}</span>
         </div>`);
 
       const searchInput = subbar.querySelector("[data-search]");
@@ -711,8 +711,8 @@ export default {
           ["Read speed", `${(snapshot.disk * 0.62).toFixed(1)} MB/s`],
           ["Write speed", `${(snapshot.disk * 0.24).toFixed(1)} MB/s`],
           ["Average response", `${(0.05 + snapshot.disk / 22).toFixed(2)} ms`],
-          ["Capacity", "476 GB"],
-          ["Type", "NVMe SSD"],
+          ["Capacity", model.diskLabel.split("·")[1]?.trim() || "476 GB"],
+          ["Type", model.diskLabel],
         ];
       }
       return [

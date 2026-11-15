@@ -2,6 +2,8 @@
 // process figures are seeded sine waves, and the only real facts are the open
 // windows (through ctx.ui.windows()) and the services in the world store.
 
+import { HARDWARE_TIERS } from "../../world/session.js";
+
 const SAMPLE_SECONDS = 0.25;
 const HISTORY_POINTS = 60;
 const ETHERNET_SCALE = 20;
@@ -27,11 +29,26 @@ const SOFTWARE_NAMES = {
   "teamviewer.exe": "TeamViewer",
 };
 
-const TIERS = {
-  1: { ram: 8, cpu: "Intel Core i3-8100 @ 3.60GHz", speed: "3.60 GHz", cores: 4 },
-  2: { ram: 16, cpu: "Intel Core i5-10400 @ 2.90GHz", speed: "2.90 GHz", cores: 6 },
-  3: { ram: 32, cpu: "Intel Core i7-12700 @ 2.10GHz", speed: "2.10 GHz", cores: 12 },
-};
+const TIERS = Object.fromEntries(
+  HARDWARE_TIERS.map((spec) => [
+    spec.tier,
+    {
+      name: spec.name,
+      ram: spec.ramGB,
+      memoryType: spec.memoryType,
+      disk: spec.disk,
+      cpu: spec.cpu,
+      speed: (/@\s*(.+)$/.exec(spec.cpu) || [])[1] || "3.00 GHz",
+      cores: spec.cores,
+    },
+  ]),
+);
+
+// Older machines have to try harder to show the same desktop, so the fake
+// figures carry a per-tier pressure. These are what make "buy a better laptop"
+// visible without changing a single process.
+const CPU_PRESSURE = { 1: 34, 2: 16, 3: 0, 4: -7, 5: -12 };
+const MEMORY_PRESSURE = { 1: 20, 2: 9, 3: 0, 4: -5, 5: -10 };
 
 const SERVICE_USERS = ["SYSTEM", "LOCAL SERVICE", "NETWORK SERVICE"];
 
@@ -123,32 +140,36 @@ function aggregate(processes, t) {
 // ---------------------------------------------------------------------------
 
 export function createPerformance(ctx) {
-  const tier = ctx.session.hardwareTier() || 2;
+  const tierNow = () => ctx.session.hardwareTier() || 1;
   const history = { cpu: [], memory: [], disk: [], ethernet: [] };
   const current = { cpu: 22, memory: 46, disk: 2, ethernet: 1.4 };
   let elapsed = 0;
   let accumulator = 0;
 
   const targets = (t) => {
+    const tier = tierNow();
     const open = ctx.ui.windows().length;
-    const memoryBias = tier === 1 ? 9 : tier === 3 ? -4 : 0;
+    const cpuBias = CPU_PRESSURE[tier] ?? 0;
+    const memoryBias = MEMORY_PRESSURE[tier] ?? 0;
     return {
       cpu: clamp(
-        6 +
+        8 +
           Math.min(28, open * 3.1) +
+          cpuBias +
           6.4 * Math.sin(t * 0.23) +
           2.3 * Math.sin(t * 0.91 + 1.3) +
           Math.pow(Math.max(0, Math.sin(t * 0.29 + 1.7)), 18) * 34,
         3,
-        92,
+        96,
       ),
       memory: clamp(
         39 + memoryBias + Math.min(10, open * 1.1) + 3.1 * Math.sin(t * 0.05) + 0.6 * Math.sin(t * 0.37 + 2),
-        28,
-        82,
+        24,
+        94,
       ),
       disk: clamp(
         0.8 +
+          (tier <= 2 ? 2.4 : 0) +
           9 * Math.pow(Math.max(0, Math.sin(t * 0.17 + 0.6)), 6) +
           2 * Math.pow(Math.max(0, Math.sin(t * 0.73 + 1.2)), 12),
         0.2,
@@ -202,7 +223,9 @@ export function createPerformance(ctx) {
     },
     history,
     uptimeSeconds: () => 19732 + elapsed,
-    tier,
+    get tier() {
+      return tierNow();
+    },
     ethernetScale: ETHERNET_SCALE,
   };
 }
@@ -216,7 +239,7 @@ export function createModel(ctx) {
   const machine = ctx.world.machines.byOwner(session.technicianId);
   const technician = session.technician;
   const perf = createPerformance(ctx);
-  const tier = TIERS[session.hardwareTier] || TIERS[2];
+  const tierNow = () => TIERS[ctx.session.hardwareTier() || 1] || TIERS[1];
   const network = machine?.devices.find((device) => device.kind === "network") || null;
   const ipconfig = machine ? ctx.world.machines.ipconfig(machine.id) : "";
   const ipv4 = /IPv4 Address[^:]*:\s*([\d.]+)/.exec(ipconfig)?.[1] || "10.14.7.42";
@@ -326,8 +349,18 @@ export function createModel(ctx) {
       return aggregate(processes, elapsed);
     },
     perf,
-    tier,
-    totalMemoryGB: tier.ram,
+    get tier() {
+      return tierNow();
+    },
+    get totalMemoryGB() {
+      return tierNow().ram;
+    },
+    get memoryType() {
+      return tierNow().memoryType;
+    },
+    get diskLabel() {
+      return tierNow().disk;
+    },
     networkName: network?.name || "Intel Ethernet Connection I219-LM",
     ipv4,
     uptimeSeconds: perf.uptimeSeconds,

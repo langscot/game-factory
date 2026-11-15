@@ -192,6 +192,15 @@ export const ICONS = {
     <path d="M12 4.2l6.1 2.2v4.8c0 4-2.5 7.1-6.1 9.4-3.6-2.3-6.1-5.4-6.1-9.4V6.4z" fill="#2f8fe0"/>
     <path d="M8.1 11.8l2.7 2.7 5.1-5.4" stroke="#8be28b" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
 
+  upgrades: svg(`
+    <path d="M3.2 8.4h17.6l-1.2 11.2a1.8 1.8 0 0 1-1.8 1.6H6.2a1.8 1.8 0 0 1-1.8-1.6z" fill="#5d4a2c"/>
+    <path d="M4.4 6.2h15.2l1.2 2.2H3.2z" fill="#8a6f42"/>
+    <rect x="7.2" y="10.4" width="9.6" height="7.6" rx="1" fill="#f5e5bd"/>
+    <path d="M12.6 12.2c-1.3 0-2 .7-2 1.6 0 .8.5 1.2 1.1 1.7h-1.2v1h3.9v-1h-1.1c-.4-.3-.9-.7-.9-1.2 0-.4.3-.7.8-.7.4 0 .7.2.8.5l1-.5c-.3-.8-1.1-1.4-2.4-1.4z" fill="#5d4a2c"/>
+    <path d="M12.4 18.4 18.6 4.6l1.8.8-6.2 13.8z" fill="#f2c94c" stroke="#8a6500" stroke-width=".5"/>
+    <circle cx="15.2" cy="12.6" r="1.5" fill="#5d4a2c" stroke="#f2c94c" stroke-width=".4"/>
+  `),
+
   $chevron: svg(`<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`),
   $check: svg(`<path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`),
   $wifi: svg(`

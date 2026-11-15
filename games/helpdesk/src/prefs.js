@@ -18,16 +18,33 @@ export const WALLPAPERS = [
   { id: "w3", name: "Mint" },
 ];
 
+// Bought in the upgrade store, deliberately absent from the free lists above so
+// Settings cannot hand them out before the player has paid for them.
+export const STORE_ACCENTS = [{ id: "aubergine", color: "#d8a5ff", strong: "#6e3d9c" }];
+export const STORE_WALLPAPERS = [{ id: "w4", name: "Executive Beige" }];
+
 // audioAmbience is deliberately null until the user makes a choice: the audio
 // engine uses that to follow prefers-reduced-motion without pretending the
 // player has switched room tone on.
-const DEFAULTS = { accent: "blue", wallpaper: "w1", audioMuted: false, audioVolume: 0.6, audioAmbience: null };
+const DEFAULTS = {
+  accent: "blue",
+  wallpaper: "w1",
+  audioMuted: false,
+  audioVolume: 0.6,
+  audioAmbience: null,
+  career: { hardwareTier: 1, bonus: 0, lifetimeBonus: 0, purchases: ["hardware:1"], lastPayslip: null },
+};
 
 export function getPrefs() {
   try {
-    return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || "{}") };
+    const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    return {
+      ...DEFAULTS,
+      ...saved,
+      career: { ...DEFAULTS.career, ...(saved.career || {}) },
+    };
   } catch {
-    return { ...DEFAULTS };
+    return { ...DEFAULTS, career: { ...DEFAULTS.career } };
   }
 }
 
@@ -41,7 +58,7 @@ export function savePrefs(next) {
 }
 
 export function applyPrefs(prefs = getPrefs()) {
-  const accent = ACCENTS.find((a) => a.id === prefs.accent) || ACCENTS[0];
+  const accent = [...ACCENTS, ...STORE_ACCENTS].find((a) => a.id === prefs.accent) || ACCENTS[0];
   document.documentElement.style.setProperty("--accent", accent.color);
   document.documentElement.style.setProperty("--accent-strong", accent.strong);
 
