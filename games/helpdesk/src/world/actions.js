@@ -3,6 +3,7 @@
 // poke the store or set trust themselves.
 
 import { seedWorld } from "./seed.js";
+import { TRUST_HIT } from "./session.js";
 
 const ok = (extra = {}) => ({ ok: true, ...extra });
 const fail = (reason, extra = {}) => ({ ok: false, reason, ...extra });
@@ -614,6 +615,92 @@ export function createActions({ store, selectors, events, clock, session }) {
     return ok({ team, ticket: selectors.tickets.get(ticket.id) });
   }
 
+  function closeTicket(ticketId, { category, note } = {}) {
+    const ticket = state().tickets.find((t) => t.id === Number(ticketId));
+    if (!ticket) return fail("unknown-ticket");
+    if (ticket.status === "resolved") return fail("already-closed");
+    if (!["resolved", "returned", "escalated", "duplicate", "unable"].includes(category)) {
+      return fail("unknown-category");
+    }
+    const text = String(note || "").trim();
+    if (text.length < 10) return fail("note-too-short", { minimum: 10 });
+
+    const complete = ticket.objectives.length > 0 && ticket.objectives.every((objective) => objective.status === "met");
+    if (category === "resolved" && !complete) return fail("objectives-incomplete");
+    if (category === "escalated" && ticket.escalations.length === 0) return fail("escalation-required");
+
+    const wrongClosure = complete && !["resolved", "escalated"].includes(category);
+    const scoredCorrect = complete && !wrongClosure && ticket.wrongActions.length === 0;
+    const outcome = complete ? (scoredCorrect ? "correct" : "incorrect") : "deferred";
+    const trustDelta = outcome === "incorrect" ? -TRUST_HIT : 0;
+    const day = state().session.day;
+    const at = now();
+    const wrongRecord = wrongClosure
+      ? {
+          id: `wc_${ticket.id}_${ticket.wrongClosures.length + 1}`,
+          reason: "wrong-closure",
+          detail: `Closed as "${category}" although every objective was met.`,
+          category,
+          actorId: state().session.technicianId,
+          at,
+          day,
+        }
+      : null;
+
+    store.commit((draft) => {
+      const record = draft.tickets.find((t) => t.id === ticket.id);
+      record.status = "resolved";
+      record.readyToClose = true;
+      record.outcome = outcome;
+      record.resolvedDay = day;
+      record.resolvedAt = at;
+      record.trustDelta = trustDelta;
+      record.closure = {
+        category,
+        note: text,
+        byId: state().session.technicianId,
+        at,
+        day,
+        evidenceSnapshot: record.evidence.map((entry) => ({ ...entry })),
+      };
+      if (wrongRecord) record.wrongClosures.push(wrongRecord);
+    });
+
+    const scored = session.recordResolved({ correct: outcome === "correct", trustDelta });
+    const rule = state().handbook.policies.find((policy) => policy.id === ticket.ruleId);
+
+    events.emit("ticket:resolved", {
+      category: "Application",
+      code: 2000,
+      level: outcome === "correct" ? "info" : "warning",
+      message: `Ticket #${ticket.id} closed as ${category} (${outcome}). Policy ${ticket.ruleId}${rule ? ` — ${rule.title}` : ""}.`,
+      subjectId: ticket.personId,
+      ticketId: ticket.id,
+      data: {
+        category,
+        note: text,
+        outcome,
+        correct: outcome === "correct",
+        ruleId: ticket.ruleId,
+        trustDelta,
+        trust: scored.trust,
+        wrongActions: ticket.wrongActions.length,
+        wrongClosure: Boolean(wrongRecord),
+        evidence: ticket.evidence.length,
+        personId: ticket.personId,
+        machineId: ticket.machineId,
+      },
+    });
+
+    return ok({
+      ticket: selectors.tickets.get(ticket.id),
+      outcome,
+      correct: outcome === "correct",
+      trust: scored.trust,
+      trustDelta,
+    });
+  }
+
   return {
     // shift + ui
     startShift,
@@ -645,6 +732,7 @@ export function createActions({ store, selectors, events, clock, session }) {
     // tickets
     replyToTicket,
     escalateTicket,
+    closeTicket,
   };
 }
 
