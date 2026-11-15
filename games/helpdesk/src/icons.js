@@ -73,6 +73,8 @@ export const ICONS = {
     <path d="M9.6 4.2h4.8l.6 1h-6z" fill="#5f6b77"/>
     <g stroke="#cfd8e3" stroke-width="1.2" stroke-linecap="round"><path d="M9.6 10.4v6M12 10.4v6M14.4 10.4v6"/></g>`),
 
+  gpmc: svg(`<rect x="2.5" y="3" width="19" height="18" rx="2.6" fill="#e9eef5"/><rect x="2.5" y="3" width="19" height="4.2" rx="2.6" fill="#2f7ad6"/><rect x="2.5" y="5.4" width="19" height="1.8" fill="#2f7ad6"/><rect x="4.6" y="9.2" width="5.2" height="9.3" rx="1.1" fill="#c9d7e8"/><path d="M6.4 11.4h9M6.4 13.7h9M6.4 16h6" stroke="#5b708c" stroke-width="1.2" stroke-linecap="round"/><circle cx="16.7" cy="16.5" r="2.3" fill="#4cc2ff"/>`),
+
   image: svg(`
     <rect x="2.5" y="4.5" width="19" height="15" rx="2.4" fill="#2f7ad6"/>
     <circle cx="8.4" cy="9.6" r="1.6" fill="#d5e8ff"/>
