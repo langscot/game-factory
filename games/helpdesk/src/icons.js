@@ -65,6 +65,21 @@ export const ICONS = {
     </g>
     <circle cx="15.4" cy="11.4" r="1.9" fill="#ffd166"/>
     <path d="M12.2 17.6c0-1.9 1.4-3.1 3.2-3.1s3.2 1.2 3.2 3.1z" fill="#ffd166"/>`),
+  services: svg(`
+    <g fill="#f2b544">
+      <circle cx="9" cy="9" r="4.4"/>
+      <g stroke="#f2b544" stroke-width="2.1" stroke-linecap="round">
+        <path d="M9 2.8v2M9 13.2v2M2.8 9h2M13.2 9h2M4.6 4.6l1.4 1.4M12 12l1.4 1.4M13.4 4.6L12 6M6 12l-1.4 1.4"/>
+      </g>
+    </g>
+    <circle cx="9" cy="9" r="1.8" fill="#23272f"/>
+    <g fill="#9fb0c0">
+      <circle cx="16.6" cy="16.6" r="3.3"/>
+      <g stroke="#9fb0c0" stroke-width="1.7" stroke-linecap="round">
+        <path d="M16.6 12.2v1.4M16.6 19.6v1.4M12.2 16.6h1.4M19.6 16.6h1.4M13.5 13.5l1 1M18.7 18.7l1 1M19.7 13.5l-1 1M14.5 18.7l-1 1"/>
+      </g>
+    </g>
+    <circle cx="16.6" cy="16.6" r="1.3" fill="#23272f"/>`),
 
   taskmgr: svg(`
     <rect x="2.5" y="3.5" width="19" height="17" rx="2.6" fill="#23272f"/>
@@ -74,6 +89,17 @@ export const ICONS = {
       <rect x="14.8" y="10.6" width="2.9" height="7" rx="1"/>
     </g>
     <path d="M5.6 7.2h12.8" stroke="#59606b" stroke-width="1.3" stroke-linecap="round"/>`),
+
+  eventviewer: svg(`
+    <rect x="3" y="2.6" width="18" height="18.8" rx="2.4" fill="#f6f9ff"/>
+    <rect x="3" y="2.6" width="18" height="4.2" rx="2.4" fill="#2f6fd0"/>
+    <rect x="3" y="5" width="18" height="1.8" fill="#2f6fd0"/>
+    <g stroke="#8b9bb1" stroke-width="1.2" stroke-linecap="round">
+      <path d="M6.2 10.4h5.6M6.2 13.2h9.6M6.2 16h7.6"/>
+    </g>
+    <circle cx="16.6" cy="15.4" r="3.1" fill="#e5484d"/>
+    <path d="M16.6 13.7v2.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="16.6" cy="17.6" r=".85" fill="#fff"/>`),
 
   settings: svg(`
     <path d="M12 2.6l1.5 2.2 2.5-.8.3 2.6 2.6.3-.8 2.5 2.2 1.5-2.2 1.5.8 2.5-2.6.3-.3 2.6-2.5-.8L12 21.4l-1.5-2.2-2.5.8-.3-2.6-2.6-.3.8-2.5L3.7 12l2.2-1.5-.8-2.5 2.6-.3.3-2.6 2.5.8z" fill="#8a8f98"/>
