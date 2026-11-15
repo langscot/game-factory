@@ -1,0 +1,80 @@
+/* Dev harness chrome. Not an app stylesheet: this page never ships to players. */
+
+.dev-body { background: #111; user-select: text; }
+
+.dev-shell {
+  position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr; gap: 10px;
+  padding: 12px; overflow: hidden;
+}
+
+.dev-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.dev-brand { display: flex; flex-direction: column; }
+.dev-brand b { font-size: 16px; font-weight: 600; }
+.dev-brand span { font-size: 11.5px; color: var(--text-3); }
+.dev-seed { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
+.dev-seed input {
+  width: 104px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--stroke-2);
+  border-radius: 4px; padding: 4px 8px; font-size: 12px;
+}
+.dev-seed .btn { padding: 5px 10px; font-size: 12px; }
+
+.dev-main { display: grid; grid-template-columns: minmax(340px, 0.9fr) minmax(420px, 1.1fr); gap: 10px; min-height: 0; }
+
+.dev-panel {
+  background: #1c1c1c; border: 1px solid var(--stroke); border-radius: 8px;
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+.dev-panel-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 9px 12px; border-bottom: 1px solid var(--stroke); flex: none;
+}
+.dev-panel-head b { font-size: 12.5px; font-weight: 600; }
+
+.dev-checks { flex: 1; min-height: 0; overflow: auto; padding: 6px; }
+.dev-check {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: start;
+  padding: 8px 9px; border-radius: 5px; border: 1px solid transparent;
+}
+.dev-check + .dev-check { margin-top: 2px; }
+.dev-check:hover { background: rgba(255, 255, 255, 0.03); }
+.dev-check .name { font-size: 12px; color: var(--text-2); line-height: 1.4; }
+.dev-check .detail { grid-column: 1 / -1; font-size: 11px; color: var(--text-3); line-height: 1.45; word-break: break-word; }
+.dev-check .detail:empty { display: none; }
+.dev-check .actions { display: flex; gap: 6px; align-items: center; }
+.dev-check .btn { padding: 3px 8px; font-size: 11px; }
+.dev-check .status {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 7px;
+  border-radius: 9px; border: 1px solid var(--stroke-2); color: var(--text-3); white-space: nowrap;
+}
+.dev-check.pass { border-color: rgba(74, 222, 128, 0.24); background: rgba(74, 222, 128, 0.05); }
+.dev-check.pass .status { color: #6ee7a0; border-color: rgba(74, 222, 128, 0.42); }
+.dev-check.fail { border-color: rgba(248, 113, 113, 0.3); background: rgba(248, 113, 113, 0.06); }
+.dev-check.fail .status { color: #ff9a9a; border-color: rgba(248, 113, 113, 0.45); }
+.dev-check.running .status { color: var(--accent); border-color: rgba(76, 194, 255, 0.4); }
+
+.dev-summary {
+  flex: none; border-top: 1px solid var(--stroke); padding: 8px 12px;
+  font-size: 11.5px; color: var(--text-3); display: flex; gap: 16px; flex-wrap: wrap;
+}
+.dev-summary b { color: var(--text-2); font-weight: 600; }
+
+.dev-toolbar { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--stroke); flex: none; }
+.dev-toolbar select {
+  flex: 1; min-width: 0; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--stroke-2);
+  border-radius: 4px; padding: 5px 8px; font-size: 12px; color: var(--text);
+}
+.dev-toolbar .btn { padding: 5px 10px; font-size: 12px; }
+
+.dev-preview { flex: 1; min-height: 0; padding: 10px; background: #0d0d0d; }
+.dev-stage {
+  height: 100%; border: 1px solid var(--stroke); border-radius: 4px; overflow: hidden;
+  background: #202020;
+}
+.dev-stage:empty::after {
+  content: "No app mounted. Pick one and press Mount."; display: grid; place-items: center;
+  height: 100%; color: var(--text-3); font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .dev-main { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+}

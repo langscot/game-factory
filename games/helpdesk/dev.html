@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT Helpdesk — platform harness</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563c9'/%3E%3Ctext x='16' y='23' font-size='18' font-family='sans-serif' text-anchor='middle' fill='%23fff'%3E?%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./src/shell.css">
+<link rel="stylesheet" href="./src/dev.css">
+</head>
+<body class="dev-body">
+  <div class="dev-shell">
+    <header class="dev-head">
+      <div class="dev-brand">
+        <b>IT Helpdesk</b>
+        <span>platform harness · store, selectors, actions, events, clock, app contract</span>
+      </div>
+      <div class="dev-seed">
+        <label for="devSeed">Seed</label>
+        <input id="devSeed" type="number" step="1" value="20261115" aria-label="World seed">
+        <button class="btn" id="devReset">Reset world</button>
+        <button class="btn primary" id="devRunAll">Run all checks</button>
+      </div>
+    </header>
+
+    <main class="dev-main">
+      <section class="dev-panel dev-checks-panel">
+        <div class="dev-panel-head">
+          <b>Cross-app invariants</b>
+          <span class="muted tiny" id="devScore">not run</span>
+        </div>
+        <div class="dev-checks" id="devChecks"></div>
+        <div class="dev-summary" id="devSummary"></div>
+      </section>
+
+      <section class="dev-panel dev-preview-panel">
+        <div class="dev-panel-head">
+          <b>App preview</b>
+          <span class="muted tiny" id="devAppMeta">no app mounted</span>
+        </div>
+        <div class="dev-toolbar">
+          <select id="devAppSelect" aria-label="App"></select>
+          <button class="btn" id="devMount">Mount</button>
+          <button class="btn" id="devUnmount">Unmount</button>
+        </div>
+        <div class="dev-preview">
+          <div class="dev-stage" id="devStage"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+  <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+
+  <script type="module" src="./src/dev.js"></script>
+</body>
+</html>
