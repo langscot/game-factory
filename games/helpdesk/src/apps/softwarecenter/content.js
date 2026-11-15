@@ -1,6 +1,6 @@
-// Presentation-only facts for the Software Center shell. The catalogue itself
+// Presentation-only facts for the Software Bazaar shell. The catalogue itself
 // lives in the world (content/software.js); this file only adds the publisher,
-// colour and blurb a real Software Center card shows, plus the policy defaults
+// colour and blurb a real bazaar card shows, plus the policy defaults
 // and the OS deployments the client always lists.
 
 export const APP_META = {
@@ -9,7 +9,7 @@ export const APP_META = {
     category: "Productivity",
     color: "#d83b01",
     initials: "O",
-    description: "Word, Excel, PowerPoint and Outlook. The reason the fan spins up at 09:02.",
+    description: "Word, Excel, PowerPoint and Lookout. The reason the fan spins up at 09:02.",
   },
   sw_slack: {
     publisher: "Slack Technologies, LLC",
@@ -86,12 +86,12 @@ export const HOURS = [
   "22:00",
 ];
 
-// Software Center's Operating Systems tab lists task sequences. The world has
+// Software Bazaar's Operating Systems tab lists task sequences. The world has
 // no OS deployment model, so this is fixed shell content with no actions.
 export const OS_DEPLOYMENTS = [
   {
     id: "os_win11_24h2",
-    name: "Windows 11 Enterprise 24H2",
+    name: "Doors 11 Enterprise 24H2",
     type: "Operating system upgrade",
     version: "10.0.26100.1742",
     sizeMb: 5120,

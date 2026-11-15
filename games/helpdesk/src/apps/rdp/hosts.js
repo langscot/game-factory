@@ -6,7 +6,7 @@ const SUFFIXES = [".halcyon.local", ".halcyon.co", ".local"];
 // The exact wording of the client's two common failures. Keep the line breaks:
 // they are part of what makes the dialog recognisable.
 const CONNECT_REASONS = [
-  "Remote Desktop can't connect to the remote computer for one of these reasons:",
+  "Remote Deskhop can't connect to the remote computer for one of these reasons:",
   "",
   "1) Remote access to the server is not enabled",
   "2) The remote computer is turned off",
@@ -19,7 +19,7 @@ export const ERROR_COPY = {
   find: (host) => ({
     heading: null,
     message:
-      `Remote Desktop can't find the computer "${host}". This might mean that "${host}" does not belong to the ` +
+      `Remote Deskhop can't find the computer "${host}". This might mean that "${host}" does not belong to the ` +
       "specified network. Verify the computer name and domain that you are trying to connect to.",
   }),
   disabled: () => ({ heading: null, message: CONNECT_REASONS }),
@@ -89,7 +89,7 @@ export function machineFacts(world, machineId) {
   return {
     id: machine.id,
     hostname: machine.hostname,
-    os: machine.os || "Windows 11 Pro 22H2",
+    os: machine.os || "Doors 11 Pro 22H2",
     cpu: tier.cpu,
     ram: tier.ram,
     owner,

@@ -1,4 +1,4 @@
-// Authored content for the Windows Update page. The machine and the update
+// Authored content for the Patchy page. The machine and the update
 // catalogue come from the store; this file supplies the friendly titles,
 // seeded history and the optional driver catalogue the static seed does not
 // carry. It also owns the default UI state so the page can be reopened with
@@ -59,7 +59,7 @@ export const NAV_ITEMS = [
   },
   {
     id: "windowsupdate",
-    label: "Windows Update",
+    label: "Patchy",
     icon: navIcon(`<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/><path d="M9 12.2l2 2 4-4"/>`),
   },
 ];
@@ -88,14 +88,14 @@ export const DEFAULT_UI = {
 };
 
 // The static seed carries one available update and one installed update. These
-// details make them read like the real Windows Update page without changing
+// details make them read like the real Patchy page without changing
 // the world shape.
 export const UPDATE_DETAILS = {
   kb_5041580: {
-    title: "2026-11 Cumulative Update for Windows 11, version 22H2 for x64-based Systems (KB5041580)",
+    title: "2026-11 Cumulative Update for Doors 11, version 22H2 for x64-based Systems (KB5041580)",
     size: "612 MB",
     kind: "Quality update",
-    description: "Fixes security issues and improves the reliability of Windows.",
+    description: "Fixes security issues and improves the reliability of Doors. Usually after breaking it first.",
   },
   kb_5040443: {
     title: "Servicing Stack Update (KB5040443)",
@@ -108,14 +108,14 @@ export const UPDATE_DETAILS = {
 export const HISTORY = [
   {
     date: "12/10/2026",
-    title: "2026-10 Cumulative Update for Windows 11, version 22H2 for x64-based Systems (KB5039212)",
+    title: "2026-10 Cumulative Update for Doors 11, version 22H2 for x64-based Systems (KB5039212)",
     kind: "Quality update",
     outcome: "failed",
     code: "0x800F0922",
   },
   {
     date: "28/09/2026",
-    title: "Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.417.512.0)",
+    title: "Security Intelligence Update for Shitnet Antivirus - KB2267602 (Version 1.417.512.0)",
     kind: "Definition update",
     outcome: "success",
     code: "0x0",
@@ -129,14 +129,14 @@ export const HISTORY = [
   },
   {
     date: "02/09/2026",
-    title: "2026-09 Cumulative Update for .NET Framework 3.5 and 4.8.1 for Windows 11 (KB5043064)",
+    title: "2026-09 Cumulative Update for .NET Framework 3.5 and 4.8.1 for Doors 11 (KB5043064)",
     kind: "Quality update",
     outcome: "success",
     code: "0x0",
   },
   {
     date: "05/08/2026",
-    title: "Feature update to Windows 11, version 22H2 (KB5036893)",
+    title: "Feature update to Doors 11, version 22H2 (KB5036893)",
     kind: "Feature update",
     outcome: "failed",
     code: "0x80070002",
@@ -144,7 +144,7 @@ export const HISTORY = [
 ];
 
 // The Intel driver is the seeded bad one. It is older than the driver already
-// on the machine and fails the same way real Windows does when it refuses a
+// on the machine and fails the same way Doors does when it refuses a
 // package: 0x80070103.
 export const OPTIONAL_UPDATES = [
   {
@@ -155,7 +155,7 @@ export const OPTIONAL_UPDATES = [
     published: "12/11/2026",
     bad: true,
     error: "0x80070103",
-    note: "Display driver. Windows recommends installing it only if a device is not working correctly.",
+    note: "Display driver. Patchy recommends installing it only if a device is not working correctly.",
   },
   {
     id: "opt_realtek_audio",

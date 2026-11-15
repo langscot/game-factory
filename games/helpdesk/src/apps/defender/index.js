@@ -1,5 +1,4 @@
-// Windows Security — a faithful shell of the Windows 10/11 app (the former
-// Windows Defender Security Center). It reads the technician's machine for
+// Shitnet Security — a faithful shell of the Doors antivirus app. It reads the technician's machine for
 // names and shows the real page names, status tiles and controls. Scan results,
 // firewall profiles and protection history are mock state kept in
 // session.ui.defender; nothing here touches the real machine.
@@ -36,8 +35,8 @@ const SCAN_OPTIONS = [
   },
   {
     id: "offline",
-    title: "Microsoft Defender Offline scan",
-    note: "Restarts the device and scans before Windows starts.",
+    title: "Shitnet Offline scan",
+    note: "Restarts the device and scans before Doors starts.",
     disabled: true,
   },
 ];
@@ -163,7 +162,7 @@ function detectionFor(ctx) {
 
 export default {
   id: "defender",
-  title: "Windows Security",
+  title: "Shitnet Security",
   icon: "defender",
   size: [960, 620],
   desktop: true,
@@ -279,7 +278,7 @@ export default {
             <h1>${tone === "good" ? "You're protected" : tone === "bad" ? "Threats found" : "Actions recommended"}</h1>
             <p>${
               tone === "good"
-                ? `Windows Security is protecting ${ctx.ui.esc(hostname())}.`
+                ? `Shitnet Security is protecting ${ctx.ui.esc(hostname())}.`
                 : tone === "bad"
                   ? `${st.threats.length} threat${st.threats.length === 1 ? "" : "s"} need${st.threats.length === 1 ? "s" : ""} your attention.`
                   : "Some security features are turned off."
@@ -305,7 +304,7 @@ export default {
             )
             .join("")}
         </div>
-        <div class="def-note">Windows Security is managed by Halcyon Dynamics.</div>`;
+        <div class="def-note">Shitnet Security is managed by Halcyon Dynamics.</div>`;
     }
 
     function currentThreats(st) {
@@ -313,7 +312,7 @@ export default {
         return `
           <div class="def-empty-row">
             ${statusMark("good")}
-            <div><b>No current threats</b><span>Windows Security is monitoring this device.</span></div>
+            <div><b>No current threats</b><span>Shitnet Security is monitoring this device.</span></div>
           </div>`;
       }
       return st.threats
@@ -369,7 +368,7 @@ export default {
           <div class="def-result ${local.scanFound ? "bad" : "good"}">
             ${statusMark(local.scanFound ? "bad" : "good")}
             <div><b>${local.scanFound ? "Scan complete — threats found" : "Scan complete — no threats found"}</b>
-            <span>${local.scanFound ? "Review the findings in Current threats." : "Windows Security did not find anything this time."}</span></div>
+            <span>${local.scanFound ? "Review the findings in Current threats." : "Shitnet Security did not find anything this time."}</span></div>
           </div>`;
       }
       return "";
@@ -384,7 +383,7 @@ export default {
           ? `${st.threats.length} threat${st.threats.length === 1 ? "" : "s"} need${st.threats.length === 1 ? "s" : ""} your attention.`
           : tone === "warn"
             ? "Real-time protection is turned off."
-            : "Windows Security is monitoring this device.";
+            : "Shitnet Security is monitoring this device.";
       const scanLabel =
         local.scanning
           ? "Scanning…"
@@ -432,8 +431,8 @@ export default {
           <div class="def-card-head"><h2>Virus &amp; threat protection settings</h2></div>
           <p class="def-copy">These protections are managed for this device by your organisation.</p>
           ${setting("Real-time protection", "Locates and stops malware from running.", toggle("virus", "realTime", st.virusSettings.realTime, "Real-time protection"))}
-          ${setting("Cloud-delivered protection", "Sends suspicious files to Microsoft for a faster verdict.", toggle("virus", "cloud", st.virusSettings.cloud, "Cloud-delivered protection"))}
-          ${setting("Automatic sample submission", "Sends samples to Microsoft to help improve protection.", toggle("virus", "sampleSubmission", st.virusSettings.sampleSubmission, "Automatic sample submission"))}
+          ${setting("Cloud-delivered protection", "Sends suspicious files to Shitnet Labs for a faster verdict.", toggle("virus", "cloud", st.virusSettings.cloud, "Cloud-delivered protection"))}
+          ${setting("Automatic sample submission", "Sends samples to Shitnet Labs to help improve protection.", toggle("virus", "sampleSubmission", st.virusSettings.sampleSubmission, "Automatic sample submission"))}
           ${setting("Tamper protection", "Stops malware from changing security settings.", toggle("virus", "tamper", st.virusSettings.tamper, "Tamper protection"))}
         </section>
         <section class="def-card">
@@ -447,26 +446,26 @@ export default {
       return `
         <div class="def-title">
           <h1>Account protection</h1>
-          <p>Keep your account safe with Windows Hello and Dynamic lock.</p>
+          <p>Keep your account safe with Halo and Dynamic lock.</p>
         </div>
-        ${statusBox("good", "No actions needed", "Windows Hello and Dynamic lock are protecting your account.")}
+        ${statusBox("good", "No actions needed", "Halo and Dynamic lock are protecting your account.")}
         <section class="def-card">
-          <div class="def-card-head"><h2>Windows Hello</h2></div>
+          <div class="def-card-head"><h2>Halo</h2></div>
           <div class="def-media">
             <span class="def-media-ico">${glyph("hello")}</span>
             <div class="def-media-text">
               <b>Face, fingerprint, PIN or security key</b>
-              <span>Sign in to this device without a password. Windows Hello is set up for ${ctx.ui.esc(person?.displayName || "this account")}.</span>
+              <span>Sign in to this device without a password. Halo is set up for ${ctx.ui.esc(person?.displayName || "this account")}.</span>
             </div>
           </div>
           <div class="def-actions">
-            ${infoButton("Manage sign-in options", "Windows Hello", "Sign-in options are managed by your organisation.\n\nThis device is using Windows Hello. Face, fingerprint, PIN and security keys can all be used to sign in.")}
+            ${infoButton("Manage sign-in options", "Halo", "Sign-in options are managed by your organisation.\n\nThis device is using Halo. Face, fingerprint, PIN and security keys can all be used to sign in.")}
           </div>
         </section>
         <section class="def-card">
           <div class="def-card-head"><h2>Dynamic lock</h2></div>
-          <p class="def-copy">Windows can lock this device automatically when you step away.</p>
-          ${setting("Allow Windows to lock this device automatically when you're away", "Uses a paired phone to notice when you leave.", toggle("account", "dynamicLock", st.account.dynamicLock, "Dynamic lock"))}
+          <p class="def-copy">Doors can lock this device automatically when you step away.</p>
+          ${setting("Allow Doors to lock this device automatically when you're away", "Uses a paired phone to notice when you leave.", toggle("account", "dynamicLock", st.account.dynamicLock, "Dynamic lock"))}
         </section>
         <section class="def-card">
           <div class="def-card-head"><h2>Your account</h2></div>
@@ -479,8 +478,8 @@ export default {
       const label = tone === "good" ? "No actions needed" : "Actions recommended";
       const sub =
         tone === "good"
-          ? "Windows Defender Firewall is on for all networks."
-          : "Windows Defender Firewall is off for one or more networks.";
+          ? "Shitnet Firewall is on for all networks."
+          : "Shitnet Firewall is off for one or more networks.";
 
       const profiles = [
         {
@@ -509,14 +508,14 @@ export default {
                 ${toggle("firewall", profile.key, on, `${profile.title} firewall`)}
               </div>
               <div class="def-fw-status ${on ? "good" : "bad"}">
-                ${glyph(on ? "shield" : "alert")}<span>${on ? "Windows Defender Firewall is on" : "Windows Defender Firewall is off"}</span>
+                ${glyph(on ? "shield" : "alert")}<span>${on ? "Shitnet Firewall is on" : "Shitnet Firewall is off"}</span>
               </div>
             </div>`;
           })
           .join("")}
         <section class="def-card" style="margin-top:12px">
           <div class="def-card-head"><h2>Firewall notification settings</h2></div>
-          ${setting("Notify me when Windows Defender Firewall blocks a new app", "A notification appears when a program is blocked.", toggle("firewallNotify", "notify", st.firewallNotify, "Firewall notifications"))}
+          ${setting("Notify me when Shitnet Firewall blocks a new app", "A notification appears when a program is blocked.", toggle("firewallNotify", "notify", st.firewallNotify, "Firewall notifications"))}
         </section>
         <section class="def-card">
           <div class="def-card-head"><h2>Firewall &amp; network protection settings</h2></div>
@@ -543,11 +542,11 @@ export default {
         ${statusBox(tone, label, sub)}
         <section class="def-card">
           <div class="def-card-head"><h2>Reputation-based protection</h2></div>
-          <p class="def-copy">Check apps and files, and use SmartScreen to protect this device from malicious sites and downloads.</p>
+          <p class="def-copy">Check apps and files, and use Glorp Guard to protect this device from malicious sites and downloads.</p>
           ${setting("Check apps and files", "Warns you before running unrecognised or dangerous apps.", toggle("app", "checkApps", st.appControl.checkApps, "Check apps and files"))}
-          ${setting("SmartScreen for Microsoft Edge", "Blocks malicious websites and downloads in Edge.", toggle("app", "edgeSmartScreen", st.appControl.edgeSmartScreen, "SmartScreen for Microsoft Edge"))}
+          ${setting("Glorp Guard for Glorp", "Blocks malicious websites and downloads in Glorp.", toggle("app", "edgeSmartScreen", st.appControl.edgeSmartScreen, "Glorp Guard for Glorp"))}
           ${setting("Potentially unwanted app blocking", "Blocks apps that may display ads or slow down this device.", toggle("app", "pua", st.appControl.pua, "Potentially unwanted app blocking"))}
-          ${setting("SmartScreen for Microsoft Store apps", "Checks Store apps before they run.", toggle("app", "storeSmartScreen", st.appControl.storeSmartScreen, "SmartScreen for Microsoft Store apps"))}
+          ${setting("Glorp Guard for Software Bazaar apps", "Checks Software Bazaar apps before they run.", toggle("app", "storeSmartScreen", st.appControl.storeSmartScreen, "Glorp Guard for Software Bazaar apps"))}
         </section>
         <section class="def-card">
           <div class="def-card-head"><h2>Exploit protection</h2></div>
@@ -575,10 +574,10 @@ export default {
         ${statusBox(tone, label, sub)}
         <section class="def-card">
           <div class="def-card-head"><h2>Core isolation</h2></div>
-          <p class="def-copy">Core isolation protects the most important parts of Windows from malicious code.</p>
+          <p class="def-copy">Core isolation protects the most important parts of Doors from malicious code.</p>
           ${setting("Memory integrity", "Prevents malicious code from interfering with high-security processes.", toggle("device", "memoryIntegrity", st.device.memoryIntegrity, "Memory integrity"))}
           <div class="def-actions">
-            ${infoButton("Core isolation details", "Core isolation", "Memory integrity uses hardware virtualisation to isolate important Windows processes.\n\nChanging this setting requires a restart.")}
+            ${infoButton("Core isolation details", "Core isolation", "Memory integrity uses hardware virtualisation to isolate important Doors processes.\n\nChanging this setting requires a restart.")}
           </div>
         </section>
         <section class="def-card">
@@ -612,7 +611,7 @@ export default {
         "C:\\Windows\\System32\\ntdll.dll",
         "C:\\Windows\\System32\\kernel32.dll",
         "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-        "C:\\ProgramData\\Microsoft\\Windows Defender\\Scans\\mpcache.bin",
+        "C:\\ProgramData\\Shitnet\\Security\\Scans\\mpcache.bin",
       ];
       if (machine) {
         for (const software of ctx.world.machines.installedSoftware(machine.id)) {
@@ -682,9 +681,9 @@ export default {
       local.scanFound = Boolean(found || st.threats.length);
       paint();
       if (found) {
-        ctx.ui.toast("Windows Security", `${found.name} found. Review it in Current threats.`, "defender");
+        ctx.ui.toast("Shitnet Security", `${found.name} found. Review it in Current threats.`, "defender");
       } else if (!st.threats.length) {
-        ctx.ui.toast("Windows Security", "Scan complete. No threats found.", "defender");
+        ctx.ui.toast("Shitnet Security", "Scan complete. No threats found.", "defender");
       }
     }
 
@@ -725,7 +724,7 @@ export default {
       local.scanDone = false;
       local.scanFound = false;
       ctx.ui.toast(
-        "Windows Security",
+        "Shitnet Security",
         action === "remove" ? "Threat removed from this device." : "Threat moved to quarantine.",
         "defender",
       );
@@ -742,9 +741,9 @@ export default {
         <aside class="def-rail">
           <div class="def-brand">
             ${ctx.ui.icon("defender")}
-            <div><b>Windows Security</b><span>${ctx.ui.esc(hostname())}</span></div>
+            <div><b>Shitnet Security</b><span>${ctx.ui.esc(hostname())}</span></div>
           </div>
-          <nav class="def-nav" aria-label="Windows Security pages">
+          <nav class="def-nav" aria-label="Shitnet Security pages">
             ${NAV.map(
               (page) => `
               <button type="button" class="def-nav-btn" data-page="${page.id}">
@@ -778,12 +777,12 @@ export default {
         if (button.dataset.railInfo === "settings") {
           ctx.ui.alert(
             "Settings",
-            "Windows Security settings are managed by your organisation.",
+            "Shitnet Security settings are managed by your organisation.",
           );
         } else {
           ctx.ui.alert(
             "Help",
-            "Windows Security protects this device from viruses, malware and other threats.",
+            "Shitnet Security protects this device from viruses, malware and other threats. Mostly it protects Shitnet's revenue.",
           );
         }
       });
@@ -796,7 +795,7 @@ export default {
 
       body.querySelectorAll("[data-info]").forEach((button) => {
         button.addEventListener("click", () =>
-          ctx.ui.alert(button.dataset.infoTitle || "Windows Security", button.dataset.info || ""),
+          ctx.ui.alert(button.dataset.infoTitle || "Shitnet Security", button.dataset.info || ""),
         );
       });
 

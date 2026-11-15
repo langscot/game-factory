@@ -1,4 +1,4 @@
-// Event Viewer — the eventvwr.msc snap-in, rebuilt as a shell. The tree, list,
+// Event Voyeur — the eventvwr.msc snap-in, rebuilt as a shell. The tree, list,
 // Actions pane, filter dialog and Event Properties dialog are all here; the
 // window owns no data. The rows are the authored log in content/eventlog.js
 // plus the live world audit log, so an account reset during the shift really
@@ -32,7 +32,7 @@ const LOG_ICON =
 const COLUMNS = ["Level", "Date and Time", "Source", "Event ID", "Task Category"];
 
 // Audit codes the world already emits get the same source and task text the
-// real Windows provider would use, so live events do not look like a changelog.
+// real Doors provider would use, so live events do not look like a changelog.
 const TASK_BY_CODE = {
   4624: "Logon",
   4625: "Logon",
@@ -63,12 +63,12 @@ const TASK_BY_CODE = {
 
 const SOURCE_BY_CODE = {
   7036: "Service Control Manager",
-  27: "Microsoft-Windows-Dhcp-Client",
-  22: "Microsoft-Windows-Dhcp-Client",
-  20001: "Microsoft-Windows-Kernel-PnP",
+  27: "Doors-Dhcp-Client",
+  22: "Doors-Dhcp-Client",
+  20001: "Doors-Kernel-PnP",
   11707: "MsiInstaller",
   11724: "MsiInstaller",
-  2004: "Microsoft-Windows-Search",
+  2004: "Doors-Search",
   2005: "ITServiceDesk",
   2001: "ITServiceDesk",
   2002: "ITServiceDesk",
@@ -78,7 +78,7 @@ const ALL_LEVELS = LEVELS.map((level) => level.id);
 
 export default {
   id: "eventvwr",
-  title: "Event Viewer",
+  title: "Event Voyeur",
   icon: "eventviewer",
   size: [1040, 640],
   desktop: true,
@@ -142,7 +142,7 @@ export default {
         time: `${datePrefix()} ${stamp}`,
         source:
           SOURCE_BY_CODE[event.code] ||
-          (String(event.category) === "Security" ? "Microsoft-Windows-Security-Auditing" : "ITServiceDesk"),
+          (String(event.category) === "Security" ? "Doors-Security-Auditing" : "ITServiceDesk"),
         eventId: event.code,
         taskCategory: TASK_BY_CODE[event.code] || (String(event.category) === "Security" ? "User Account Management" : "None"),
         keywords: event.level === "warning" ? "Audit Failure" : "Classic",
@@ -292,13 +292,13 @@ export default {
       const marker = clearedFor(logId);
       const hadFocus = treeHost.contains(document.activeElement);
       treeHost.innerHTML = `
-        <div class="ev-trow root">${ctx.ui.icon("$monitor")}<span class="ev-tlabel">Event Viewer (Local)</span></div>
+        <div class="ev-trow root">${ctx.ui.icon("$monitor")}<span class="ev-tlabel">Event Voyeur (Local)</span></div>
         <button type="button" class="ev-trow group" role="treeitem" aria-expanded="${treeOpen.custom}" data-tree="custom">
           <span class="tw">${treeOpen.custom ? "▾" : "▸"}</span>${FOLDER_ICON}<span class="ev-tlabel">Custom Views</span>
         </button>
         ${treeOpen.custom ? '<div class="ev-tnone">No custom views saved.</div>' : ""}
         <button type="button" class="ev-trow group" role="treeitem" aria-expanded="${treeOpen.windows}" data-tree="windows">
-          <span class="tw">${treeOpen.windows ? "▾" : "▸"}</span>${FOLDER_ICON}<span class="ev-tlabel">Windows Logs</span>
+          <span class="tw">${treeOpen.windows ? "▾" : "▸"}</span>${FOLDER_ICON}<span class="ev-tlabel">Doors Logs</span>
         </button>
         ${
           treeOpen.windows
@@ -433,7 +433,7 @@ export default {
       const log = logById(currentLogId());
       const count = visibleRows().length;
       ctx.actions.setUi("eventvwr", { refreshedAt: ctx.clock.timeText() });
-      ctx.ui.toast("Event Viewer", `${log.name} log refreshed. ${count} event${count === 1 ? "" : "s"}.`, "eventviewer");
+      ctx.ui.toast("Event Voyeur", `${log.name} log refreshed. ${count} event${count === 1 ? "" : "s"}.`, "eventviewer");
     }
 
     async function clearLog() {
@@ -448,7 +448,7 @@ export default {
       const cleared = { ...(uiState().cleared || {}), [log.id]: { seq, at: ctx.clock.timeText() } };
       closeOverlay();
       ctx.actions.setUi("eventvwr", { cleared, selectedId: null });
-      ctx.ui.toast("Event Viewer", `The ${log.name} log was cleared.`, "eventviewer");
+      ctx.ui.toast("Event Voyeur", `The ${log.name} log was cleared.`, "eventviewer");
     }
 
     function openSelectedProperties() {
@@ -506,11 +506,11 @@ export default {
 
       ctx.ui.menu(x, y, [
         {
-          label: "About Event Viewer",
+          label: "About Event Voyeur",
           onClick: () =>
             ctx.ui.alert(
-              "Event Viewer",
-              "Microsoft Management Console — eventvwr.msc\n\nEvent Viewer shows the event logs for this computer. Use it to review system, application and security events.\n\nVersion 10.0 (Build 22621)",
+              "Event Voyeur",
+              "Nadir Management Console — eventvwr.msc\n\nEvent Voyeur shows the event logs for this computer. Use it to review system, application and security events, and to watch people have a worse day than you.\n\nVersion 10.0 (Build 22621)",
             ),
         },
       ]);
@@ -796,7 +796,7 @@ ${data}
 
     function toastCopy(ok, xml) {
       ctx.ui.toast(
-        "Event Viewer",
+        "Event Voyeur",
         ok ? (xml ? "Event XML copied." : "Event details copied.") : "The clipboard is not available in this browser.",
         "eventviewer",
       );

@@ -1,4 +1,4 @@
-// Mock data for the Task Manager shell. Nothing here touches the machine:
+// Mock data for the Task Mangler shell. Nothing here touches the machine:
 // process figures are seeded sine waves, and the only real facts are the open
 // windows (through ctx.ui.windows()) and the services in the world store.
 
@@ -8,12 +8,12 @@ const ETHERNET_SCALE = 20;
 
 // [id, name, publisher, startup impact in seconds, enabled at boot, tile colour]
 const STARTUP = [
-  ["edge", "Microsoft Edge", "Microsoft Corporation", 1.4, true, "#2f8ae0"],
-  ["teams", "Microsoft Teams", "Microsoft Corporation", 2.2, true, "#5b5fc7"],
-  ["onedrive", "OneDrive", "Microsoft Corporation", 1.2, true, "#2d7bd6"],
+  ["edge", "Glorp", "Glorp Systems", 1.4, true, "#2f8ae0"],
+  ["teams", "Halcyon Huddle", "Halcyon Dynamics", 2.2, true, "#5b5fc7"],
+  ["onedrive", "OneDrain", "Nadir Systems", 1.2, true, "#2d7bd6"],
   ["spotify", "Spotify", "Spotify AB", 2.0, false, "#1db954"],
   ["slack", "Slack", "Slack Technologies", 0.5, false, "#4a154b"],
-  ["office", "Microsoft Office Start", "Microsoft Corporation", 0.4, true, "#c43e1c"],
+  ["office", "Nadir Office Start", "Nadir Systems", 0.4, true, "#c43e1c"],
 ];
 const STARTUP_BASE_SECONDS = 5.2;
 
@@ -283,7 +283,7 @@ export function createModel(ctx) {
         ? technician?.logonName || "m.hayes"
         : entry.kind === "service"
           ? SERVICE_USERS[hash(entry.name) % SERVICE_USERS.length]
-          : entry.name === "Windows Explorer"
+          : entry.name === "File Exploder"
             ? technician?.logonName || "m.hayes"
             : "SYSTEM";
       const status = isSoftware && hash(entry.name) % 7 === 0 ? "Suspended" : "Running";

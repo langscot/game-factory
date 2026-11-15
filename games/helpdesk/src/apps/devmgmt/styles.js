@@ -1,4 +1,4 @@
-// Device Manager's stylesheet. Every selector is scoped under .app-devmgmt,
+// Device Mangler's stylesheet. Every selector is scoped under .app-devmgmt,
 // including the bits that live in the shared modal (the wrapper carries the
 // class too).
 export const CSS = `

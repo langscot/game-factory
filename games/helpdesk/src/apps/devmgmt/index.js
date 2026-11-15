@@ -1,4 +1,4 @@
-// Device Manager (devmgmt.msc), shell only. The MMC tree, properties dialog and
+// Device Mangler (devmgmt.msc), shell only. The MMC tree, properties dialog and
 // driver actions all run on the catalogue in ./catalogue.js plus session UI
 // overrides; nothing here touches the world's machines or the real registry.
 
@@ -23,7 +23,7 @@ const TAB_NAMES = { general: "General", driver: "Driver", details: "Details" };
 
 export default {
   id: APP_ID,
-  title: "Device Manager",
+  title: "Device Mangler",
   icon: "devmgmt",
   size: [840, 590],
   desktop: true,
@@ -94,7 +94,7 @@ export default {
       if (selected.startsWith("class:")) return classNameFor(selected.slice(6));
       if (selected.startsWith("device:")) return selectedDevice(list)?.name || "Device";
       if (selected === "machine") return hostname();
-      return "Device Manager";
+      return "Device Mangler";
     }
 
     function resultDevices(list) {
@@ -192,7 +192,7 @@ export default {
     }
 
     function treeHtml(list) {
-      let html = treeNode({ id: "root", depth: 0, icon: glyph("console"), label: "Device Manager", twisty: "open" });
+      let html = treeNode({ id: "root", depth: 0, icon: glyph("console"), label: "Device Mangler", twisty: "open" });
       html += treeNode({ id: "machine", depth: 1, icon: glyph("machine"), label: hostname(), twisty: "open" });
       for (const group of CLASSES) {
         const devices = list.filter((device) => device.classId === group.id);
@@ -272,7 +272,7 @@ export default {
           </div>
           <div class="mmc-path">
             ${ctx.ui.icon("monitor")}
-            <span>Device Manager</span><span class="crumb">›</span>
+            <span>Device Mangler</span><span class="crumb">›</span>
             <span>${ctx.ui.esc(hostname())}</span><span class="crumb">›</span>
             <span class="crumb-here">${ctx.ui.esc(label)}</span>
           </div>
@@ -343,16 +343,16 @@ export default {
           icon: "$info",
           onClick: () =>
             ctx.ui.alert(
-              "Device Manager Help",
-              "Device Manager displays the hardware installed on this computer and lets you update, disable or uninstall a device and its driver.",
+              "Device Mangler Help",
+              "Device Mangler displays the hardware installed on this computer and lets you update, disable or uninstall a device and its driver.",
             ),
         },
         {
-          label: "About Device Manager",
+          label: "About Device Mangler",
           onClick: () =>
             ctx.ui.alert(
-              "About Device Manager",
-              "Device Manager\nVersion 10.0.22621.1\n\n© Halcyon Dynamics IT.",
+              "About Device Mangler",
+              "Device Mangler\nVersion 10.0.22621.1\n\n© Halcyon Dynamics IT. No device was harmed, only renamed.",
             ),
         },
       ];
@@ -668,7 +668,7 @@ export default {
         driverProvider: previous.provider,
         driverSigner: previous.signer,
       });
-      ctx.ui.toast("Device Manager", `Driver rolled back to ${previous.version} for ${device.name}.`, "devmgmt");
+      ctx.ui.toast("Device Mangler", `Driver rolled back to ${previous.version} for ${device.name}.`, "devmgmt");
       if (reopen) openProperties(deviceId, "driver");
     }
 
@@ -682,7 +682,7 @@ export default {
       );
       if (!confirmed) return;
       setDeviceOverride(deviceId, { disabled: true });
-      ctx.ui.toast("Device Manager", `${device.name} is disabled.`, "devmgmt");
+      ctx.ui.toast("Device Mangler", `${device.name} is disabled.`, "devmgmt");
     }
 
     function enableDevice(deviceId) {
@@ -691,7 +691,7 @@ export default {
       setDeviceOverride(deviceId, { disabled: false });
       const restored = deviceList().find((entry) => entry.id === deviceId);
       ctx.ui.toast(
-        "Device Manager",
+        "Device Mangler",
         `${device.name} is enabled${restored?.status === "problem" ? " and still reporting a problem" : ""}.`,
         "devmgmt",
       );
@@ -712,7 +712,7 @@ export default {
         save({ selectedId: selected });
       }
       ctx.ui.closeDialog();
-      ctx.ui.toast("Device Manager", `${device.name} was uninstalled. Scan for hardware changes to reinstall it.`, "devmgmt");
+      ctx.ui.toast("Device Mangler", `${device.name} was uninstalled. Scan for hardware changes to reinstall it.`, "devmgmt");
     }
 
     function scan() {
@@ -727,7 +727,7 @@ export default {
         resultTitle: "Scan for hardware changes",
         resultHtml:
           removed.length > 0
-            ? `<p>Windows found ${removed.length} device${removed.length === 1 ? "" : "s"} and reinstalled the driver${removed.length === 1 ? "" : "s"}.</p>`
+            ? `<p>Doors found ${removed.length} device${removed.length === 1 ? "" : "s"} and reinstalled the driver${removed.length === 1 ? "" : "s"}.</p>`
             : `<p>The scan is complete. No new hardware was detected.</p>`,
         onComplete: () => {
           if (removed.length) restoreRemoved(removed);

@@ -1,4 +1,4 @@
-// Devices and Printers. A shell over mock printers and jobs; the only live
+// Spool & Pray. A shell over mock printers and jobs; the only live
 // input is the Print Spooler service, which turns every printer offline when
 // it is stopped.
 
@@ -10,7 +10,7 @@ const instances = new WeakMap();
 
 export default {
   id: "printers",
-  title: "Devices and Printers",
+  title: "Spool & Pray",
   icon: "printer",
   size: [940, 650],
   desktop: true,

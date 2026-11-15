@@ -1,4 +1,4 @@
-// Scoped styles for the Outlook shell. Every selector is under `.app-mail`;
+// Scoped styles for the Lookout shell. Every selector is under `.app-mail`;
 // colours come from the shell's tokens so the app follows the desktop theme.
 
 export const css = `

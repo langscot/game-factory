@@ -1,7 +1,7 @@
 // The terminal's mock C: drive. Folders come from the seeded file rows in the
 // world plus the Windows folders a real desk machine would have. Nothing here
 // touches the disk: dir, cd, type and tab completion are projections of this
-// table, and every file body is the text the Explorer and Notepad already show.
+// table, and every file body is the text File Exploder and Typo already show.
 
 export const HOME = "C:/Users/m.hayes";
 
@@ -33,7 +33,7 @@ const HIDDEN_FOLDERS = new Set(["C:/Users/m.hayes/AppData", "C:/ProgramData"]);
 
 // A handful of system files so `dir C:\Windows` and `type` have something to
 // say. These are app-local props, not world files: Explorer never sees them.
-const WIN_INI = `; Windows initialisation settings
+const WIN_INI = `; Doors initialisation settings
 [fonts]
 [extensions]
 [mci extensions]

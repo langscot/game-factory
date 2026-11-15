@@ -9,7 +9,7 @@ const OPS = ["+", "−", "×", "÷"];
 
 export default {
   id: "calculator",
-  title: "Calculator",
+  title: "Calc-U-Later",
   icon: "calculator",
   size: [360, 560],
   desktop: true,
@@ -45,7 +45,7 @@ export default {
 
     container.innerHTML = "";
     const root = ctx.ui.el(`
-      <div class="calc" tabindex="0" aria-label="Calculator">
+      <div class="calc" tabindex="0" aria-label="Calc-U-Later">
         <div class="calc-mode"><span>Standard</span><button class="calc-menu" title="More" aria-label="More">⋮</button></div>
         <div class="calc-screen" title="Right-click for options">
           <div class="calc-expr" data-calc="expr"></div>
@@ -159,7 +159,7 @@ export default {
         }
         if (which === "M+") state.memory = (state.memory ?? 0) + n;
         if (which === "M-") state.memory = (state.memory ?? 0) - n;
-        if (which === "MS") ctx.ui.toast("Calculator", "Value saved to memory.", "calculator");
+        if (which === "MS") ctx.ui.toast("Calc-U-Later", "Value saved to memory.", "calculator");
         paint();
       });
     }
@@ -167,15 +167,15 @@ export default {
     function openMenu(x, y) {
       ctx.ui.menu(x, y, [
         {
-          label: "About Calculator",
+          label: "About Calc-U-Later",
           onClick: () =>
             ctx.ui.alert(
-              "Calculator",
-              "Version 11.2210.0.0\n\n© Microsoft Corporation. All rights reserved.",
+              "Calc-U-Later",
+              "Version 11.2210.0.0\n\n© Nadir Systems. All rights reserved.\n\nNumbers are a subscription feature.",
             ),
         },
         { separator: true },
-        { label: "Copy result", onClick: () => ctx.ui.toast("Calculator", `Result: ${state.cur}`, "calculator") },
+        { label: "Copy result", onClick: () => ctx.ui.toast("Calc-U-Later", `Result: ${state.cur}`, "calculator") },
       ]);
     }
 

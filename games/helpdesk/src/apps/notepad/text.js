@@ -12,7 +12,7 @@ export const ZOOM_MAX = 300;
 export const DEFAULT_EOL = "CRLF";
 
 export const EOL_LABEL = {
-  CRLF: "Windows (CRLF)",
+  CRLF: "Doors (CRLF)",
   LF: "Unix (LF)",
   CR: "Macintosh (CR)",
 };

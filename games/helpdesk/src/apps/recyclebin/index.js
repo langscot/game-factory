@@ -1,10 +1,10 @@
-// Recycle Bin. Reads the store's recycle bin; emptying it is still a ticket.
+// The Bin. Reads the store's recycle bin; emptying it is still a ticket.
 
 const instances = new WeakMap();
 
 export default {
   id: "recyclebin",
-  title: "Recycle Bin",
+  title: "The Bin",
   icon: "bin",
   size: [520, 400],
   desktop: true,

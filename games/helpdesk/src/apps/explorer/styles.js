@@ -1,4 +1,4 @@
-// Scoped stylesheet for File Explorer. Every selector lives under
+// Scoped stylesheet for File Exploder. Every selector lives under
 // .app-explorer; ctx.ui.styles() injects it once for the app.
 
 export const css = `

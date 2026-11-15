@@ -52,7 +52,7 @@ export function createSelectors(store) {
       if (!person) return [];
       return copy(state().org.groups.filter((g) => person.groupIds.includes(g.id)));
     },
-    /** Outlook's global address list: everyone with a live mailbox. */
+    /** Lookout's global address list: everyone with a live mailbox. */
     gal: () =>
       copy(
         allPeople()
@@ -134,9 +134,9 @@ export function createSelectors(store) {
       const software = catalogue.filter((s) => machine.software.includes(s.id));
       const runningServices = machine.services.filter((s) => s.status === "running");
       return copy([
-        { name: "Windows Explorer", kind: "system" },
-        { name: "Desktop Window Manager", kind: "system" },
-        { name: "Antimalware Service Executable", kind: "system" },
+        { name: "File Exploder", kind: "system" },
+        { name: "Desktop Compositor", kind: "system" },
+        { name: "Shitnet Service Executable", kind: "system" },
         ...runningServices.map((s) => ({ name: `svchost.exe (${s.displayName})`, kind: "service" })),
         ...software.map((s) => ({ name: s.process, kind: "software", softwareId: s.id })),
       ]);
@@ -148,9 +148,9 @@ export function createSelectors(store) {
       const machine = findMachine(machineId);
       if (!machine) return "No machine.";
       if (!machine.network.connected) {
-        return "Windows IP Configuration\n\n   Media disconnected\n   No adapters reported.";
+        return "Doors IP Configuration\n\n   Media disconnected\n   No adapters reported.";
       }
-      return `Windows IP Configuration\n\nEthernet adapter Ethernet:\n   IPv4 Address. . . . . . . . . . . : 10.14.7.${40 + machine.hardwareTier}\n   Subnet Mask . . . . . . . . . . . : 255.255.255.0\n   Default Gateway . . . . . . . . . : 10.14.7.1`;
+      return `Doors IP Configuration\n\nEthernet adapter Ethernet:\n   IPv4 Address. . . . . . . . . . . : 10.14.7.${40 + machine.hardwareTier}\n   Subnet Mask . . . . . . . . . . . : 255.255.255.0\n   Default Gateway . . . . . . . . . : 10.14.7.1`;
     },
     canSignIn: (machineId) => {
       const machine = findMachine(machineId);

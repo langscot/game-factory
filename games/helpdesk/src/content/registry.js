@@ -1,6 +1,6 @@
-// The mock registry behind Registry Editor. It is authored content: the app
+// The mock registry behind Regret Editor. It is authored content: the app
 // copies this into session.ui("regedit") on first open, and every later edit
-// lives there. Nothing here reads the machine Windows is actually running on.
+// lives there. Nothing here reads the machine the player is actually running on.
 //
 // Paths use the long hive names because that is what regedit shows and what a
 // .reg file contains. Values are [name, type, data]; DWORD data is decimal text
@@ -67,7 +67,7 @@ const ENTRIES = [
     K("HKEY_CURRENT_USER", "Software", "Halcyon", "Preferences"),
     [
       ["DisplayName", "REG_SZ", "Morgan Hayes"],
-      ["DefaultBrowser", "REG_SZ", "Google Chrome"],
+      ["DefaultBrowser", "REG_SZ", "Glorp"],
       ["StartupSound", "REG_DWORD", "1"],
     ],
   ],
@@ -143,7 +143,7 @@ const ENTRIES = [
   [
     K("HKEY_LOCAL_MACHINE", "SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion"),
     [
-      ["ProductName", "REG_SZ", "Windows 11 Pro"],
+      ["ProductName", "REG_SZ", "Doors 11 Pro"],
       ["CurrentBuild", "REG_SZ", "22621"],
       ["RegisteredOwner", "REG_SZ", "Halcyon Dynamics"],
       ["RegisteredOrganization", "REG_SZ", "Halcyon Dynamics Ltd"],
@@ -161,7 +161,7 @@ const ENTRIES = [
   [
     K("HKEY_LOCAL_MACHINE", "SYSTEM", "CurrentControlSet", "Services", "TermService"),
     [
-      ["DisplayName", "REG_SZ", "Remote Desktop Services"],
+      ["DisplayName", "REG_SZ", "Remote Deskhop Services"],
       ["Start", "REG_DWORD", "2"],
     ],
   ],

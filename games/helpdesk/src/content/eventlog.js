@@ -1,6 +1,6 @@
-// Authored content for the Event Viewer: the four Windows logs and the events
+// Authored content for the Event Voyeur: the four Doors logs and the events
 // that are already in them at the start of a shift. This is content, not state:
-// Event Viewer adds the live audit log from the world on top of these rows, so
+// Event Voyeur adds the live audit log from the world on top of these rows, so
 // the app never owns a private copy of anything.
 
 export const LOGS = [
@@ -12,7 +12,7 @@ export const LOGS = [
 
 const at = (time) => `15/11/2026 ${time}`;
 
-// Every entry mirrors the fields Windows writes into an event record. `general`
+// Every entry mirrors the fields Doors writes into an event record. `general`
 // is the text the General tab shows; `data` becomes the EventData block in the
 // XML on the Details tab.
 export const EVENTS = [
@@ -24,7 +24,7 @@ export const EVENTS = [
     log: "application",
     level: "warning",
     time: at("08:58:46"),
-    source: "Windows Error Reporting",
+    source: "Doors Error Reporting",
     eventId: 1001,
     taskCategory: "None",
     keywords: "Classic",
@@ -114,7 +114,7 @@ export const EVENTS = [
     general: [
       "Product: 7-Zip 24.09 -- Installation completed successfully.",
       "",
-      "Windows Installer installed the product. Product Name: 7-Zip 24.09. Product Version: 24.09. Product Language: 1033. Manufacturer: Igor Pavlov. Installation success or error status: 0.",
+      "Doors Installer installed the product. Product Name: 7-Zip 24.09. Product Version: 24.09. Product Language: 1033. Manufacturer: Igor Pavlov. Installation success or error status: 0.",
     ].join("\n"),
     data: {
       ProductName: "7-Zip 24.09",
@@ -137,7 +137,7 @@ export const EVENTS = [
     user: "HALCYON\\d.okafor",
     computer: "LT-DO90",
     general: [
-      "The program WINWORD.EXE version 16.0.17932.20222 stopped interacting with Windows and was closed. To see if more information about the problem is available, check the problem history in the Security and Maintenance control panel.",
+      "The program WINWORD.EXE version 16.0.17932.20222 stopped interacting with Doors and was closed. To see if more information about the problem is available, check the problem history in the Control Freak app.",
       "",
       " Process ID: 2f80",
       " Start Time: 01db36a1b0e4c9d7",
@@ -235,7 +235,7 @@ export const EVENTS = [
     general: [
       "Product: Slack 4.41 -- Installation completed successfully.",
       "",
-      "Windows Installer installed the product. Product Name: Slack 4.41. Product Version: 4.41. Product Language: 1033. Manufacturer: Slack Technologies, LLC. Installation success or error status: 0.",
+      "Doors Installer installed the product. Product Name: Slack 4.41. Product Version: 4.41. Product Language: 1033. Manufacturer: Slack Technologies, LLC. Installation success or error status: 0.",
     ].join("\n"),
     data: {
       ProductName: "Slack 4.41",
@@ -290,7 +290,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:58:03"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4634,
     taskCategory: "Logoff",
     keywords: "Audit Success",
@@ -323,7 +323,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:57:51"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4624,
     taskCategory: "Logon",
     keywords: "Audit Success",
@@ -393,7 +393,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:57:26"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4625,
     taskCategory: "Logon",
     keywords: "Audit Failure",
@@ -461,7 +461,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:53:31"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4740,
     taskCategory: "User Account Management",
     keywords: "Audit Failure",
@@ -500,7 +500,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:52:13"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4724,
     taskCategory: "User Account Management",
     keywords: "Audit Success",
@@ -536,7 +536,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:50:38"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4670,
     taskCategory: "Authorization Policy Change",
     keywords: "Audit Success",
@@ -584,7 +584,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:31:09"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4720,
     taskCategory: "User Account Management",
     keywords: "Audit Success",
@@ -642,7 +642,7 @@ export const EVENTS = [
     log: "security",
     level: "info",
     time: at("08:29:44"),
-    source: "Microsoft-Windows-Security-Auditing",
+    source: "Doors-Security-Auditing",
     eventId: 4728,
     taskCategory: "Security Group Management",
     keywords: "Audit Success",
@@ -692,24 +692,24 @@ export const EVENTS = [
     log: "setup",
     level: "warning",
     time: at("08:49:12"),
-    source: "Microsoft-Windows-WindowsUpdateClient",
+    source: "Doors-PatchClient",
     eventId: 20,
-    taskCategory: "Windows Update Agent",
+    taskCategory: "Patchy Agent",
     keywords: "Classic",
     opcode: "Info",
     user: "SYSTEM",
     computer: "DESKTOP-8H2K9L",
     general: [
-      "Installation Failure: Windows failed to install the following update with error 0x80070005: 2026-11 Cumulative Update for Windows 11, version 24H2 for x64-based Systems (KB5041580).",
+      "Installation Failure: Doors failed to install the following update with error 0x80070005: 2026-11 Cumulative Update for Doors 11, version 24H2 for x64-based Systems (KB5041580).",
     ].join("\n"),
-    data: { UpdateTitle: "2026-11 Cumulative Update for Windows 11, version 24H2 for x64-based Systems (KB5041580)", ErrorCode: "0x80070005" },
+    data: { UpdateTitle: "2026-11 Cumulative Update for Doors 11, version 24H2 for x64-based Systems (KB5041580)", ErrorCode: "0x80070005" },
   },
   {
     id: "setup-3-servicing",
     log: "setup",
     level: "info",
     time: at("08:46:39"),
-    source: "Microsoft-Windows-Servicing",
+    source: "Doors-Servicing",
     eventId: 3,
     taskCategory: "None",
     keywords: "Classic",
@@ -730,7 +730,7 @@ export const EVENTS = [
     log: "setup",
     level: "info",
     time: at("08:44:01"),
-    source: "Microsoft-Windows-Setup",
+    source: "Doors-Setup",
     eventId: 2,
     taskCategory: "None",
     keywords: "Classic",
@@ -738,7 +738,7 @@ export const EVENTS = [
     user: "SYSTEM",
     computer: "DESKTOP-8H2K9L",
     general: [
-      "Windows Setup initialised in servicing mode.",
+      "Doors Setup initialised in servicing mode.",
       "",
       "Offline image: C:\\Windows",
       "Architecture: amd64",
@@ -751,7 +751,7 @@ export const EVENTS = [
     log: "setup",
     level: "info",
     time: at("08:33:24"),
-    source: "Microsoft-Windows-Servicing",
+    source: "Doors-Servicing",
     eventId: 1,
     taskCategory: "None",
     keywords: "Classic",
@@ -775,7 +775,7 @@ export const EVENTS = [
     log: "system",
     level: "error",
     time: at("08:32:04"),
-    source: "Microsoft-Windows-Kernel-Power",
+    source: "Doors-Kernel-Power",
     eventId: 41,
     taskCategory: "None",
     keywords: "Classic",
@@ -915,7 +915,7 @@ export const EVENTS = [
     log: "system",
     level: "info",
     time: at("08:33:02"),
-    source: "Microsoft-Windows-Kernel-General",
+    source: "Doors-Kernel-General",
     eventId: 12,
     taskCategory: "None",
     keywords: "Classic",

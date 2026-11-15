@@ -1,13 +1,13 @@
-// File Explorer. The world store is the source of truth for files; this app
-// adds a small view layer on top of it so Windows Explorer's shell habits
+// File Exploder. The world store is the source of truth for files; this app
+// adds a small view layer on top of it so a file manager's shell habits
 // (tabs, breadcrumbs, the command bar, cutting and pasting) work without
 // teaching every other app about folder renames or a clipboard.
 //
-// Folders are derived from file paths, so a file saved by Notepad appears here
-// without Explorer knowing Notepad exists. Renamed folders are virtual: a
-// redirect maps the display path to the real path, which keeps Notepad opening
+// Folders are derived from file paths, so a file saved by Typo appears here
+// without File Exploder knowing Typo exists. Renamed folders are virtual: a
+// redirect maps the display path to the real path, which keeps Typo opening
 // the original bytes. Deletions are hidden in the same view layer and recorded
-// in its bin list; the platform has no delete action yet, so the Recycle Bin app
+// in its bin list; the platform has no delete action yet, so The Bin app
 // is not updated by this window.
 
 import { FILE_ICON, local } from "./icons.js";
@@ -18,12 +18,12 @@ const instances = new WeakMap();
 const HOME = "Home";
 const THIS_PC = "This PC";
 const GALLERY = "Gallery";
-const ONEDRIVE = "OneDrive";
+const ONEDRIVE = "OneDrain";
 const NETWORK = "Network";
 const USER_ROOT = "C:/Users/m.hayes";
 const QUICK_FOLDERS = ["Desktop", "Documents", "Downloads", "Pictures"];
 const SEED_DATE = "15/11/2026";
-// The store seeds one system drive. There is no drives selector, so Explorer
+// The store seeds one system drive. There is no drives selector, so this app
 // keeps the shell label here rather than reaching into the store.
 const DRIVES = [{ id: "drv_c", letter: "C:" }];
 
@@ -43,17 +43,17 @@ const EXTENSION_TYPES = {
   jpeg: "JPG File",
   png: "PNG File",
   gif: "GIF File",
-  xlsx: "Microsoft Excel Worksheet",
-  xls: "Microsoft Excel Worksheet",
-  pptx: "Microsoft PowerPoint Presentation",
-  docx: "Microsoft Word Document",
+  xlsx: "Spreadsheet",
+  xls: "Spreadsheet",
+  pptx: "Slide Deck",
+  docx: "Document",
   exe: "Application",
   zip: "Compressed (zipped) Folder",
 };
 
 export default {
   id: "explorer",
-  title: "File Explorer",
+  title: "File Exploder",
   icon: "folder",
   size: [1000, 650],
   desktop: true,
@@ -562,28 +562,28 @@ export default {
         return;
       }
       if (entry.kind === "exe") {
-        ctx.ui.toast("Windows protected your PC", `${entry.name} was blocked by IT policy. Nice try.`, "terminal");
+        ctx.ui.toast("Shitnet protected your PC", `${entry.name} was blocked by IT policy. Nice try.`, "terminal");
         return;
       }
-      ctx.ui.toast("File Explorer", `Nothing on this PC opens ${entry.name}.`, "folder");
+      ctx.ui.toast("File Exploder", `Nothing on this PC opens ${entry.name}.`, "folder");
     }
 
     async function openRegistry(entry) {
       const machine = ctx.world.machines.byOwner(technician());
       if (!machine || !entry.file) return;
       const ok = await ctx.ui.confirm(
-        "Registry Editor",
+        "Regret Editor",
         `Import ${entry.name}?\n\n${entry.path}/${entry.name}\n\nThis writes policy keys for every user on ${machine.hostname}.`,
         { ok: "Yes", cancel: "No" },
       );
       if (!ok) return;
       const result = ctx.actions.importRegistry(machine.id, entry.file.id);
       if (!result.ok) {
-        ctx.ui.toast("Registry Editor", `Import failed: ${result.reason}.`, "settings");
+        ctx.ui.toast("Regret Editor", `Import failed: ${result.reason}.`, "settings");
         return;
       }
       ctx.ui.toast(
-        "Registry Editor",
+        "Regret Editor",
         `${result.entries.length} value${result.entries.length === 1 ? "" : "s"} imported. Policy state updated.`,
         "settings",
       );
@@ -615,7 +615,7 @@ export default {
       const state = read();
       const display = activePath(state);
       if (!isWritable(display, state)) {
-        ctx.ui.toast("File Explorer", "Choose a folder on this PC first.", "folder");
+        ctx.ui.toast("File Exploder", "Choose a folder on this PC first.", "folder");
         return;
       }
       const directory = targetDirectory(state);
@@ -633,14 +633,14 @@ export default {
       const state = read();
       const display = activePath(state);
       if (!isWritable(display, state)) {
-        ctx.ui.toast("File Explorer", "Choose a folder on this PC first.", "folder");
+        ctx.ui.toast("File Exploder", "Choose a folder on this PC first.", "folder");
         return;
       }
       const directory = targetDirectory(state);
       const name = uniqueName(currentNames(state), "New Text Document.txt", ".txt");
       const result = ctx.actions.saveFile({ path: directory, name, contents: "", kind: "text" });
       if (!result.ok) {
-        ctx.ui.toast("File Explorer", `Could not create the file: ${result.reason}.`, "folder");
+        ctx.ui.toast("File Exploder", `Could not create the file: ${result.reason}.`, "folder");
         return;
       }
       const full = `${directory}/${name}`;
@@ -654,7 +654,7 @@ export default {
       const entry = selectedRow(state);
       if (!entry) return;
       if (entry.kind === "drive" || entry.kind === "share") {
-        ctx.ui.toast("File Explorer", "That item cannot be cut or copied here.", "folder");
+        ctx.ui.toast("File Exploder", "That item cannot be cut or copied here.", "folder");
         return;
       }
       const contents = entry.file?.contents ?? entry.virtual?.contents ?? null;
@@ -673,7 +673,7 @@ export default {
         },
       };
       save({ clipboard });
-      ctx.ui.toast("File Explorer", `${entry.name} ${mode === "cut" ? "cut" : "copied"}.`, "folder");
+      ctx.ui.toast("File Exploder", `${entry.name} ${mode === "cut" ? "cut" : "copied"}.`, "folder");
     }
 
     function writeFile(directory, name, item, state) {
@@ -716,7 +716,7 @@ export default {
       if (!clipboard) return;
       const display = activePath(state);
       if (!isWritable(display, state)) {
-        ctx.ui.toast("File Explorer", "Choose a folder on this PC first.", "folder");
+        ctx.ui.toast("File Exploder", "Choose a folder on this PC first.", "folder");
         return;
       }
       const directory = targetDirectory(state);
@@ -725,7 +725,7 @@ export default {
 
       if (item.isFolder) {
         if (directory === item.actualPath || directory.startsWith(`${item.actualPath}/`)) {
-          ctx.ui.toast("File Explorer", "You cannot move a folder into itself.", "folder");
+          ctx.ui.toast("File Exploder", "You cannot move a folder into itself.", "folder");
           return;
         }
         const baseName = clipboard.mode === "copy" ? `${item.name} - Copy` : item.name;
@@ -752,7 +752,7 @@ export default {
       const name = uniqueName(names, item.name, extension);
       const ok = writeFile(directory, name, item, state);
       if (!ok) {
-        ctx.ui.toast("File Explorer", "The paste did not complete.", "folder");
+        ctx.ui.toast("File Exploder", "The paste did not complete.", "folder");
         return;
       }
       const full = `${directory}/${name}`;
@@ -787,7 +787,7 @@ export default {
         return;
       }
       if (/[<>:"/\\|?*]/.test(name) || name === "." || name === "..") {
-        ctx.ui.toast("File Explorer", "A file name cannot contain any of these characters: \\ / : * ? \" < > |", "folder");
+        ctx.ui.toast("File Exploder", "A file name cannot contain any of these characters: \\ / : * ? \" < > |", "folder");
         paint();
         return;
       }
@@ -803,7 +803,7 @@ export default {
       }
       const names = currentNames(state).filter((existing) => existing !== entry.name);
       if (names.some((existing) => existing.toLowerCase() === name.toLowerCase())) {
-        ctx.ui.toast("File Explorer", "There is already an item with that name in this folder.", "folder");
+        ctx.ui.toast("File Exploder", "There is already an item with that name in this folder.", "folder");
         paint();
         return;
       }
@@ -846,7 +846,7 @@ export default {
           kind: entry.file.kind,
         });
         if (!result.ok) {
-          ctx.ui.toast("File Explorer", `Could not rename the item: ${result.reason}.`, "folder");
+          ctx.ui.toast("File Exploder", `Could not rename the item: ${result.reason}.`, "folder");
           paint();
           return;
         }
@@ -862,13 +862,13 @@ export default {
       const entry = selectedRow(state);
       if (!entry) return;
       if (entry.kind === "drive" || entry.kind === "share") {
-        ctx.ui.toast("File Explorer", "This item cannot be deleted from here.", "folder");
+        ctx.ui.toast("File Exploder", "This item cannot be deleted from here.", "folder");
         return;
       }
       const what = entry.kind === "folder" ? "folder" : "file";
       const ok = await ctx.ui.confirm(
         `Delete ${what}`,
-        `Are you sure you want to move this ${what} to the Recycle Bin?\n\n${entry.name}`,
+        `Are you sure you want to move this ${what} to The Bin?\n\n${entry.name}`,
         { ok: "Yes", cancel: "No" },
       );
       if (!ok) return;
@@ -900,7 +900,7 @@ export default {
         selected: null,
         clipboard: null,
       });
-      ctx.ui.toast("File Explorer", `${entry.name} moved to the Recycle Bin.`, "bin");
+      ctx.ui.toast("File Exploder", `${entry.name} moved to The Bin.`, "bin");
     }
 
     function shareSelection() {
@@ -1184,7 +1184,7 @@ export default {
 
     function emptyMarkup(path, query) {
       if (path === ONEDRIVE) {
-        return `<div class="exp-empty onedrive">${local("cloud")}<h3>OneDrive isn't set up</h3><p>This PC is joined to HALCYON. A work account can sign in to sync Documents, Desktop and Pictures.</p><button class="btn" disabled>Set up OneDrive</button></div>`;
+        return `<div class="exp-empty onedrive">${local("cloud")}<h3>OneDrain isn't set up</h3><p>This PC is joined to HALCYON. A work account can sign in to sync Documents, Desktop and Pictures directly to Nadir, where they will be mined for insights.</p><button class="btn" disabled>Set up OneDrain</button></div>`;
       }
       if (query) {
         return `<div class="exp-empty">${local("gallery")}<h3>No items match your search</h3></div>`;
@@ -1219,7 +1219,7 @@ export default {
             <button class="tab-new" data-new-tab title="New tab" aria-label="New tab">${local("plus")}</button>
           </div>
 
-          <div class="exp-cmd" role="toolbar" aria-label="File Explorer commands">
+          <div class="exp-cmd" role="toolbar" aria-label="File Exploder commands">
             ${commandButton("new", ctx.ui.icon("folder") + `<span class="plus-badge">+</span>`, "New", {
               disabled: !isWritable(path, state),
               trailing: ctx.ui.icon("$chevronDown"),
@@ -1243,7 +1243,7 @@ export default {
             <aside class="exp-nav" aria-label="Navigation pane">
               ${navItem(HOME, "Home", local("home"), path === HOME)}
               ${navItem(GALLERY, "Gallery", local("gallery"), path === GALLERY)}
-              ${navItem(ONEDRIVE, "OneDrive", local("cloud"), path === ONEDRIVE)}
+              ${navItem(ONEDRIVE, "OneDrain", local("cloud"), path === ONEDRIVE)}
               <div class="nav-group">
                 <button class="nav-parent${path === THIS_PC ? " sel" : ""}" data-expand="thispc" data-nav-group="thispc" data-nav="${THIS_PC}">
                   <span class="nav-chev${expanded.has("thispc") ? " open" : ""}">${ctx.ui.icon("$chevron")}</span>${local("thispc")}<span>This PC</span>

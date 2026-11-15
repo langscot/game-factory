@@ -1,5 +1,5 @@
 // One bus, one audit log. Every action that changes the world emits an event:
-// Event Viewer renders them, scoring reads them, apps subscribe for redraws.
+// Event Voyeur renders them, scoring reads them, apps subscribe for redraws.
 //
 // Transient notifications ("world:changed") are dispatched but not written to
 // the log, so redraws do not fill the audit trail.

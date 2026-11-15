@@ -1,9 +1,9 @@
 // Mock command handlers for the terminal. Every command returns text; nothing
 // is executed on the real machine. The handlers read the same world the rest of
 // the desktop does, so `net user` agrees with the Directory, `ipconfig` agrees
-// with Task Manager, and `dir`/`type` agree with File Explorer and Notepad.
+// with Task Mangler, and `dir`/`type` agree with File Exploder and Typo.
 
-const WINDOWS_VERSION = "Microsoft Windows [Version 10.0.22621.4317]";
+const WINDOWS_VERSION = "Nadir Doors [Version 10.0.22621.4317]";
 const POWERSHELL_VERSION = "5.1.22621.4391";
 const DNS_SERVER = "dc01.halcyon.co";
 const DNS_ADDRESS = "10.14.7.2";
@@ -48,11 +48,11 @@ const CMD_HELP = [
   ["CLS", "Clears the screen."],
   ["DIR", "Displays a list of files and subdirectories in a directory."],
   ["ECHO", "Displays messages."],
-  ["EXIT", "Quits the CMD.EXE program (command interpreter)."],
+  ["EXIT", "Quits the ShitShell program (command interpreter)."],
   ["HOSTNAME", "Prints the name of the current host."],
   ["SFC", "Scans and repairs protected system files."],
   ["TYPE", "Displays the contents of a text file."],
-  ["VER", "Displays the Windows version."],
+  ["VER", "Displays the Doors version."],
 ];
 
 const PS_HELP = [
@@ -60,7 +60,7 @@ const PS_HELP = [
   ["cls", "Clears the host window."],
   ["dir", "Gets the items in a location."],
   ["echo", "Sends the specified objects to the next command in the pipeline."],
-  ["exit", "Closes the current PowerShell session."],
+  ["exit", "Closes the current ShitShell Admin session."],
   ["help", "Shows the commands installed on this machine."],
   ["ipconfig", "Displays the IP configuration of this machine."],
   ["net", "Manages local users, groups and services."],
@@ -217,7 +217,7 @@ function psPathError(env, command, target, cmdlet) {
       out(`+ ${env.line}`),
       out(`+ ${"~".repeat(Math.max(1, env.line.length))}`),
       out(`    + CategoryInfo          : ObjectNotFound: (${shown}:String) [${PS_CMDLET_NAMES[cmdlet] || cmdlet}], ItemNotFoundException`),
-      out(`    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.${cmdlet}Command`),
+      out(`    + FullyQualifiedErrorId : PathNotFound,ShitShell.Commands.${cmdlet}Command`),
     ],
   };
 }
@@ -371,7 +371,7 @@ function ipconfigCommand(env) {
   const switches = switchesOf(env.args);
   if (switches.includes("/flushdns")) {
     return {
-      lines: [out("Windows IP Configuration"), blank(), out("Successfully flushed the DNS Resolver Cache."), blank()],
+      lines: [out("Doors IP Configuration"), blank(), out("Successfully flushed the DNS Resolver Cache."), blank()],
     };
   }
 
@@ -379,7 +379,7 @@ function ipconfigCommand(env) {
   if (switches.includes("/displaydns")) {
     return {
       lines: [
-        out("Windows IP Configuration"),
+        out("Doors IP Configuration"),
         blank(),
         out(`    ${hostnameOf(env).toLowerCase()}.halcyon.co`),
         out("    ----------------------------------------"),
@@ -397,7 +397,7 @@ function ipconfigCommand(env) {
   if (switches.includes("/all")) {
     const adapter = env.machine?.devices?.find((device) => device.kind === "network")?.name || "Intel(R) Ethernet Connection I219-LM";
     const lines = [
-      out("Windows IP Configuration"),
+      out("Doors IP Configuration"),
       blank(),
       out(`   Host Name . . . . . . . . . . . . : ${hostnameOf(env)}`),
       out("   Primary Dns Suffix  . . . . . . . : halcyon.co"),
@@ -612,7 +612,7 @@ function localGroups(env) {
       members: logons(["p_marge", "p_hayes"]),
     },
     {
-      name: "Remote Desktop Users",
+      name: "Remote Deskhop Users",
       comment: "Members in this group are granted the right to logon remotely",
       members: people.filter((person) => person.remote).map((person) => person.logonName),
     },
@@ -720,7 +720,7 @@ function netStart(env, args) {
   const services = env.world.machines.services(env.machine?.id).filter((service) => service.status === "running");
   return {
     lines: [
-      out("These Windows services are started:"),
+      out("These Doors services are started:"),
       blank(),
       ...services.map((service) => out(`   ${service.displayName}`)),
       blank(),
@@ -758,10 +758,10 @@ function sfcCommand(env) {
   if (!env.args.some((arg) => /^\/scannow$/i.test(arg))) {
     return {
       lines: [
-        out("Microsoft (R) Windows (R) Resource Checker 6.0"),
-        out("Copyright (C) Microsoft Corporation. All rights reserved."),
+        out("Nadir (R) Doors (R) Resource Checker 6.0"),
+        out("Copyright (C) Nadir Systems. All rights reserved."),
         blank(),
-        out("Scans the integrity of all protected system files and replaces incorrect versions with correct Microsoft versions."),
+        out("Scans the integrity of all protected system files and replaces incorrect versions with correct Nadir versions."),
         blank(),
         out("SFC [/SCANNOW] [/VERIFYONLY] [/SCANFILE=<file>] [/VERIFYFILE=<file>]"),
         out("    [/OFFWINDIR=<offline windows directory> /OFFBOOTDIR=<offline boot directory>]"),
@@ -775,7 +775,7 @@ function sfcCommand(env) {
         at: 1.2,
         lines: [out("Beginning verification phase of system scan."), out("Verification 100% complete."), blank()],
       },
-      { at: 2.1, lines: [out("Windows Resource Protection did not find any integrity violations.")] },
+      { at: 2.1, lines: [out("Doors Resource Protection did not find any integrity violations.")] },
     ],
   };
 }
@@ -807,7 +807,7 @@ function helpCommand(env) {
       out("----                           -----------"),
       ...PS_HELP.map(([name, description]) => out(`${name.padEnd(31)}${description}`)),
       blank(),
-      out(`Windows PowerShell ${POWERSHELL_VERSION}`),
+      out(`ShitShell Admin ${POWERSHELL_VERSION}`),
     ];
     return { lines };
   }

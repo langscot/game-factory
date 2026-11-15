@@ -93,9 +93,9 @@ const MACHINES = [
 const SERVICE_CATALOGUE = [
   ["spooler", "Spooler", "Print Spooler", "automatic"],
   ["bits", "BIT", "Background Intelligent Transfer Service", "manual"],
-  ["wuauserv", "Windows Update", "Windows Update", "manual"],
+  ["wuauserv", "Patchy Update", "Patchy Update", "manual"],
   ["lanmanworkstation", "Workstation", "Workstation", "automatic"],
-  ["rdp", "TermService", "Remote Desktop Services", "automatic"],
+  ["rdp", "TermService", "Remote Deskhop Services", "automatic"],
 ];
 
 const DEVICE_CATALOGUE = [
@@ -111,7 +111,7 @@ const DRIVERS = [
   ["ax201", "Intel Wi-Fi 6 AX201", "22.230.0.3", "Intel", true],
   ["uhd630", "Intel UHD Graphics 630", "31.0.101.2130", "Intel", true],
   ["realtek_hda", "Realtek Audio", "6.0.9231.1", "Realtek", true],
-  ["usbcc", "USB Composite Device", "10.0.22621.1", "Microsoft", true],
+  ["usbcc", "USB Composite Device", "10.0.22621.1", "Nadir", true],
 ];
 
 // [share id, label, unc path, acl entries]
@@ -241,7 +241,7 @@ const TICKETS = [
     2,
     "p_ruth",
     "Notepad++ please",
-    "Opening CSVs in Notepad is ruining my life. Could I get Notepad++?",
+    "Opening CSVs in Typo is ruining my life. Could I get Notepad++?",
     3,
     "Notepad++ is on the approved list.",
     [["software.install", { appId: "sw_notepadpp" }]],
@@ -588,7 +588,7 @@ escalate. Yes, even if they are nice about it.`,
 - do NOT forget the biscuits`,
 };
 
-const FIX_PRINTERS_REG = `Windows Registry Editor Version 5.00
+const FIX_PRINTERS_REG = `Doors Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Halcyon\\Printing]
 "AllowPrintSpoolerRemoteCalls"=dword:00000001
@@ -657,7 +657,7 @@ const machineRecord = ([ownerId, hostname, tier, software]) => ({
   hostname,
   ownerId,
   hardwareTier: tier,
-  os: `Windows 11 Pro 22H2`,
+  os: `Doors 11 Pro 22H2`,
   software: [...software],
   services: SERVICE_CATALOGUE.map(([id, name, displayName, startType]) => ({
     id: `svc_${id}`,
@@ -845,7 +845,7 @@ export function seedWorld({ seed = 20261115 } = {}) {
   const events = [
     { id: "ev_0001", seq: 1, type: "system:boot", category: "System", level: "info", code: 6005, message: "Event log service started. Terminal 04 booted.", day: 1, at: "08:56", subjectId: null, ticketId: null, data: {} },
     { id: "ev_0002", seq: 2, type: "service:started", category: "System", level: "info", code: 7036, message: "Print Spooler entered the running state.", day: 1, at: "08:56", subjectId: "p_hayes", ticketId: null, data: { service: "spooler" } },
-    { id: "ev_0003", seq: 3, type: "gpo:applied", category: "System", level: "info", code: 1503, message: "Group Policy applied for HALCYON\\m.hayes. 0 errors.", day: 1, at: "08:58", subjectId: "p_hayes", ticketId: null, data: { gpo: "gpo_printers" } },
+    { id: "ev_0003", seq: 3, type: "gpo:applied", category: "System", level: "info", code: 1503, message: "Group Policing applied for HALCYON\\m.hayes. 0 errors.", day: 1, at: "08:58", subjectId: "p_hayes", ticketId: null, data: { gpo: "gpo_printers" } },
   ];
 
   const store = {
@@ -885,7 +885,7 @@ export function seedWorld({ seed = 20261115 } = {}) {
     mail,
     tickets,
     files: {
-      drives: [{ id: "drv_c", letter: "C:", label: "Windows" }],
+      drives: [{ id: "drv_c", letter: "C:", label: "Doors" }],
       shares: SHARES.map(([id, label, path, acl]) => ({
         id,
         label,
@@ -907,7 +907,7 @@ export function seedWorld({ seed = 20261115 } = {}) {
       softwareCatalogue: SOFTWARE,
       drivers: DRIVERS.map(([id, name, version, vendor, signed]) => ({ id, name, version, vendor, signed })),
       updates: [
-        { id: "kb_5041580", title: "2026-11 Cumulative Update for Windows 11", status: "available", sizeMb: 612, requiresRestart: true },
+        { id: "kb_5041580", title: "2026-11 Cumulative Update for Doors 11", status: "available", sizeMb: 612, requiresRestart: true },
         { id: "kb_5040443", title: "Servicing Stack Update", status: "installed", sizeMb: 24, requiresRestart: false },
       ],
       gpos: [

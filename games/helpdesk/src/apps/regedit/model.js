@@ -1,4 +1,4 @@
-// Pure registry helpers shared by the Registry Editor window: tree shape,
+// Pure registry helpers shared by the Regret Editor window: tree shape,
 // value display, .reg serialisation and the import merge. No DOM and no world
 // access, so the rules can be read (and exercised) on their own.
 
@@ -171,7 +171,7 @@ export function exportReg(keys, path) {
     .filter((key) => eq(key.path, target.path) || key.path.toLowerCase().startsWith(prefix))
     .sort((a, b) => a.path.localeCompare(b.path, "en-GB", { sensitivity: "base" }));
 
-  const lines = ["Windows Registry Editor Version 5.00", ""];
+  const lines = ["Doors Registry Editor Version 5.00", ""];
   for (const record of branch) {
     lines.push(`[${record.path}]`);
     const values = displayValues(record).filter((value) => !value.unset);

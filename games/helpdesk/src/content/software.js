@@ -1,5 +1,5 @@
 // The approved software catalogue. Installing one of these is a world action,
-// so Start, Task Manager and file associations all read the same list.
+// so Start, Task Mangler and file associations all read the same list.
 
 export const SOFTWARE = [
   {

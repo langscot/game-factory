@@ -1,4 +1,4 @@
-// Remote Desktop Connection (mstsc.exe). Shell only: the dialog, its options,
+// Remote Deskhop (mstsc.exe). Shell only: the dialog, its options,
 // a mock handshake and a remote desktop you can look at. The world supplies the
 // machines; this app supplies the client. No sockets, no remote machine.
 
@@ -13,7 +13,7 @@ const instances = new WeakMap();
 
 export default {
   id: "rdp",
-  title: "Remote Desktop Connection",
+  title: "Remote Deskhop",
   icon: "rdp",
   size: [680, 540],
   desktop: true,
@@ -53,7 +53,7 @@ export default {
         overlay = showInfoDialog(root, { ...details, onClose: () => (overlay = null) });
       },
       notice(text) {
-        app.info({ heading: "Remote Desktop Connection", message: text });
+        app.info({ heading: "Remote Deskhop", message: text });
       },
       connect(value) {
         beginConnect(value);
@@ -90,8 +90,8 @@ export default {
       view = null;
       root.innerHTML = "";
       const title = state.connected
-        ? `${state.connected.host} - Remote Desktop Connection`
-        : "Remote Desktop Connection";
+        ? `${state.connected.host} - Remote Deskhop`
+        : "Remote Deskhop";
       ctx.window.setTitle(title);
       view = state.connected ? createRemoteSession(root, ctx, app) : createConnectionDialog(root, ctx, app);
     }

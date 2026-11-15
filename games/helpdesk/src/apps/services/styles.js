@@ -1,4 +1,4 @@
-// Services console chrome. Everything is scoped under .app-services, including
+// Servicing console chrome. Everything is scoped under .app-services, including
 // the Properties and progress dialogs (their markup carries the same class).
 export const CSS = `
 .app-services .svc-console {

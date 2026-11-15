@@ -1,4 +1,4 @@
-// Authored content for the Group Policy Management Console. The console is a
+// Authored content for the Group Policing console. The console is a
 // mock: the domain, OUs, GPOs and setting definitions below are static, while
 // the links and setting values the technician changes live in
 // ctx.world.session.ui("gpmc"). Nothing here reads a real directory.
@@ -130,7 +130,7 @@ export const SETTINGS = [
   {
     id: "password_length",
     scope: "computer",
-    path: ["Policies", "Windows Settings", "Security Settings", "Account Policies", "Password Policy"],
+    path: ["Policies", "Doors Settings", "Security Settings", "Account Policies", "Password Policy"],
     name: "Minimum password length",
     kind: "number",
     unit: "characters",
@@ -151,7 +151,7 @@ export const SETTINGS = [
   {
     id: "drive_map",
     scope: "user",
-    path: ["Policies", "Administrative Templates", "Windows Components", "File Explorer"],
+    path: ["Policies", "Administrative Templates", "Doors Components", "File Exploder"],
     name: "Map network drives at logon",
     kind: "text",
     placeholder: "H: \\\\halcyon\\finance",

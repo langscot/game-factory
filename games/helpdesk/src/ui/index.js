@@ -27,7 +27,7 @@ export function createUi({ windows, endWindow } = {}) {
     menu: openMenu,
     /** Inject an app stylesheet; selectors must be scoped under .app-<id>. */
     styles: injectStyles,
-    /** The open windows, for Task Manager. Platform UI state, not app state. */
+    /** The open windows, for Task Mangler. Platform UI state, not app state. */
     windows: windows || (() => []),
     endWindow: endWindow || (() => {}),
     prefs: {

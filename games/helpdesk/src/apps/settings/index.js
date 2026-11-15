@@ -12,7 +12,7 @@ const TIER_LABEL = {
 
 export default {
   id: "settings",
-  title: "Settings",
+  title: "Control Freak",
   icon: "settings",
   size: [800, 560],
   desktop: true,
@@ -69,8 +69,8 @@ export default {
             <div class="set-row">Network <b>${machine?.network.connected ? "Connected · 1 Gbps" : "Disconnected"}</b></div>
           </div>
           <div class="set-card">
-            <h4>Windows specifications</h4>
-            <div class="set-row">Edition <b>${ctx.ui.esc(machine?.os || "Windows 11 Pro")}</b></div>
+            <h4>Doors specifications</h4>
+            <div class="set-row">Edition <b>${ctx.ui.esc(machine?.os || "Doors 11 Pro")}</b></div>
             <div class="set-row">OS build <b>22621.4317</b></div>
             <div class="set-row">Activation <b style="color:#fbbf24">Not activated</b></div>
           </div>
@@ -99,10 +99,10 @@ export default {
           button.addEventListener("click", () => {
             const result = ctx.actions.installSoftware(machine.id, button.dataset.install, { role: "helpdesk" });
             if (!result.ok) {
-              ctx.ui.toast("Settings", `Install failed: ${result.reason}.`, "settings");
+              ctx.ui.toast("Control Freak", `Install failed: ${result.reason}.`, "settings");
               return;
             }
-            ctx.ui.toast("Settings", `${result.software.name} installed on ${machine.hostname}.`, "settings");
+            ctx.ui.toast("Control Freak", `${result.software.name} installed on ${machine.hostname}.`, "settings");
           });
         }
       } else if (page === "personal") {
@@ -139,7 +139,7 @@ export default {
       } else {
         main.innerHTML = `
           <h3>About</h3>
-          <div class="sub">Halcyon Dynamics · IT Service Desk build</div>
+          <div class="sub">Control Freak · Doors 11 · Nadir Systems</div>
           <div class="set-card">
             <div class="set-row">Machine name <b>${ctx.ui.esc(machine?.hostname || "DESKTOP")}</b></div>
             <div class="set-row">Assigned to <b>${ctx.ui.esc(session.technician?.logonName || "m.hayes")} (IT)</b></div>

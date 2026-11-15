@@ -1,4 +1,4 @@
-// Group Policy Management Editor, opened from the console as a second window
+// Group Policing Editor, opened from the console as a second window
 // of the same app. The tree mirrors the editor's Computer/User Configuration
 // shape; the detail pane writes setting values back into session.ui("gpmc"),
 // which is the same state the console's Settings tab reads.
@@ -218,9 +218,9 @@ export function mountEditor(container, ctx, gpoId) {
           <button type="button" class="gpmc-tool" data-editor-act="templates">Administrative Templates</button>
         </div>
         <div class="gpmc-body is-editor">
-          <div class="gpmc-tree" role="tree" aria-label="Group Policy Management Editor tree">${treeHtml()}</div>
+          <div class="gpmc-tree" role="tree" aria-label="Group Policing Editor tree">${treeHtml()}</div>
           <div class="gpmc-main is-single">
-            <div class="gpmc-panehead"><div><b>Group Policy Management Editor</b><small>${esc(
+            <div class="gpmc-panehead"><div><b>Group Policing Editor</b><small>${esc(
               gpo.name,
             )} · ${esc(gpo.security)}</small></div><span class="gpmc-pill">${visible.length} setting${
               visible.length === 1 ? "" : "s"
@@ -274,7 +274,7 @@ export function mountEditor(container, ctx, gpoId) {
       lastAction: `Edited ${setting.name} on ${gpo.name}`,
     });
     paint();
-    ctx.ui.toast("Group Policy Management Editor", `${setting.name} applied to ${gpo.name}.`, "gpmc");
+    ctx.ui.toast("Group Policing Editor", `${setting.name} applied to ${gpo.name}.`, "gpmc");
   }
 
   function wire(root, selected) {
@@ -358,11 +358,11 @@ export function mountEditor(container, ctx, gpoId) {
     } else {
       ctx.ui.menu(x, y, [
         {
-          label: "About Group Policy Management Editor",
+          label: "About Group Policing Editor",
           onClick: () =>
             ctx.ui.alert(
-              "Group Policy Management Editor",
-              "Group Policy Management Editor\n\nUse this editor to change the settings in a Group Policy object.\n\nVersion 10.0 (Build 22621)",
+              "Group Policing Editor",
+              "Group Policing Editor\n\nUse this editor to change the settings in a Group Policing object.\n\nVersion 10.0 (Build 22621)",
             ),
         },
       ]);

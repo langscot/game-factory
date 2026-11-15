@@ -159,7 +159,7 @@ export function createConnectionDialog(root, ctx, app) {
           <div class="rdp-group">
             <h4>Keyboard</h4>
             <div class="rdp-row">
-              <label>Apply Windows key combinations:</label>
+              <label>Apply Doors key combinations:</label>
               <select data-opt="local.keyboard">
                 <option value="windows">Only when using the full screen</option>
                 <option value="remote">On the remote computer</option>
@@ -250,7 +250,7 @@ export function createConnectionDialog(root, ctx, app) {
               <button class="rdp-btn" data-info="save">Save As...</button>
               <button class="rdp-btn" data-info="open">Open...</button>
             </div>
-            <p class="rdp-note">Connection settings are stored in a Remote Desktop (.rdp) file.</p>
+            <p class="rdp-note">Connection settings are stored in a Remote Deskhop (.rdp) file.</p>
           </div>`;
     }
   }
@@ -258,12 +258,12 @@ export function createConnectionDialog(root, ctx, app) {
   const INFO = {
     save: {
       heading: "Connection settings saved",
-      message: `Your Remote Desktop Connection settings were saved to ${SAVE_PATH}.`,
+      message: `Your Remote Deskhop settings were saved to ${SAVE_PATH}.`,
     },
     open: {
       heading: "Open a connection file",
       message:
-        "Remote Desktop Connection cannot open saved .rdp files on this PC. Type the computer name on the General tab instead.",
+        "Remote Deskhop cannot open saved .rdp files on this PC. Type the computer name on the General tab instead.",
     },
     audio: {
       heading: "Remote audio",
@@ -376,9 +376,9 @@ export function createConnectionDialog(root, ctx, app) {
   });
   node.querySelector("[data-help]").addEventListener("click", () =>
     app.info({
-      heading: "Remote Desktop Connection",
+      heading: "Remote Deskhop",
       message:
-        "Remote Desktop Connection connects to a Windows computer on the Halcyon network and shows its desktop in this window.\n\nType the computer name (for example LT-PR24) and a user name, then choose Connect. For help with a machine on your desk, open a ticket for IT.",
+        "Remote Deskhop connects to a Doors computer on the Halcyon network and shows its desktop in this window. It is the same desk, only further away.\n\nType the computer name (for example LT-PR24) and a user name, then choose Connect. For help with a machine on your desk, open a ticket for IT.",
     }),
   );
   connectButton.addEventListener("click", () => app.connect(computerInput.value));

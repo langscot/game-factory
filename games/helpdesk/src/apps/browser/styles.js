@@ -1,4 +1,4 @@
-// Browser chrome and the shared page primitives every intranet site can use.
+// Glorp chrome and the shared page primitives every intranet site can use.
 // Everything is scoped under .app-browser: no global selectors, no <style> tags
 // in the pages themselves. Sites add their own rules through platform.style()
 // and scope those under their `.site-<id>` wrapper.

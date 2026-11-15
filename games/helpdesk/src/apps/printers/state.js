@@ -1,4 +1,4 @@
-// Mock Devices and Printers state. It lives in session.ui.printers so a redraw
+// Mock Spool & Pray state. It lives in session.ui.printers so a redraw
 // or another window sees the same printers, jobs and selection. Nothing here
 // touches a real device, port or spooler.
 
@@ -21,10 +21,10 @@ const PRINTER_SEED = [
   },
   {
     id: "prn_04",
-    name: "Microsoft Print to PDF",
+    name: "Nadir Print to PDF",
     shareName: "",
-    driver: "Microsoft Print To PDF",
-    model: "Microsoft Print to PDF",
+    driver: "Nadir Print To PDF",
+    model: "Nadir Print to PDF",
     location: "Local port",
     port: "PORTPROMPT:",
     status: "ready",

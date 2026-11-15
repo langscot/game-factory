@@ -1,5 +1,5 @@
-// The two real dialogs on the Devices and Printers page: Add a printer and
-// Printer Properties. Both are mock-only but follow the Windows flow, errors
+// The two real dialogs on the Spool & Pray page: Add a printer and
+// Printer Properties. Both are mock-only but follow the usual flow, errors
 // included.
 
 import { DISCOVERED_PRINTERS, addJob, commit, printerStatus, readState, spoolerState } from "./state.js";
@@ -62,7 +62,7 @@ export function openAddPrinterWizard(ctx) {
           <span class="wiz-icon">${ctx.ui.icon("printer")}</span>
           <div><h2>Add a printer</h2><div class="sub">Adding ${ctx.ui.esc(install?.name || "printer")}…</div></div>
         </div>
-        <div class="wiz-working"><span class="spinner"></span><div><b>Installing printer driver</b><span>Windows is copying the driver and creating the port. This can take a moment.</span></div></div>
+        <div class="wiz-working"><span class="spinner"></span><div><b>Installing printer driver</b><span>Doors is copying the driver and creating the port. This can take a moment, or until you give up.</span></div></div>
         <div class="wiz-progress"><i></i></div>`;
     }
 
@@ -76,7 +76,7 @@ export function openAddPrinterWizard(ctx) {
           <label class="wiz-label" for="printers-manual-name">Printer name or address</label>
           <input id="printers-manual-name" class="wiz-input" data-name value="${ctx.ui.esc(manualValue)}" placeholder="\\\\PRINT01\\HP-Floor3" autocomplete="off" spellcheck="false">
           <p class="wiz-hint">For a shared printer, use <code>\\\\PRINT01\\share-name</code>. Example: <code>\\\\PRINT01\\Canon-Finance</code>.</p>
-          ${error ? `<div class="wiz-error" role="alert"><b>Windows couldn't add the printer</b><span>${ctx.ui.esc(error)}</span></div>` : ""}
+          ${error ? `<div class="wiz-error" role="alert"><b>Spool &amp; Pray couldn't add the printer</b><span>${ctx.ui.esc(error)}</span></div>` : ""}
           <button class="wiz-link" data-search-again>Search for printers on the network instead</button>
         </div>
         <div class="wiz-foot">
@@ -112,7 +112,7 @@ export function openAddPrinterWizard(ctx) {
                 .join("")}
           ${!searching && !list.length ? `<div class="wiz-empty">No unused printers were found on the network.</div>` : ""}
         </div>
-        ${error ? `<div class="wiz-error" role="alert"><b>Windows couldn't add the printer</b><span>${ctx.ui.esc(error)}</span></div>` : ""}
+        ${error ? `<div class="wiz-error" role="alert"><b>Spool &amp; Pray couldn't add the printer</b><span>${ctx.ui.esc(error)}</span></div>` : ""}
         <button class="wiz-link" data-manual>The printer that I want isn't listed</button>
       </div>
       <div class="wiz-foot">
@@ -180,7 +180,7 @@ export function openAddPrinterWizard(ctx) {
           return;
         }
         error =
-          "Windows couldn't connect to the printer. Check the printer name and try again. Error 0x00000bcb. The specified port is unknown.";
+          "Doors couldn't connect to the printer. Check the printer name and try again. Error 0x00000bcb. The specified port is unknown.";
       }
     }
     draw();
@@ -196,7 +196,7 @@ export function openAddPrinterWizard(ctx) {
       if (modalGone(card)) return;
       if (readState(ctx).printers.some((printer) => printer.shareName.toLowerCase() === found.shareName.toLowerCase())) {
         ctx.ui.closeDialog();
-        ctx.ui.toast("Devices and Printers", `${found.name} is already installed.`, "printer");
+        ctx.ui.toast("Spool & Pray", `${found.name} is already installed.`, "printer");
         return;
       }
       commit(ctx, (draft) => {
@@ -222,7 +222,7 @@ export function openAddPrinterWizard(ctx) {
         draft.selectedDeviceId = null;
       });
       ctx.ui.closeDialog();
-      ctx.ui.toast("Devices and Printers", `${found.name} was added to this PC.`, "printer");
+      ctx.ui.toast("Spool & Pray", `${found.name} was added to this PC.`, "printer");
     });
   }
 
@@ -399,7 +399,7 @@ export function openPrinterProperties(ctx, printerId) {
   function save(close) {
     collect();
     if (!draft.name.trim()) {
-      ctx.ui.toast("Devices and Printers", "The printer name cannot be empty.", "printer");
+      ctx.ui.toast("Spool & Pray", "The printer name cannot be empty.", "printer");
       return;
     }
     commit(ctx, (state) => {
@@ -422,7 +422,7 @@ export function openPrinterProperties(ctx, printerId) {
       });
     });
     if (close) ctx.ui.closeDialog();
-    else ctx.ui.toast("Devices and Printers", "Printer properties saved.", "printer");
+    else ctx.ui.toast("Spool & Pray", "Printer properties saved.", "printer");
   }
 
   function wire() {
@@ -447,7 +447,7 @@ export function openPrinterProperties(ctx, printerId) {
     });
     for (const node of host.querySelectorAll("[data-preferences], [data-drivers], [data-add-port], [data-configure-port], [data-defaults], [data-processor], [data-separator]")) {
       node.addEventListener("click", () =>
-        ctx.ui.toast("Devices and Printers", "That dialog is managed by Halcyon Dynamics IT.", "printer"),
+        ctx.ui.toast("Spool & Pray", "That dialog is managed by Halcyon Dynamics IT.", "printer"),
       );
     }
   }
@@ -462,16 +462,16 @@ export function openPrinterProperties(ctx, printerId) {
 export function printTestPage(ctx, printer) {
   const spooler = spoolerState(ctx);
   if (!spooler.running) {
-    ctx.ui.toast("Devices and Printers", "The Print Spooler service is stopped. The test page was not sent.", "printer");
+    ctx.ui.toast("Spool & Pray", "The Print Spooler service is stopped. The test page was not sent.", "printer");
     return null;
   }
   if (printer.offline) {
-    ctx.ui.toast("Devices and Printers", "This printer is offline. Choose Use Printer Online, then try again.", "printer");
+    ctx.ui.toast("Spool & Pray", "This printer is offline. Choose Use Printer Online, then try again.", "printer");
     return null;
   }
 
   const job = addJob(ctx, { printerId: printer.id, document: "Test Page", pages: 1, status: "printing" });
-  ctx.ui.toast("Devices and Printers", `Test page sent to ${printer.name}.`, "printer");
+  ctx.ui.toast("Spool & Pray", `Test page sent to ${printer.name}.`, "printer");
 
   const finish = () => {
     const current = readState(ctx).jobs.find((record) => record.id === job.id);
@@ -484,7 +484,7 @@ export function printTestPage(ctx, printer) {
       const record = draft.jobs.find((item) => item.id === job.id);
       if (record && record.status !== "cancelled") record.status = "complete";
     });
-    ctx.ui.toast("Devices and Printers", "Test page completed successfully.", "printer");
+    ctx.ui.toast("Spool & Pray", "Test page completed successfully.", "printer");
   };
   ctx.clock.schedule(1.6, finish);
   return job;
