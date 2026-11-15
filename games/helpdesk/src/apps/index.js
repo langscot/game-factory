@@ -35,13 +35,14 @@ import printers from "./printers/index.js";
 import gpmc from "./gpmc/index.js";
 import defender from "./defender/index.js";
 import eventvwr from "./eventvwr/index.js";
+import upgrades from "./upgrades/index.js";
 
 let registered = false;
 
 export function registerBuiltinApps() {
   if (registered) return;
   registered = true;
-  registerApps([browser, mail, handbook, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr]);
+  registerApps([browser, mail, handbook, explorer, notepad, regedit, calculator, settings, taskmanager, recyclebin, softwarecenter, terminal, rdp, wupdate, devmgmt, printers, gpmc, defender, aduc, services, eventvwr, upgrades]);
 }
 
 export { getApp, listApps, desktopApps, pinnedApps } from "./registry.js";

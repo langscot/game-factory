@@ -6,7 +6,7 @@ import { registerBuiltinApps } from "./apps/index.js";
 import { initShell, openApp, closeAllApps, toast } from "./shell.js";
 import { showDialog, hideDialog } from "./ui/dialog.js";
 import { COMPANY } from "./content/company.js";
-import { freshStart } from "./prefs.js";
+import { freshStart, getPrefs, savePrefs } from "./prefs.js";
 
 // `?fresh` throws the profile away before anything reads it. The shell shows
 // the out-of-box experience when there is no account, so this is the whole
@@ -14,6 +14,9 @@ import { freshStart } from "./prefs.js";
 freshStart();
 
 const world = createWorld();
+// Tier, bonus and purchases live in prefs so a reload keeps the machine you
+// paid for. The session is still the source of truth while the game runs.
+world.session.hydrateCareer(getPrefs().career);
 registerBuiltinApps();
 
 const platform = {
@@ -26,9 +29,21 @@ const platform = {
   onSignIn: () => startDay(world.world.session.day()),
 };
 
+// The store calls these like any other action. They live here because the
+// economy methods belong to the session, not to an app.
+Object.assign(platform.actions, {
+  buyHardware: (tier) => world.session.buyHardware(tier),
+  buyCosmetic: (itemId) => world.session.buyCosmetic(itemId),
+});
+
 initShell(platform);
 world.clock.start();
 
+function persistCareer() {
+  savePrefs({ career: world.session.careerSnapshot() });
+}
+
+world.events.on("session:career-changed", persistCareer);
 world.events.on("session:shift-ended", (event) => showShiftEnd(event.data));
 world.clock.onTick((dt) => {
   world.session.tick(dt);
@@ -85,6 +100,7 @@ function showDaySummary(summary) {
         <div class="stat"><b>${summary.answered - summary.correct}</b><span>mistakes</span></div>
         <div class="stat"><b>${summary.missed}</b><span>left open</span></div>
       </div>
+      ${payslipMarkup(summary.payslip)}
       <div class="quote">${quotes[summary.day] || "“See you tomorrow.”"}</div>
       <p class="muted tiny">Anything left open rolls over to tomorrow.</p>
       <div class="row"><button class="btn primary" id="modal-next">Start day ${nextDay}</button></div>`,
@@ -113,6 +129,7 @@ function showFired(summary) {
       card.querySelector("#modal-restart").addEventListener("click", () => {
         hideAnd();
         world.actions.resetWorld();
+        restoreCareer();
         startDay(1);
       }),
   });
@@ -141,6 +158,7 @@ function showFinal(summary) {
         <div class="stat"><b>${week.correct}/${week.answered}</b><span>correct, all week</span></div>
         <div class="stat"><b>${trust}</b><span>trust</span></div>
       </div>
+      ${payslipMarkup(summary.payslip)}
       <div class="quote">${quote}</div>
       <p class="muted tiny">Another week survived. The wiki password is the same as last quarter's.</p>
       <div class="row"><button class="btn primary" id="modal-restart">Start over</button></div>`,
@@ -148,6 +166,7 @@ function showFinal(summary) {
       card.querySelector("#modal-restart").addEventListener("click", () => {
         hideAnd();
         world.actions.resetWorld();
+        restoreCareer();
         startDay(1);
       }),
   });
@@ -155,6 +174,27 @@ function showFinal(summary) {
 
 function hideAnd() {
   hideDialog();
+}
+
+function money(value) {
+  const amount = Math.abs(Number(value) || 0);
+  return `${Number(value) < 0 ? "−" : ""}£${amount.toFixed(2).replace(/\.00$/, "")}`;
+}
+
+function payslipMarkup(slip) {
+  if (!slip) return "";
+  return `
+    <div class="payslip">
+      <div class="payslip-head"><span>Performance bonus · Day ${slip.day}</span><span>Halcyon Dynamics</span></div>
+      ${slip.lines.map((line) => `<div class="payslip-line"><span>${line.label}</span><b>${money(line.amount)}</b></div>`).join("")}
+      <div class="payslip-line muted"><span>Salary (flavour, not spendable)</span><b>${money(slip.salary)}</b></div>
+      <div class="payslip-total"><span>Added to the bonus balance</span><b>${money(slip.bonus)}</b></div>
+      <div class="payslip-balance">Balance ${money(slip.balance)} · spend it in The IT Cupboard</div>
+    </div>`;
+}
+
+function restoreCareer() {
+  world.session.hydrateCareer(getPrefs().career);
 }
 
 // `?debug` exposes the world for poking at the console; it holds the answer

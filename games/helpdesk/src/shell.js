@@ -23,6 +23,7 @@ import { toast as showToast } from "./ui/toast.js";
 import { alertDialog, showDialog, hideDialog } from "./ui/dialog.js";
 import { startOobe } from "./ui/oobe.js";
 import { requestAdminPassword } from "./ui/uac.js";
+import { tierSpec } from "./world/session.js";
 
 const TASKBAR_PINNED = ["explorer", "calculator"];
 
@@ -39,6 +40,7 @@ let ui = null;
 let selectedIcon = null;
 let altTab = null;
 let windowSounds = new Map();
+let launching = 0;
 const adminPrompts = new Set();
 let resetStage = "verify";
 
@@ -78,6 +80,7 @@ export function initShell(platform) {
     stage: $("#windows"),
     onChange: () => {
       syncWindowSounds();
+      syncAudioLoad();
       renderTaskbar();
       if (els.taskview.hidden === false) renderTaskView();
     },
@@ -108,6 +111,7 @@ export function initShell(platform) {
   renderClock();
   renderCalendar();
   renderTrust();
+  syncAudioLoad();
 
   wireTaskbar();
   wireStart();
@@ -134,6 +138,7 @@ export function initShell(platform) {
     renderTrust();
     renderStart();
     renderTaskbar();
+    syncAudioLoad();
   });
 }
 
@@ -168,8 +173,32 @@ export function openApp(appId, options) {
     ? [Math.max(0, innerWidth - width - 16), app.position?.[1] ?? 20]
     : app.position || [undefined, undefined];
 
+  // Already open: focus it. Do not charge the launch delay twice.
+  const existing = getWindow(windowId);
+  if (existing) {
+    existing.handle.focus();
+    return existing.handle;
+  }
+
   let root = null;
   let context = null;
+  let alive = true;
+  let settled = false;
+  let cancelLaunch = null;
+
+  // One launch path for every app. Old hardware spends real seconds starting a
+  // window, and the loading state is inside the window so the taskbar and the
+  // rest of the desktop stay usable. clock.schedule pauses with the tab.
+  const delay = launchDelayFor(app);
+  launching += 1;
+  syncAudioLoad();
+
+  const settle = () => {
+    if (settled) return;
+    settled = true;
+    launching = Math.max(0, launching - 1);
+    syncAudioLoad();
+  };
 
   return openWindow({
     id: windowId,
@@ -181,19 +210,56 @@ export function openApp(appId, options) {
     x: position[0],
     y: position[1],
     onClose: () => {
+      alive = false;
+      cancelLaunch?.();
+      settle();
       if (root) app.unmount?.(root);
       context?.dispose();
     },
     build: (body, handle) => {
       body.classList.toggle("fixed", Boolean(app.fixed));
-      root = document.createElement("div");
-      root.className = `app app-${app.id}`;
-      root.dataset.app = app.id;
-      body.append(root);
-      context = createAppContext({ platform: api, ui, app, handle, options, open: openApp });
-      app.mount(root, context);
+      body.innerHTML = launchMarkup(app);
+
+      cancelLaunch = api.clock.schedule(delay, () => {
+        if (!alive) return;
+        settle();
+        body.innerHTML = "";
+        root = document.createElement("div");
+        root.className = `app app-${app.id}`;
+        root.dataset.app = app.id;
+        body.append(root);
+        context = createAppContext({ platform: api, ui, app, handle, options, open: openApp });
+        app.mount(root, context);
+        syncAudioLoad();
+      });
     },
   });
+}
+
+/** Tier base × open-window load × a rough size weight, capped so it stays a joke. */
+function launchDelayFor(app) {
+  const spec = tierSpec(api.world.session.hardwareTier() || 1);
+  const openWindows = windowList().length;
+  const area = (app.size?.[0] || 800) * (app.size?.[1] || 560);
+  const weight = Math.max(1, Math.min(1.8, area / 500000));
+  return Math.min(3.5, spec.launchSeconds * (1 + Math.min(openWindows, 8) * 0.16) * weight);
+}
+
+function launchMarkup(app) {
+  const spec = tierSpec(api.world.session.hardwareTier() || 1);
+  const note =
+    spec.tier <= 2
+      ? `Reading from ${spec.disk}…`
+      : spec.tier <= 4
+        ? "Loading. The SSD is doing its best."
+        : "Loading. This normally takes no time at all.";
+  return `
+    <div class="launch-screen">
+      <span class="launch-icon">${icon(app.icon)}</span>
+      <b>Starting ${escapeHtml(app.title)}…</b>
+      <small>${escapeHtml(spec.name)} · ${escapeHtml(note)}</small>
+      <span class="launch-bar"><i></i></span>
+    </div>`;
 }
 
 export function closeAllApps() {
@@ -387,9 +453,15 @@ function syncWindowSounds() {
   }
 
   windowSounds = next;
-  // More windows is the only OS-level load signal the shell has; ambience and
-  // the fan rise a little with it.
-  api.audio?.setLoad(Math.min(1, next.size / 7));
+}
+
+/** The fan floor is a hardware fact; open windows and in-flight launches add to it. */
+function syncAudioLoad() {
+  if (!api) return;
+  const spec = tierSpec(api.world.session.hardwareTier() || 1);
+  const openWindows = windowList().length;
+  const load = Math.min(1, spec.fan + openWindows * 0.055 + launching * 0.06);
+  api.audio?.setLoad(Number(load.toFixed(3)));
 }
 
 function renderTaskbar() {
@@ -752,7 +824,8 @@ function renderTrust() {
       <div><span>Day</span><b>${overview.day} of ${overview.maxDay}</b></div>
       <div><span>Tickets answered</span><b>${overview.answered}/${overview.total}</b></div>
       <div><span>Mistakes today</span><b>${wrong}</b></div>
-      <div><span>Trust</span><b>${overview.trust}</b></div>`;
+      <div><span>Trust</span><b>${overview.trust}</b></div>
+      <div><span>Bonus</span><b>£${Number(overview.bonus || 0).toFixed(2)}</b></div>`;
   }
 }
 
