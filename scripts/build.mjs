@@ -5,12 +5,18 @@
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { join } from "node:path";
+import { basename, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = new URL("..", import.meta.url).pathname;
+// fileURLToPath, not `.pathname`: on Windows the latter is "/D:/Code/..." and
+// join() turns that into "\D:\Code\...", which does not exist.
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const GAMES = join(ROOT, "games");
 const DIST = join(ROOT, "dist");
 const HUB = join(ROOT, "scripts", "hub.html");
+
+// npm is a .cmd shim on Windows, and Node won't spawn .cmd without a shell.
+const NPM = process.platform === "win32" ? { file: "npm.cmd", shell: true } : { file: "npm", shell: false };
 
 const SKIP = new Set(["node_modules", ".git", ".github", "package.json", "package-lock.json"]);
 
@@ -47,8 +53,8 @@ function prepare(gameDir) {
   }
 
   console.log(`  building ${gameDir}`);
-  execFileSync("npm", ["ci", "--no-audit", "--no-fund"], { cwd: gameDir, stdio: "inherit" });
-  execFileSync("npm", ["run", "build"], { cwd: gameDir, stdio: "inherit" });
+  execFileSync(NPM.file, ["ci", "--no-audit", "--no-fund"], { cwd: gameDir, stdio: "inherit", shell: NPM.shell });
+  execFileSync(NPM.file, ["run", "build"], { cwd: gameDir, stdio: "inherit", shell: NPM.shell });
   return join(gameDir, "dist");
 }
 
@@ -71,7 +77,8 @@ for (const entry of await readdir(GAMES, { withFileTypes: true })) {
   const out = join(DIST, "games", slug);
   await cp(source, out, {
     recursive: true,
-    filter: (src) => !SKIP.has(src.split("/").pop()),
+    // filter receives native paths, so let basename split them.
+    filter: (src) => !SKIP.has(basename(src)),
   });
 
   const meta = await readMeta(gameDir);
