@@ -3,6 +3,7 @@
 
 import { openMenu } from "./menu.js";
 import { icon } from "./icons.js";
+import { dismissDialogsFor } from "./ui/dialog.js";
 
 const MIN_W = 280;
 const MIN_H = 160;
@@ -155,6 +156,7 @@ export function closeWindow(id) {
   if (!win) return;
   OPEN.delete(id);
   win.onClose?.();
+  dismissDialogsFor(win.el);
   win.el.remove();
   hidePreview();
   const next = [...OPEN.values()].filter((w) => !w.minimized).pop();

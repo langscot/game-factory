@@ -1187,9 +1187,9 @@ export default {
         return `<div class="exp-empty onedrive">${local("cloud")}<h3>OneDrive isn't set up</h3><p>This PC is joined to HALCYON. A work account can sign in to sync Documents, Desktop and Pictures.</p><button class="btn" disabled>Set up OneDrive</button></div>`;
       }
       if (query) {
-        return `<div class="exp-empty">${local("gallery")}<h3>No items match your search</h3><p>Try a different name, or clear the search box.</p></div>`;
+        return `<div class="exp-empty">${local("gallery")}<h3>No items match your search</h3></div>`;
       }
-      return `<div class="exp-empty">${ctx.ui.icon("folder")}<h3>This folder is empty</h3><p>${path.startsWith("//") ? "You have access to this share, but nothing is stored here yet." : "Drop something in, or use New in the command bar."}</p></div>`;
+      return `<div class="exp-empty">${ctx.ui.icon("folder")}<h3>This folder is empty</h3><p>${path.startsWith("//") ? "You have access to this share, but nothing is stored here yet." : ""}</p></div>`;
     }
 
     function paint() {

@@ -223,7 +223,7 @@ function iconMenu(app, x, y) {
       onClick: () =>
         alertDialog(
           app.title,
-          `Type: Application\nLocation: games/helpdesk/src/apps/${app.id}\nContract: mount(container, ctx)\nSize: ${app.size[0]} × ${app.size[1]}`,
+          `Type: Application\nTarget: "C:\\Program Files\\Halcyon\\Workstation\\Apps\\${app.id}.exe"\nStart in: C:\\Program Files\\Halcyon\\Workstation\\Apps\nSize: ${app.size[0]} × ${app.size[1]}`,
         ),
     },
   ]);
@@ -501,7 +501,7 @@ function renderStart(query = "") {
         openApp(entry.id);
       } else {
         closeStart();
-        toast(entry.title, "Installed on this PC. This build has no window for it yet.", "settings");
+        toast(entry.title, "This app is managed by Halcyon IT. Contact the service desk for access.", "settings");
       }
     });
     els.startGrid.append(button);
@@ -725,7 +725,7 @@ function renderTaskView() {
     grid.append(card);
   }
   if (!windowList().length) {
-    grid.append(el(`<div class="app-empty"><p class="muted">No windows open. Double-click something on the desktop.</p></div>`));
+    grid.append(el(`<div class="app-empty"><p class="muted">No open windows.</p></div>`));
   }
 }
 
