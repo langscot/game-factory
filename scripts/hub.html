@@ -135,6 +135,37 @@
   .empty .tile, .empty .tri { display: none; }
 
 
+  /* ── sound ────────────────────────────────────────────────────────────── */
+  .sound {
+    position: fixed; right: 1.9rem; bottom: 1.2rem;
+    width: 46px; height: 46px; display: grid; place-items: center;
+    padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%;
+    color: rgba(226,238,255,.5);
+    transition: color .25s;
+  }
+  .sound:hover, .sound:focus-visible { color: #fff; }
+  .sound:focus-visible { outline: 1px solid rgba(255,255,255,.4); outline-offset: 2px; }
+  .sound svg {
+    width: 23px; height: 23px; fill: none; stroke: currentColor;
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .sound .spk { fill: currentColor; stroke: none; }
+  .sound .slash { opacity: 0; transition: opacity .2s; }
+  .sound[data-muted="1"] { color: rgba(226,238,255,.3); }
+  .sound[data-muted="1"] .slash { opacity: 1; }
+  .sound[data-muted="1"] .w1, .sound[data-muted="1"] .w2 { opacity: .25; }
+  .sound[data-ready="0"] .w1, .sound[data-ready="0"] .w2 { opacity: 0; }
+  /* Before audio is unlocked, a slow ring says "there is something here". */
+  .ring {
+    position: absolute; inset: 7px; border-radius: 50%;
+    border: 1px solid rgba(186,216,255,.4); opacity: 0;
+  }
+  .sound[data-ready="0"] .ring { animation: beckon 3.4s ease-out infinite; }
+  @keyframes beckon {
+    0%        { transform: scale(.7); opacity: .75; }
+    70%, 100% { transform: scale(1.5); opacity: 0; }
+  }
+
   /* ── footer ───────────────────────────────────────────────────────────── */
   .foot {
     position: fixed; left: 2.7rem; bottom: 1.9rem;
@@ -149,6 +180,7 @@
     .clock span { display: none; }
     .col { flex-basis: 150px; width: 150px; }
     .foot { left: 1.3rem; bottom: 1.1rem; }
+    .sound { right: 1.1rem; bottom: .7rem; }
   }
   /* First paint: no transitions, so the initial selection is simply there. */
   body.booting *, body.booting *::before { transition: none !important; }
@@ -156,6 +188,7 @@
   @media (prefers-reduced-motion: reduce) {
     .ribbon { animation: none; }
     .rail, .cat, .cat svg, .items a { transition: none; }
+    .sound[data-ready="0"] .ring { animation: none; }
   }
 </style>
 </head>
@@ -211,6 +244,16 @@
 </div>
 
 <a class="foot" href="https://github.com/langscot/game-factory">github.com/langscot/game-factory</a>
+
+<button class="sound" id="sound" type="button" aria-label="Sound — click to turn on" aria-pressed="false" data-ready="0" data-muted="0">
+  <span class="ring" aria-hidden="true"></span>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path class="spk" d="M4.2 9.4h3.1L11.9 5.6v12.8L7.3 14.6H4.2z"/>
+    <path class="w1" d="M14.9 9.3a4.1 4.1 0 0 1 0 5.4"/>
+    <path class="w2" d="M17.6 6.7a7.7 7.7 0 0 1 0 10.6"/>
+    <path class="slash" d="M4.6 4.6l14.8 14.8"/>
+  </svg>
+</button>
 
 <script>
   const GAMES = __GAMES__;
@@ -308,27 +351,266 @@
       cx = (cx + dx + cols.length) % cols.length;
       const n = cols[cx].querySelectorAll(".items a").length;
       cy = Math.max(0, Math.min(cy, n - 1));
+      swish();
     }
     if (dy) {
       const n = cols[cx].querySelectorAll(".items a").length;
       cy = Math.max(0, Math.min(n - 1, cy + dy));
+      tick();
     }
     place();
   }
+
+  // ── sound ────────────────────────────────────────────────────────────────
+  // The console hum, synthesised. The site is static and offline, so there are no
+  // audio files: the bed is three slowly drifting tones plus filtered noise, and
+  // every effect is a short oscillator burst. Browsers won't start audio without
+  // a gesture, so the graph is built on the first key press or click, and
+  // suspended again when the tab goes away.
+  const SOUND_KEY = "hub.sound";
+  const BED_GAIN = 0.09;       // the hum sits under the effects, never over them
+  const EFFECT_GAIN = 0.22;
+  const BLIP_MS = 45;          // keeps mouse-over from machine-gunning the cursor blip
+  const VOICES = [
+    { hz: 55,    type: "sine",     gain: 0.5 },   // A1
+    { hz: 82.41, type: "sine",     gain: 0.22 },  // E2, a fifth up
+    { hz: 110,   type: "triangle", gain: 0.09 },  // A2, an octave up
+  ];
+
+  let sound = null;            // the audio graph, built on the first gesture
+  let blippedAt = 0;
+  let muted = (() => {
+    try { return localStorage.getItem(SOUND_KEY) === "off"; } catch { return false; }
+  })();
+
+  function noiseBuffer(ctx) {
+    const frames = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let warm = 0;
+    for (let i = 0; i < frames; i++) {
+      // Integrate white noise so it reads as air rather than hiss.
+      warm = (warm + (Math.random() * 2 - 1) * 0.04) * 0.99;
+      data[i] = warm * 3;
+    }
+    return buffer;
+  }
+
+  function bootAudio() {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return null;
+    const ctx = new AudioCtx();
+
+    const master = ctx.createGain();
+    master.gain.value = muted ? 0 : 1;
+    master.connect(ctx.destination);
+
+    const bed = ctx.createGain();
+    bed.gain.value = 0;
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 420;
+    lp.Q.value = 0.7;
+    lp.connect(bed).connect(master);
+
+    // Slow, shallow modulation — a held sine on its own sounds like a test tone.
+    const drift = (param, rate, depth) => {
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = rate;
+      const amount = ctx.createGain();
+      amount.gain.value = depth;
+      lfo.connect(amount).connect(param);
+      lfo.start();
+    };
+
+    for (const voice of VOICES) {
+      const osc = ctx.createOscillator();
+      osc.type = voice.type;
+      osc.frequency.value = voice.hz;
+      const gain = ctx.createGain();
+      gain.gain.value = voice.gain;
+      osc.connect(gain).connect(lp);
+      drift(osc.detune, 0.03 + Math.random() * 0.05, 8);
+      osc.start();
+    }
+
+    const noise = noiseBuffer(ctx);
+    const air = ctx.createBufferSource();
+    air.buffer = noise;
+    air.loop = true;
+    const band = ctx.createBiquadFilter();
+    band.type = "bandpass";
+    band.frequency.value = 780;
+    band.Q.value = 0.6;
+    const airGain = ctx.createGain();
+    airGain.gain.value = 0.35;
+    air.connect(band).connect(airGain).connect(bed);
+    drift(band.frequency, 0.055, 260);
+    air.start();
+
+    const sfx = ctx.createGain();
+    sfx.gain.value = EFFECT_GAIN;
+    sfx.connect(master);
+
+    // Fade in: a hum that snaps on is startling, a hum that swells is a console.
+    bed.gain.setValueAtTime(0, ctx.currentTime);
+    bed.gain.linearRampToValueAtTime(BED_GAIN, ctx.currentTime + 3);
+
+    return { ctx, master, sfx, noise };
+  }
+
+  // One-shot oscillator: fast attack, exponential tail.
+  function tone(hz, { to = hz, type = "sine", dur = 0.2, level = 0.3, at = 0 } = {}) {
+    const { ctx, sfx } = sound;
+    const start = ctx.currentTime + at;
+    const osc = ctx.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueAtTime(hz, start);
+    if (to !== hz) osc.frequency.exponentialRampToValueAtTime(to, start + dur * 0.85);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(level, start + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    osc.connect(gain).connect(sfx);
+    osc.start(start);
+    osc.stop(start + dur + 0.02);
+  }
+
+  // Filtered noise: the mechanical click under the cursor sounds.
+  function tickNoise(level, hz, dur) {
+    const { ctx, sfx, noise } = sound;
+    const start = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = noise;
+    const hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = hz;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(level, start);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    src.connect(hp).connect(gain).connect(sfx);
+    src.start(start, Math.random() * 1.5, dur + 0.02);
+  }
+
+  // Down the list: the crisp little tick the XMB makes on every row.
+  function tick() {
+    if (!sound) return;
+    const now = performance.now();
+    if (now - blippedAt < BLIP_MS) return;
+    blippedAt = now;
+    tone(1240, { to: 1750, dur: 0.1, level: 0.3 });
+    tickNoise(0.09, 3400, 0.018);
+  }
+
+  // Across the rail: heavier and lower, so the two axes sound different.
+  function swish() {
+    if (!sound) return;
+    const now = performance.now();
+    if (now - blippedAt < BLIP_MS) return;
+    blippedAt = now;
+    tone(190, { to: 150, type: "triangle", dur: 0.2, level: 0.34 });
+    tickNoise(0.1, 700, 0.05);
+  }
+
+  // Enter: a short rising chime, quiet enough to sit under the bed.
+  function confirm() {
+    if (!sound) return;
+    tone(784, { dur: 0.26, level: 0.16 });
+    tone(1175, { at: 0.055, dur: 0.3, level: 0.11 });
+    tone(1568, { at: 0.11, dur: 0.34, level: 0.06 });
+  }
+
+  // Unlocking audio is a gesture worth hearing, like a console coming on.
+  function powerOn() {
+    tone(220, { to: 330, dur: 0.9, level: 0.1 });
+    tone(440, { to: 660, at: 0.12, dur: 0.8, level: 0.05 });
+  }
+
+  function wake() {
+    if (!sound) {
+      sound = bootAudio();
+      if (!sound) return;
+      if (!muted) powerOn();
+    } else if (sound.ctx.state === "suspended") {
+      sound.ctx.resume();
+    }
+    paintSound();
+  }
+
+  function setMuted(next) {
+    muted = next;
+    try { localStorage.setItem(SOUND_KEY, muted ? "off" : "on"); } catch {}
+    if (sound) {
+      const now = sound.ctx.currentTime;
+      sound.master.gain.cancelScheduledValues(now);
+      sound.master.gain.setTargetAtTime(muted ? 0 : 1, now, 0.04);
+    }
+    paintSound();
+  }
+
+  const soundBtn = document.getElementById("sound");
+
+  function paintSound() {
+    soundBtn.dataset.muted = muted ? "1" : "0";
+    soundBtn.dataset.ready = sound ? "1" : "0";
+    soundBtn.setAttribute("aria-pressed", String(!!sound && !muted));
+    soundBtn.setAttribute("aria-label",
+      !sound ? "Sound — click to turn on"
+        : muted ? "Sound off — click to turn on"
+          : "Sound on — click to turn off");
+  }
+
+  soundBtn.addEventListener("click", () => {
+    if (!sound) { setMuted(false); wake(); return; }
+    setMuted(!muted);
+    if (!muted) confirm();
+  });
+
+  // The first key press or click is the gesture browsers need. The button is
+  // skipped: its own click handler knows whether to start audio or mute it.
+  const wakeOnGesture = (e) => {
+    if (e.target instanceof Element && e.target.closest("#sound")) return;
+    wake();
+  };
+  addEventListener("keydown", wakeOnGesture, true);
+  addEventListener("pointerdown", wakeOnGesture, true);
+
+  // Nobody should come back to a tab quietly humming away in the background.
+  document.addEventListener("visibilitychange", () => {
+    if (!sound) return;
+    if (document.hidden) sound.ctx.suspend();
+    else sound.ctx.resume();
+  });
+
+  paintSound();
 
   addEventListener("keydown", (e) => {
     const map = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
     if (map[e.key]) { e.preventDefault(); move(...map[e.key]); return; }
     if (e.key === "Enter") {
+      // The sound button owns its own Enter/Space.
+      if (e.target instanceof Element && e.target.closest("#sound")) return;
       const a = cols[cx].querySelectorAll(".items a")[cy];
-      if (a) location.href = a.href;
+      if (!a) return;
+      confirm();
+      // Let a beat of the confirmation play before the page unloads.
+      if (sound && !muted) setTimeout(() => { location.href = a.href; }, 140);
+      else location.href = a.href;
     }
   });
 
   cols.forEach((c, i) => {
-    c.querySelector(".cat").addEventListener("click", () => { cx = i; cy = 0; place(); });
+    c.querySelector(".cat").addEventListener("click", () => {
+      if (cx !== i) swish();
+      cx = i; cy = 0; place();
+    });
     c.querySelectorAll(".items a").forEach((a, j) => {
-      a.addEventListener("mouseenter", () => { cx = i; cy = j; place(); });
+      a.addEventListener("mouseenter", () => {
+        const across = cx !== i;
+        if (!across && cy === j) return;
+        cx = i; cy = j; place();
+        if (across) swish(); else tick();
+      });
     });
   });
 
