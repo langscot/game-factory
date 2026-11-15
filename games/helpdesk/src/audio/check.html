@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT Helpdesk — audio render check</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext x='12' y='19' font-size='20' text-anchor='middle'%3E%F0%9F%94%8A%3C/text%3E%3C/svg%3E">
+<style>
+  :root { color-scheme: dark; --bg: #17181a; --panel: #202225; --line: #33363b; --text: #e8eaed; --muted: #9aa0a6; --ok: #67d391; --bad: #ff8d8d; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 28px; background: var(--bg); color: var(--text); font: 13px/1.5 "Segoe UI", system-ui, sans-serif; }
+  h1 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
+  p.lede { margin: 0 0 20px; color: var(--muted); max-width: 760px; }
+  .bar { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  #status { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  #status.pass { color: var(--ok); border-color: rgba(103, 211, 145, .4); }
+  #status.fail { color: var(--bad); border-color: rgba(255, 141, 141, .4); }
+  #summary { color: var(--muted); }
+  button { font: inherit; color: var(--text); background: #2b2e33; border: 1px solid var(--line); border-radius: 5px; padding: 5px 12px; cursor: pointer; }
+  button:hover { background: #353940; }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+  th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  th { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td.pass { color: var(--ok); }
+  td.fail { color: var(--bad); }
+  code { color: #b8d4ff; }
+</style>
+</head>
+<body>
+  <h1>Audio render check</h1>
+  <p class="lede">
+    Every named sound is generated in code and rendered through an
+    <code>OfflineAudioContext</code>: no speakers, no files. A pass means the sound produced samples,
+    did not clip, stayed under the peak ceiling and kept a sane duration.
+  </p>
+  <div class="bar">
+    <span id="status">running</span>
+    <span id="summary">Rendering…</span>
+    <button id="again" type="button">Run again</button>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Sound</th><th>Bus</th><th>Design</th><th>Peak</th><th>RMS</th><th>Rendered</th><th>Result</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <script type="module" src="./check.js"></script>
+</body>
+</html>

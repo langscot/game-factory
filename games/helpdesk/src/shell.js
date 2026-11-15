@@ -18,6 +18,7 @@ import {
 import { applyPrefs } from "./prefs.js";
 import { createUi } from "./ui/index.js";
 import { createAppContext } from "./context.js";
+import { initAudio } from "./audio/index.js";
 import { toast as showToast } from "./ui/toast.js";
 import { alertDialog } from "./ui/dialog.js";
 
@@ -30,11 +31,15 @@ let api = null;
 let ui = null;
 let selectedIcon = null;
 let altTab = null;
+let windowSounds = new Map();
 
 // ---------------------------------------------------------------------------
 
 export function initShell(platform) {
   api = platform;
+  // The audio service is OS-level and owns the only AudioContext. It attaches
+  // itself to the platform before any app context is built.
+  api.audio = initAudio();
   ui = createUi({
     windows: () =>
       windowList().map((win) => ({ id: win.id, title: win.title, icon: win.icon, minimized: win.minimized })),
@@ -62,6 +67,7 @@ export function initShell(platform) {
   initWindows({
     stage: $("#windows"),
     onChange: () => {
+      syncWindowSounds();
       renderTaskbar();
       if (els.taskview.hidden === false) renderTaskView();
     },
@@ -319,6 +325,25 @@ function desktopMenu(x, y) {
 // taskbar
 // ---------------------------------------------------------------------------
 
+// One diff over the window manager's public list gives us open/minimise/close
+// sounds without teaching wm.js about audio.
+function syncWindowSounds() {
+  const next = new Map(windowList().map((win) => [win.id, win.minimized]));
+
+  for (const [id, minimized] of next) {
+    if (!windowSounds.has(id)) api.audio?.play("window.open", { gain: 0.85 });
+    else if (minimized && !windowSounds.get(id)) api.audio?.play("window.minimise");
+  }
+  for (const id of windowSounds.keys()) {
+    if (!next.has(id)) api.audio?.play("window.close", { gain: 0.85 });
+  }
+
+  windowSounds = next;
+  // More windows is the only OS-level load signal the shell has; ambience and
+  // the fan rise a little with it.
+  api.audio?.setLoad(Math.min(1, next.size / 7));
+}
+
 function renderTaskbar() {
   const open = windowList();
   const byId = new Map(open.map((win) => [win.id, win]));
@@ -570,6 +595,7 @@ function closeStart() {
 function restart(word) {
   closeStart();
   closeFlyouts();
+  api.audio?.play("logout");
   const screen = $("#screen");
   const veil = document.createElement("div");
   veil.style.cssText =
@@ -767,6 +793,8 @@ export function lockScreen() {
   closeStart();
   closeFlyouts();
   closeMenu();
+  api?.audio?.play("lock");
+  api?.audio?.stopAmbience();
   els.lock.hidden = false;
   els.lock.classList.remove("gone");
   $("#lockBottom").hidden = false;
@@ -778,7 +806,10 @@ export function signIn() {
   if (els.lock.classList.contains("gone")) return;
   els.lock.classList.add("gone");
   setTimeout(() => (els.lock.hidden = true), 320);
+  api?.audio?.unlock();
+  api?.audio?.play("boot");
   api?.onSignIn?.();
+  api?.audio?.startAmbience("office");
 }
 
 // ---------------------------------------------------------------------------

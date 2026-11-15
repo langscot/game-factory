@@ -18,7 +18,10 @@ export const WALLPAPERS = [
   { id: "w3", name: "Mint" },
 ];
 
-const DEFAULTS = { accent: "blue", wallpaper: "w1" };
+// audioAmbience is deliberately null until the user makes a choice: the audio
+// engine uses that to follow prefers-reduced-motion without pretending the
+// player has switched room tone on.
+const DEFAULTS = { accent: "blue", wallpaper: "w1", audioMuted: false, audioVolume: 0.6, audioAmbience: null };
 
 export function getPrefs() {
   try {
